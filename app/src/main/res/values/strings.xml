@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Image Gallery</string>
+    <string name="placeholder_name">Place Holder</string>
 </resources>

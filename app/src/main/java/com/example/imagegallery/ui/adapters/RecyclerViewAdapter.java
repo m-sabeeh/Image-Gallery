@@ -15,6 +15,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.imagegallery.MainActivity;
 import com.example.imagegallery.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -28,7 +29,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private Context mContext;
     private OnItemInteractionListener mListener;
 
-    public RecyclerViewAdapter(Context context, List<Data> dataList) {
+
+    public RecyclerViewAdapter(Context context, @NonNull List<Data> dataList) {
         mDataList = dataList;
         mContext = context;
 

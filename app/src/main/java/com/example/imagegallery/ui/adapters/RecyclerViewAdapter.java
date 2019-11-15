@@ -1,23 +1,17 @@
 package com.example.imagegallery.ui.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
-import com.example.imagegallery.MainActivity;
+import com.example.imagegallery.models.Hit;
 import com.example.imagegallery.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -27,11 +21,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private static final String TAG = "RecyclerViewAdapter";
-    private List<Data> mDataList;
+    private List<Hit> mDataList;
     private Context mContext;
     private OnItemInteractionListener mListener;
 
-    public RecyclerViewAdapter(Context context, @NonNull List<Data> dataList) {
+    public RecyclerViewAdapter(Context context, @NonNull List<Hit> dataList) {
         mDataList = dataList;
         mContext = context;
 
@@ -50,16 +44,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerViewAdapter.ViewHolder holder, final int position) {
-        //Log.d(TAG, "onBindViewHolder: " + holder.cardView.getMeasuredWidth()+" "+holder.imageView.getMeasuredHeight());
+        Log.d(TAG, "onBindViewHolder: " + holder.cardView.getMeasuredWidth()+" "+holder.imageView.getMeasuredHeight());
         //RequestOptions options = new RequestOptions();
         //options.placeholder(R.drawable.ic_launcher_background);
         Glide.with(mContext)
-                .load(mDataList.get(position).getImageUri())
+                .load(mDataList.get(position).getPreviewURL())
                 //.apply(options)
                 .placeholder(R.drawable.ic_launcher_background)
                 .into(holder.imageView);
-        holder.imageTitle.setText(mDataList.get(position).getImageTile());
+        holder.imageTitle.setText(mDataList.get(position).getUser());
     }
+
 
     @Override
     public int getItemCount() {

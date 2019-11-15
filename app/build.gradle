@@ -37,11 +37,21 @@ dependencies {
     implementation "androidx.cardview:cardview:$androidx_version"
     //palette
     implementation "androidx.palette:palette:$androidx_version"
+
+    //retrofit
+    implementation "com.squareup.retrofit2:retrofit:2.6.2"
+    implementation "com.squareup.retrofit2:converter-gson:2.6.2"
+
+    //GSON
+    implementation 'com.google.code.gson:gson:2.8.6'
+
+    //paging library
+    implementation "androidx.paging:paging-runtime:2.1.0"
+
+
     //glide
     def glide_version = "4.10.0"
     implementation "com.github.bumptech.glide:glide:$glide_version"
     annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
-    //palette
-
 
 }

@@ -1,6 +1,5 @@
-package com.example.imagegallery.Utils;
+package com.example.imagegallery.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import com.example.imagegallery.ui.containerfragments.ImageFragment;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 
 /**
  * This Activity allows the user to edit a note's title. It displays a floating window

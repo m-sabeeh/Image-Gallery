@@ -2,8 +2,7 @@ package com.example.imagegallery;
 
 import android.os.Bundle;
 
-import com.bumptech.glide.util.Util;
-import com.example.imagegallery.Utils.Utils;
+import com.example.imagegallery.utils.Utils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -12,7 +11,6 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 public class ContainerActivity extends AppCompatActivity {
     private static final String TAG = "ContainerActivity";

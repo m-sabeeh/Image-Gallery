@@ -7,10 +7,13 @@ import com.example.imagegallery.ui.adapters.RecyclerViewAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class MainViewModel extends ViewModel {
     private static final String TAG = "MainViewModel";
+    private MutableLiveData<List<RecyclerViewAdapter.Data>> mutableLiveData;
 
     @Override
     protected void onCleared() {
@@ -18,11 +21,18 @@ public class MainViewModel extends ViewModel {
         Log.d(TAG, "onCleared: ");
     }
 
-    public List<RecyclerViewAdapter.Data> getDataList() {
-        return initImageData2();
+    public void init() {
+        if (mutableLiveData == null) {
+            mutableLiveData = initImageData2();
+        }
     }
 
-    public List<RecyclerViewAdapter.Data> initImageData() {
+    public LiveData<List<RecyclerViewAdapter.Data>> getData() {
+        return mutableLiveData;
+    }
+
+    public MutableLiveData<List<RecyclerViewAdapter.Data>> initImageData() {
+        MutableLiveData<List<RecyclerViewAdapter.Data>> listMutableLiveData = new MutableLiveData<>();
         List<RecyclerViewAdapter.Data> dataList = new ArrayList<>();
 
         dataList.add(new RecyclerViewAdapter.Data("https://c1.staticflickr.com/5/4636/25316407448_de5fbf183d_o.jpg", "Havasu Falls"));
@@ -35,10 +45,12 @@ public class MainViewModel extends ViewModel {
         dataList.add(new RecyclerViewAdapter.Data("https://i.redd.it/obx4zydshg601.jpg", "Austrailia"));
         dataList.add(new RecyclerViewAdapter.Data("https://i.imgur.com/ZcLLrkY.jpg", "Washington"));
 
-        return dataList;
+        listMutableLiveData.setValue(dataList);
+        return listMutableLiveData;
     }
 
-    public List<RecyclerViewAdapter.Data> initImageData2() {
+    public MutableLiveData<List<RecyclerViewAdapter.Data>> initImageData2() {
+        MutableLiveData<List<RecyclerViewAdapter.Data>> listMutableLiveData = new MutableLiveData<>();
         List<RecyclerViewAdapter.Data> dataList = new ArrayList<>();
 
         dataList.add(new RecyclerViewAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.001.png", "Havasu Falls"));
@@ -62,7 +74,8 @@ public class MainViewModel extends ViewModel {
         dataList.add(new RecyclerViewAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.019.png", "Washington"));
         dataList.add(new RecyclerViewAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.020.png", "Washington"));
 
-        return dataList;
+        listMutableLiveData.setValue(dataList);
+        return listMutableLiveData;
     }
 
 

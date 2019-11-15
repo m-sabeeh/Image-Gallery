@@ -1,8 +1,8 @@
 package com.example.imagegallery.ui.main;
 
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,19 +12,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.imagegallery.ContainerActivity;
-import com.example.imagegallery.MainActivity;
 import com.example.imagegallery.R;
-import com.example.imagegallery.Utils.Utils;
 import com.example.imagegallery.ui.adapters.RecyclerViewAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainFragment extends Fragment {
@@ -50,17 +45,24 @@ public class MainFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        mViewModel.init();
+        mViewModel.getData().observe(this, new Observer<List<RecyclerViewAdapter.Data>>() {
+            @Override
+            public void onChanged(List<RecyclerViewAdapter.Data> data) {
+                mAdapter.notifyDataSetChanged();
+            }
+        });
         initRecyclerView();
     }
 
 
     private void initRecyclerView() {
         mRecyclerView = getView().findViewById(R.id.recyclerView);
-        mAdapter = new RecyclerViewAdapter(getContext(), mViewModel.getDataList());
+        mAdapter = new RecyclerViewAdapter(getContext(), mViewModel.getData().getValue());
         mAdapter.setOnItemInteractionListener(new RecyclerViewAdapter.OnItemInteractionListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Toast.makeText(getContext(), position+" "+mViewModel.getDataList().get(position).getImageTile(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), position+" "+mViewModel.getData().getValue().get(position).getImageTile(), Toast.LENGTH_SHORT).show();
                 //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, MainFragment.newInstance()).commit();
                 //Intent intent = new Intent(getContext(), ContainerActivity.class);
                 //Intent intent = Utils.IntentUtils.buildImageFragmentIntent(getContext());

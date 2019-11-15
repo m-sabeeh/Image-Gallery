@@ -60,15 +60,16 @@ public class MainFragment extends Fragment {
         mAdapter.setOnItemInteractionListener(new RecyclerViewAdapter.OnItemInteractionListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Toast.makeText(getContext(), mViewModel.getDataList().get(position).getImageTile(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), position+" "+mViewModel.getDataList().get(position).getImageTile(), Toast.LENGTH_SHORT).show();
                 //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, MainFragment.newInstance()).commit();
                 //Intent intent = new Intent(getContext(), ContainerActivity.class);
-                Intent intent = Utils.IntentUtils.buildImageFragmentIntent(getContext());
-                startActivity(intent);
+                //Intent intent = Utils.IntentUtils.buildImageFragmentIntent(getContext());
+                //startActivity(intent);
             }
         });
         RecyclerView.LayoutManager staggeredGridManager =
                 new StaggeredGridLayoutManager(COLUMN, LinearLayoutManager.VERTICAL);
+        RecyclerView.LayoutManager linearLayoutManger = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
         mRecyclerView.setLayoutManager(staggeredGridManager);
         mRecyclerView.setAdapter(mAdapter);
 

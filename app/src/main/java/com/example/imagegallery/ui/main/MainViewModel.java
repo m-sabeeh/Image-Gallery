@@ -56,7 +56,7 @@ public class MainViewModel extends ViewModel {
         dataList.add(new RecyclerViewAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.013.png", "Washington"));
         dataList.add(new RecyclerViewAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.014.png", "Washington"));
         dataList.add(new RecyclerViewAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.015.png", "Washington"));
-        dataList.add(new RecyclerViewAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.016", "Washington"));
+        dataList.add(new RecyclerViewAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.016.png", "Washington"));
         dataList.add(new RecyclerViewAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.017.png", "Washington"));
         dataList.add(new RecyclerViewAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.018.png", "Washington"));
         dataList.add(new RecyclerViewAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.019.png", "Washington"));

@@ -6,12 +6,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.example.imagegallery.MainActivity;
 import com.example.imagegallery.R;
 
@@ -28,7 +30,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private List<Data> mDataList;
     private Context mContext;
     private OnItemInteractionListener mListener;
-
 
     public RecyclerViewAdapter(Context context, @NonNull List<Data> dataList) {
         mDataList = dataList;
@@ -48,13 +49,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewAdapter.ViewHolder holder, final int position) {
-        Log.d(TAG, "onBindViewHolder: " + mDataList.get(position).imageUri);
-        RequestOptions options = new RequestOptions();
-        options.placeholder(R.drawable.ic_launcher_background);
+    public void onBindViewHolder(@NonNull final RecyclerViewAdapter.ViewHolder holder, final int position) {
+        //Log.d(TAG, "onBindViewHolder: " + holder.cardView.getMeasuredWidth()+" "+holder.imageView.getMeasuredHeight());
+        //RequestOptions options = new RequestOptions();
+        //options.placeholder(R.drawable.ic_launcher_background);
         Glide.with(mContext)
                 .load(mDataList.get(position).getImageUri())
-                .apply(options)
+                //.apply(options)
+                .placeholder(R.drawable.ic_launcher_background)
                 .into(holder.imageView);
         holder.imageTitle.setText(mDataList.get(position).getImageTile());
     }

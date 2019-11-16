@@ -2,7 +2,7 @@ package com.example.imagegallery.repositories;
 
 import android.util.Log;
 
-import com.example.imagegallery.models.DataAPI;
+import com.example.imagegallery.models.DataService;
 import com.example.imagegallery.models.DataList;
 import com.example.imagegallery.models.Hit;
 import com.example.imagegallery.ui.adapters.RecyclerViewAdapter;
@@ -10,6 +10,7 @@ import com.example.imagegallery.ui.adapters.RecyclerViewAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -18,62 +19,75 @@ import retrofit2.Response;
 public class HitRepository {
     private static final String TAG = "HitRepository";
     private static HitRepository mHitRepository;
-    private MutableLiveData<List<Hit>> mMutableHits;
-    private RepoUpdateObserver mUpdateObserver;
+    private MutableLiveData<List<Hit>> mutableLiveData;
 
     public static HitRepository getInstance() {
         if (mHitRepository == null) {
             mHitRepository = new HitRepository();
         }
-
         return mHitRepository;
     }
 
-
-    public MutableLiveData<List<Hit>> getHits() {
-        if (mMutableHits == null) {
+    public LiveData<List<Hit>> getLiveHitList() {
+        Log.d(TAG, "getLiveHitList: ");
+        if (mutableLiveData == null) {
             init();
         }
-        return mMutableHits;
+        return mutableLiveData;
     }
-
-    public void setUpdateObserver(RepoUpdateObserver observer) {
-        mUpdateObserver = observer;
-    }
-
-
-    private void updateRepo(List<Hit> newHits) {
-        List<Hit> hitList = mMutableHits.getValue();
-        hitList.addAll(newHits);
-        mMutableHits.setValue(hitList);
-    }
-
 
     public void init() {
-        mMutableHits = new MutableLiveData<>();
+        mutableLiveData = new MutableLiveData<>();
         List<Hit> hitList = new ArrayList<>();
-        mMutableHits.setValue(hitList);
-        Log.d(TAG, "init: " + mMutableHits.getValue());
-        initOnline2();
-        initOnline();
+        mutableLiveData.setValue(hitList);
+        Log.d(TAG, "init: " + mutableLiveData.getValue());
+        fetchOnlineData();
     }
 
-    private void initOnline2() {
-        Hit h1 = new Hit();
-        h1.setPreviewURL("https://c1.staticflickr.com/5/4636/25316407448_de5fbf183d_o.jpg");
-        mMutableHits.getValue().add(h1);
+    private void addToRepo(List<Hit> newHits) {
+        List<Hit> hitList = mutableLiveData.getValue();
+        hitList.addAll(newHits);
+        mutableLiveData.setValue(hitList);
     }
 
-    private void initOnline() {
-        Call<DataList> dataListCall = DataAPI.getDataService().getDataList();
+    private void updateRepo(List<Hit> newHits) {
+        Log.d(TAG, "updateRepo: ");
+        List<Hit> hitList = mutableLiveData.getValue();
+        hitList.clear();
+        hitList.addAll(newHits);
+        mutableLiveData.setValue(hitList);
+    }
+
+
+    private void fetchOnlineData() {
+        Log.d(TAG, "fetchOnlineData: ");
+        Call<DataList> dataListCall = DataService.getPixabayAPIServiceInstance().getDefaultDataList();
         dataListCall.enqueue(new Callback<DataList>() {
             @Override
             public void onResponse(Call<DataList> call, Response<DataList> response) {
+                if (response.body() != null) {
+                    Log.d(TAG, "onResponse: ");
+                    updateRepo(response.body().getHits());
+                }
+            }
 
-                updateRepo(response.body().getHits());
+            @Override
+            public void onFailure(Call<DataList> call, Throwable t) {
 
-                if (mUpdateObserver != null) {
-                    mUpdateObserver.repoUpdated();
+            }
+        });
+
+    }
+
+    public void fetchRequestedData(String q) {
+        Log.d(TAG, "fetchRequestedData: ");
+        Call<DataList> dataListCall = DataService.getPixabayAPIServiceInstance().getSearchedData(q);
+        dataListCall.enqueue(new Callback<DataList>() {
+            @Override
+            public void onResponse(Call<DataList> call, Response<DataList> response) {
+                Log.d(TAG, "onResponse: " + response.body());
+                if (response.body() != null) {
+                    updateRepo(response.body().getHits());
                 }
             }
 
@@ -131,7 +145,4 @@ public class HitRepository {
         return listMutableLiveData;
     }
 
-    public interface RepoUpdateObserver {
-        void repoUpdated();
-    }
 }

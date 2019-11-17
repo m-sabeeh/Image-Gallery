@@ -1,10 +1,12 @@
 package com.example.imagegallery.ui.main;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
@@ -19,23 +21,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.imagegallery.models.DataList;
 import com.example.imagegallery.models.Hit;
 import com.example.imagegallery.R;
-import com.example.imagegallery.ui.adapters.RecyclerViewAdapter;
+import com.example.imagegallery.ui.adapters.CustomListAdapter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainFragment extends Fragment {
     private static final String TAG = "MainFragment";
     private MainViewModel mViewModel;
-    private RecyclerViewAdapter mAdapter;
+    private CustomListAdapter mAdapter;
     private LiveData<List<Hit>> liveData;
     ProgressDialog progressDialog;
+    String mSearchTerm;
+    int count = 1;
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -59,31 +62,59 @@ public class MainFragment extends Fragment {
         liveData.observe(this, new Observer<List<Hit>>() {
             @Override
             public void onChanged(List<Hit> hits) {
-                //dialog.dismiss();
-                if (!hits.isEmpty() && mAdapter != null) {
-                    mAdapter.notifyDataSetChanged();
+                if (mAdapter != null && !hits.isEmpty()) {
+                    //mAdapter.submitList(hits);
+                    mAdapter.notifyItemRangeChanged(0, mAdapter.getItemCount());
+                    //dialog.dismiss();
+                    //count = hits.size();
                 }
 
                 Log.d(TAG, "onChanged: " + hits);
             }
         });
         initRecyclerView();
-        Button button = getView().findViewById(R.id.button);
+        FloatingActionButton button = getView().findViewById(R.id.fab);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "onClick: ");
-                mViewModel.fetchRequiredData("red cars");
+                initSearch();
+
 
             }
         });
     }
 
+    private void initSearch() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Search Images on Pixabay");
+        View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.user_input_dialog, (ViewGroup) getView(), false);
+        final TextInputEditText input = viewInflated.findViewById(R.id.input);
+        builder.setView(viewInflated);
+
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                mSearchTerm = input.getText().toString();
+                mViewModel.fetchRequiredData(mSearchTerm);
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
 
     private void initRecyclerView() {
         RecyclerView recyclerView = getView().findViewById(R.id.recyclerView);
-        mAdapter = new RecyclerViewAdapter(getContext(), liveData.getValue());
-        mAdapter.setOnItemInteractionListener(new RecyclerViewAdapter.OnItemInteractionListener() {
+        mAdapter = new CustomListAdapter(getContext(), liveData.getValue());
+        mAdapter.setOnItemInteractionListener(new CustomListAdapter.OnItemInteractionListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Toast.makeText(getContext(), position + " " + mViewModel.getLiveHitList().getValue().get(position).getUser(), Toast.LENGTH_SHORT).show();
@@ -96,7 +127,17 @@ public class MainFragment extends Fragment {
 
         int columns = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 3 : 2;
         RecyclerView.LayoutManager staggeredGridManager =
-                new StaggeredGridLayoutManager(columns, LinearLayoutManager.VERTICAL);
+                new StaggeredGridLayoutManager(columns, LinearLayoutManager.VERTICAL) {
+                    /**
+                     * Disable predictive animations. There is a bug in RecyclerView which causes views that
+                     * are being reloaded to pull invalid ViewHolders from the internal recycler stack if the
+                     * adapter size has decreased since the ViewHolder was recycled.
+                     */
+                    @Override
+                    public boolean supportsPredictiveItemAnimations() {
+                        return false;
+                    }
+                };
         //RecyclerView.LayoutManager linearLayoutManger = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(staggeredGridManager);
         recyclerView.setAdapter(mAdapter);

@@ -2,45 +2,55 @@ package com.example.imagegallery.ui.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.example.imagegallery.models.Hit;
 import com.example.imagegallery.R;
 
 import java.util.List;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.palette.graphics.Palette;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
-    private static final String TAG = "RecyclerViewAdapter";
+public class CustomListAdapter extends ListAdapter<Hit, CustomListAdapter.ViewHolder> {
+    private static final String TAG = "CustomListAdapter";
     private List<Hit> mDataList;
     private Context mContext;
     private OnItemInteractionListener mListener;
     private ConstraintSet set = new ConstraintSet();
+    String ratio;
 
+    public CustomListAdapter(Context mContext, List<Hit> mDataList) {
+        super(DIFF_CALLBACK);
+        this.mDataList = mDataList;
+        this.mContext = mContext;
+    }
 
-    public RecyclerViewAdapter(Context context, @NonNull List<Hit> dataList) {
+/*    public CustomListAdapter(@NonNull DiffUtil.ItemCallback<List<Hit>> diffCallback, List<Hit> mDataList, Context mContext) {
+        super(DIFF_CALLBACK);
+        this.mDataList = mDataList;
+        this.mContext = mContext;
+    }*/
+
+/*    public CustomListAdapter(Context context, @NonNull List<Hit> dataList) {
         mDataList = dataList;
         mContext = context;
 
-    }
+    }*/
 
     public void setOnItemInteractionListener(OnItemInteractionListener listener) {
         mListener = listener;
@@ -48,44 +58,25 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @NonNull
     @Override
-    public RecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CustomListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_view, parent, false);
         return new ViewHolder(itemView);
     }
 
 
     @Override
-    public void onBindViewHolder(@NonNull final RecyclerViewAdapter.ViewHolder holder, final int position) {
-        //Log.d(TAG, "onBindViewHolder: " + holder.cardView.getMeasuredWidth()+" "+holder.imageView.getMeasuredHeight());
-        //RequestOptions options = new RequestOptions();
-        //options.placeholder(R.drawable.ic_launcher_background);
-        //int w = mDataList.get(position).getPreviewWidth();
-        //int h = mDataList.get(position).getPreviewHeight();
-        //Drawable d = mContext.getResources().getDrawable(R.drawable.ic_launcher_background);
-        //d.setBounds(0, 0, w, h);
-        //holder.
-        //ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) holder.imageView.getLayoutParams();
-        //layoutParams.dimensionRatio = 1:2;
-        String ratio = String.format("%d:%d",mDataList.get(position).getPreviewWidth(),mDataList.get(position).getPreviewHeight());
+    public void onBindViewHolder(@NonNull final CustomListAdapter.ViewHolder holder, final int position) {
+
+        ratio = String.format(Locale.getDefault(), "%d:%d", mDataList.get(position).getPreviewWidth(), mDataList.get(position).getPreviewHeight());
         set.clone(holder.constraintLayout);
-        Log.d(TAG, "onBindViewHolder: "+set);
-
-        set.setDimensionRatio(holder.imageView.getId(),ratio);
+        set.setDimensionRatio(holder.imageView.getId(), ratio);
         set.applyTo(holder.constraintLayout);
-        //getPercentLayoutInfo().aspectRatio = (float) w / (float) h;
-        //mImageView.setLayoutParams(layoutParams);
-        //holder.imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_launcher_background));
-        int W = holder.imageView.getLayoutParams().width;
-        //(int) ((float) h / (float) w) * W;
-        //holder.imageView.getLayoutParams().height = h;
-        Log.d(TAG, "onBindViewHolder: " + W + " " + ratio + " " +  " " + holder.imageView.getLayoutParams().height);
-
 
         Glide.with(mContext)
                 //.asBitmap()
                 .load(mDataList.get(position).getPreviewURL())
-                .transition(DrawableTransitionOptions.withCrossFade())                //.apply(options)
-                //.placeholder(R.drawable.ic_launcher_background)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                //.apply(options)
                 .into(holder.imageView);
         //holder.imageTitle.setText(mDataList.get(position).getUser());
     }
@@ -96,11 +87,22 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return mDataList.size();
     }
 
+    public static final DiffUtil.ItemCallback<Hit> DIFF_CALLBACK = new DiffUtil.ItemCallback<Hit>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Hit oldItem, @NonNull Hit newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Hit oldItem, @NonNull Hit newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
+    };
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private CardView cardView;
         private ImageView imageView;
-        private TextView imageTitle;
+        //private TextView imageTitle;
         private ConstraintLayout constraintLayout;
 
         public ViewHolder(@NonNull View itemView) {

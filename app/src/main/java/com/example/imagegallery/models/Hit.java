@@ -4,6 +4,8 @@ package com.example.imagegallery.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import androidx.annotation.Nullable;
+
 public class Hit {
 
     @SerializedName("largeImageURL")

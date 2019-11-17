@@ -45,6 +45,8 @@ public class DataService {
 
         @GET ("?key=" + API_key +"&q=")
         Call<DataList> getSearchedData(@Query("q") String q);
+
+        Call<DataList> getNextPage();
     }
 
 }

@@ -22,6 +22,8 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,6 +33,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private List<Hit> mDataList;
     private Context mContext;
     private OnItemInteractionListener mListener;
+    private ConstraintSet set = new ConstraintSet();
+
 
     public RecyclerViewAdapter(Context context, @NonNull List<Hit> dataList) {
         mDataList = dataList;
@@ -55,24 +59,35 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         //Log.d(TAG, "onBindViewHolder: " + holder.cardView.getMeasuredWidth()+" "+holder.imageView.getMeasuredHeight());
         //RequestOptions options = new RequestOptions();
         //options.placeholder(R.drawable.ic_launcher_background);
-/*        int w = mDataList.get(position).getPreviewWidth();
-        int h = mDataList.get(position).getPreviewHeight();
-        Drawable d = mContext.getResources().getDrawable(R.drawable.ic_launcher_background);
-        d.setBounds(0, 0, w, h);
+        //int w = mDataList.get(position).getPreviewWidth();
+        //int h = mDataList.get(position).getPreviewHeight();
+        //Drawable d = mContext.getResources().getDrawable(R.drawable.ic_launcher_background);
+        //d.setBounds(0, 0, w, h);
         //holder.
-        PercentFrameLayout.LayoutParams layoutParams = (PercentFrameLayout.LayoutParams) holder.imageView.getLayoutParams();
-        layoutParams.getPercentLayoutInfo().aspectRatio = (float) w / (float)  h;
-        mImageView.setLayoutParams(layoutParams);
-        holder.imageView.getLayoutParams().height = h;
-        holder.imageView.getLayoutParams().width=w;
-        holder.imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_launcher_background));*/
+        //ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) holder.imageView.getLayoutParams();
+        //layoutParams.dimensionRatio = 1:2;
+        String ratio = String.format("%d:%d",mDataList.get(position).getPreviewWidth(),mDataList.get(position).getPreviewHeight());
+        set.clone(holder.constraintLayout);
+        Log.d(TAG, "onBindViewHolder: "+set);
+
+        set.setDimensionRatio(holder.imageView.getId(),ratio);
+        set.applyTo(holder.constraintLayout);
+        //getPercentLayoutInfo().aspectRatio = (float) w / (float) h;
+        //mImageView.setLayoutParams(layoutParams);
+        //holder.imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_launcher_background));
+        int W = holder.imageView.getLayoutParams().width;
+        //(int) ((float) h / (float) w) * W;
+        //holder.imageView.getLayoutParams().height = h;
+        Log.d(TAG, "onBindViewHolder: " + W + " " + ratio + " " +  " " + holder.imageView.getLayoutParams().height);
+
+
         Glide.with(mContext)
                 //.asBitmap()
                 .load(mDataList.get(position).getPreviewURL())
-                //.transition(DrawableTransitionOptions.withCrossFade())                //.apply(options)
-                .placeholder(R.drawable.ic_launcher_background)
+                .transition(DrawableTransitionOptions.withCrossFade())                //.apply(options)
+                //.placeholder(R.drawable.ic_launcher_background)
                 .into(holder.imageView);
-        holder.imageTitle.setText(mDataList.get(position).getUser());
+        //holder.imageTitle.setText(mDataList.get(position).getUser());
     }
 
 
@@ -86,12 +101,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         private CardView cardView;
         private ImageView imageView;
         private TextView imageTitle;
+        private ConstraintLayout constraintLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            constraintLayout = itemView.findViewById(R.id.constraintLayout);
             cardView = itemView.findViewById(R.id.cardView);
             imageView = itemView.findViewById(R.id.imageView);
-            imageTitle = itemView.findViewById(R.id.imageTitle);
+            //imageTitle = itemView.findViewById(R.id.imageTitle);
 
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override

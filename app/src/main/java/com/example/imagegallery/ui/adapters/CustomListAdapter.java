@@ -20,13 +20,14 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.paging.PagedListAdapter;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-public class CustomListAdapter extends ListAdapter<Hit, CustomListAdapter.ViewHolder> {
+public class CustomListAdapter extends PagedListAdapter<Hit, CustomListAdapter.ViewHolder> {
     private static final String TAG = "CustomListAdapter";
     private List<Hit> mDataList;
     private Context mContext;

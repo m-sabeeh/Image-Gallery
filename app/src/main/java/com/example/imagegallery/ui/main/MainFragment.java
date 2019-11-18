@@ -13,7 +13,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.paging.PagedListAdapter;
+import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -26,7 +26,7 @@ import android.widget.Toast;
 
 import com.example.imagegallery.models.Hit;
 import com.example.imagegallery.R;
-import com.example.imagegallery.ui.adapters.CustomListAdapter;
+import com.example.imagegallery.ui.adapters.CustomPagedListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -35,11 +35,12 @@ import java.util.List;
 public class MainFragment extends Fragment {
     private static final String TAG = "MainFragment";
     private MainViewModel mViewModel;
-    private CustomListAdapter mAdapter;
-    private LiveData<List<Hit>> liveData;
+    private CustomPagedListAdapter mAdapter;
+    private LiveData<PagedList<Hit>> liveData;
     ProgressDialog progressDialog;
     String mSearchTerm;
     int count = 1;
+    public static final String DEFAULT_SEARCH_TERM = "abstract";
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -50,6 +51,7 @@ public class MainFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.main_fragment, container, false);
+
     }
 
 
@@ -60,17 +62,18 @@ public class MainFragment extends Fragment {
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         mViewModel.initOnlineData();
         liveData = mViewModel.getLiveHitList();
-        liveData.observe(this, new Observer<List<Hit>>() {
+        //mAdapter.submitList(liveData.getValue());
+        liveData.observe(this, new Observer<PagedList<Hit>>() {
             @Override
-            public void onChanged(List<Hit> hits) {
+            public void onChanged(PagedList<Hit> hits) {
                 if (mAdapter != null && !hits.isEmpty()) {
-                    //mAdapter.submitList(hits);
-                    mAdapter.notifyItemRangeChanged(0, mAdapter.getItemCount());
+                    mAdapter.submitList(hits);
+                    //mAdapter.notifyItemRangeChanged(0, mAdapter.getItemCount());
                     //dialog.dismiss();
                     //count = hits.size();
                 }
-
-                Log.d(TAG, "onChanged: " + hits);
+                mAdapter.submitList(hits);
+                Log.d(TAG, "onChanged: MainFragment" + hits);
             }
         });
         initRecyclerView();
@@ -114,8 +117,8 @@ public class MainFragment extends Fragment {
 
     private void initRecyclerView() {
         RecyclerView recyclerView = getView().findViewById(R.id.recyclerView);
-        mAdapter = new CustomListAdapter(getContext(), liveData.getValue());
-        mAdapter.setOnItemInteractionListener(new CustomListAdapter.OnItemInteractionListener() {
+        mAdapter = new CustomPagedListAdapter(getContext(), liveData.getValue());
+        mAdapter.setOnItemInteractionListener(new CustomPagedListAdapter.OnItemInteractionListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Toast.makeText(getContext(), position + " " + mViewModel.getLiveHitList().getValue().get(position).getUser(), Toast.LENGTH_SHORT).show();

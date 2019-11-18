@@ -20,34 +20,34 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.paging.PagedList;
 import androidx.paging.PagedListAdapter;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-public class CustomListAdapter extends PagedListAdapter<Hit, CustomListAdapter.ViewHolder> {
-    private static final String TAG = "CustomListAdapter";
-    private List<Hit> mDataList;
+public class CustomPagedListAdapter extends PagedListAdapter<Hit, CustomPagedListAdapter.ViewHolder> {
+    private static final String TAG = "CustomPagedListAdapter";
+    private PagedList<Hit> mDataList;
     private Context mContext;
     private OnItemInteractionListener mListener;
     private ConstraintSet set = new ConstraintSet();
     String ratio;
 
-    public CustomListAdapter(Context mContext, List<Hit> mDataList) {
+    public CustomPagedListAdapter(Context mContext, PagedList<Hit> mDataList) {
         super(DIFF_CALLBACK);
         this.mDataList = mDataList;
         this.mContext = mContext;
     }
 
-/*    public CustomListAdapter(@NonNull DiffUtil.ItemCallback<List<Hit>> diffCallback, List<Hit> mDataList, Context mContext) {
+/*    public CustomPagedListAdapter(@NonNull DiffUtil.ItemCallback<List<Hit>> diffCallback, List<Hit> mDataList, Context mContext) {
         super(DIFF_CALLBACK);
         this.mDataList = mDataList;
         this.mContext = mContext;
     }*/
 
-/*    public CustomListAdapter(Context context, @NonNull List<Hit> dataList) {
+/*    public CustomPagedListAdapter(Context context, @NonNull List<Hit> dataList) {
         mDataList = dataList;
         mContext = context;
 
@@ -59,14 +59,14 @@ public class CustomListAdapter extends PagedListAdapter<Hit, CustomListAdapter.V
 
     @NonNull
     @Override
-    public CustomListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CustomPagedListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_view, parent, false);
         return new ViewHolder(itemView);
     }
 
 
     @Override
-    public void onBindViewHolder(@NonNull final CustomListAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final CustomPagedListAdapter.ViewHolder holder, final int position) {
 
         ratio = String.format(Locale.getDefault(), "%d:%d", mDataList.get(position).getPreviewWidth(), mDataList.get(position).getPreviewHeight());
         set.clone(holder.constraintLayout);
@@ -83,10 +83,10 @@ public class CustomListAdapter extends PagedListAdapter<Hit, CustomListAdapter.V
     }
 
 
-    @Override
+/*    @Override
     public int getItemCount() {
         return mDataList.size();
-    }
+    }*/
 
     public static final DiffUtil.ItemCallback<Hit> DIFF_CALLBACK = new DiffUtil.ItemCallback<Hit>() {
         @Override

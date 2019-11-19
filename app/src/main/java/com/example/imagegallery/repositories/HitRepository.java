@@ -5,7 +5,6 @@ import android.util.Log;
 import com.example.imagegallery.api.PixabayApiService;
 import com.example.imagegallery.models.DataList;
 import com.example.imagegallery.models.Hit;
-import com.example.imagegallery.ui.adapters.CustomPagedListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +27,7 @@ public class HitRepository {
     DataSource latestDataSource;
 
     public HitRepository(PixabayApiService.PixabayApi pixabayApi) {
-        Log.d(TAG, "HitRepository: Constructor "+pixabayApi);
+        Log.d(TAG, "HitRepository: Constructor " + pixabayApi);
         this.pixabayApi = pixabayApi;
         //init();
 
@@ -49,7 +48,7 @@ public class HitRepository {
         return liveData;
     }
 
-    public void init() {
+    /*public void init() {
         //liveData = new MutableLiveData<>();
         //String s = "";
 
@@ -66,15 +65,16 @@ public class HitRepository {
         //liveData.setValue(hitList);
         Log.d(TAG, "init: HitRepo " + liveData.getValue());
         //fetchOnlineData();
-    }
+    }*/
 
     private void addToRepo(List<Hit> newHits) {
         List<Hit> hitList = liveData.getValue();
         hitList.addAll(newHits);
         //liveData.setValue(hitList);
     }
-    public void invalidate(){
-        Log.d(TAG, "invalidate: Hitrepo"+latestDataSource.toString());
+
+    public void invalidate() {
+        Log.d(TAG, "invalidate: Hitrepo" + latestDataSource.toString());
         latestDataSource.invalidate();
     }
 
@@ -87,9 +87,9 @@ public class HitRepository {
     }
 
 
-    private void fetchOnlineData() {
+    /*private void fetchOnlineData() {
         Log.d(TAG, "fetchOnlineData: ");
-        Call<DataList> dataListCall = PixabayApiService.getPixabayApi().serchRepo("Abstract");
+        Call<DataList> dataListCall = PixabayApiService.getPixabayApi().serchRepo("Abstract", 1);
         dataListCall.enqueue(new Callback<DataList>() {
             @Override
             public void onResponse(Call<DataList> call, Response<DataList> response) {
@@ -105,11 +105,11 @@ public class HitRepository {
             }
         });
 
-    }
+    }*/
 
-    public void fetchRequestedData(String q) {
+/*    public void fetchRequestedData(String q) {
         Log.d(TAG, "fetchRequestedData: ");
-        Call<DataList> dataListCall = PixabayApiService.getPixabayApi().serchRepo(q);
+        Call<DataList> dataListCall = PixabayApiService.getPixabayApi().serchRepo(q,1);
         dataListCall.enqueue(new Callback<DataList>() {
             @Override
             public void onResponse(Call<DataList> call, Response<DataList> response) {
@@ -125,53 +125,71 @@ public class HitRepository {
 
             }
         });
+    }*/
+/*
+    private MutableLiveData<List<Data>> initImageData2() {
+        MutableLiveData<List<Data>> listMutableLiveData = new MutableLiveData<>();
+        List<Data> dataList = new ArrayList<>();
+
+        dataList.add(new Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.001.png", "Havasu Falls"));
+        dataList.add(new Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.002.png", "Trondheim"));
+        dataList.add(new Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.003.png", "Portugal"));
+        dataList.add(new Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.004.png", "Rocky Mountain National Park"));
+        dataList.add(new Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.005.png", "Mahahual"));
+        dataList.add(new Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.006.png", "Frozen Lake"));
+        dataList.add(new Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.007.png", "White Sands Desert"));
+        dataList.add(new Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.008.png", "Austrailia"));
+        dataList.add(new Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.009.png", "Washington"));
+        dataList.add(new Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.010.png", "Washington"));
+        dataList.add(new Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.011.png", "Washington"));
+        dataList.add(new Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.012.png", "Washington"));
+        dataList.add(new Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.013.png", "Washington"));
+        dataList.add(new Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.014.png", "Washington"));
+        dataList.add(new Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.015.png", "Washington"));
+        dataList.add(new Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.016.png", "Washington"));
+        dataList.add(new Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.017.png", "Washington"));
+        dataList.add(new Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.018.png", "Washington"));
+        dataList.add(new Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.019.png", "Washington"));
+        dataList.add(new Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.020.png", "Washington"));
+
+        listMutableLiveData.setValue(dataList);
+        return listMutableLiveData;
     }
 
-    private MutableLiveData<List<CustomPagedListAdapter.Data>> initImageData2() {
-        MutableLiveData<List<CustomPagedListAdapter.Data>> listMutableLiveData = new MutableLiveData<>();
-        List<CustomPagedListAdapter.Data> dataList = new ArrayList<>();
+    public MutableLiveData<List<Data>> initImageData() {
+        MutableLiveData<List<Data>> listMutableLiveData = new MutableLiveData<>();
+        List<Data> dataList = new ArrayList<>();
 
-        dataList.add(new CustomPagedListAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.001.png", "Havasu Falls"));
-        dataList.add(new CustomPagedListAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.002.png", "Trondheim"));
-        dataList.add(new CustomPagedListAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.003.png", "Portugal"));
-        dataList.add(new CustomPagedListAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.004.png", "Rocky Mountain National Park"));
-        dataList.add(new CustomPagedListAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.005.png", "Mahahual"));
-        dataList.add(new CustomPagedListAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.006.png", "Frozen Lake"));
-        dataList.add(new CustomPagedListAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.007.png", "White Sands Desert"));
-        dataList.add(new CustomPagedListAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.008.png", "Austrailia"));
-        dataList.add(new CustomPagedListAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.009.png", "Washington"));
-        dataList.add(new CustomPagedListAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.010.png", "Washington"));
-        dataList.add(new CustomPagedListAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.011.png", "Washington"));
-        dataList.add(new CustomPagedListAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.012.png", "Washington"));
-        dataList.add(new CustomPagedListAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.013.png", "Washington"));
-        dataList.add(new CustomPagedListAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.014.png", "Washington"));
-        dataList.add(new CustomPagedListAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.015.png", "Washington"));
-        dataList.add(new CustomPagedListAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.016.png", "Washington"));
-        dataList.add(new CustomPagedListAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.017.png", "Washington"));
-        dataList.add(new CustomPagedListAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.018.png", "Washington"));
-        dataList.add(new CustomPagedListAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.019.png", "Washington"));
-        dataList.add(new CustomPagedListAdapter.Data("https://s3-us-west-1.amazonaws.com/spruce-eng-challenge-photos/images.020.png", "Washington"));
+        dataList.add(new Data("https://c1.staticflickr.com/5/4636/25316407448_de5fbf183d_o.jpg", "Havasu Falls"));
+        dataList.add(new Data("https://i.redd.it/tpsnoz5bzo501.jpg", "Trondheim"));
+        dataList.add(new Data("https://i.redd.it/qn7f9oqu7o501.jpg", "Portugal"));
+        dataList.add(new Data("https://i.redd.it/j6myfqglup501.jpg", "Rocky Mountain National Park"));
+        dataList.add(new Data("https://i.redd.it/0h2gm1ix6p501.jpg", "Mahahual"));
+        dataList.add(new Data("https://i.redd.it/k98uzl68eh501.jpg", "Frozen Lake"));
+        dataList.add(new Data("https://i.redd.it/glin0nwndo501.jpg", "White Sands Desert"));
+        dataList.add(new Data("https://i.redd.it/obx4zydshg601.jpg", "Austrailia"));
+        dataList.add(new Data("https://i.imgur.com/ZcLLrkY.jpg", "Washington"));
 
         listMutableLiveData.setValue(dataList);
         return listMutableLiveData;
     }
 
-    public MutableLiveData<List<CustomPagedListAdapter.Data>> initImageData() {
-        MutableLiveData<List<CustomPagedListAdapter.Data>> listMutableLiveData = new MutableLiveData<>();
-        List<CustomPagedListAdapter.Data> dataList = new ArrayList<>();
+    public static class Data {
+        private String imageUri;
+        private String imageTile;
 
-        dataList.add(new CustomPagedListAdapter.Data("https://c1.staticflickr.com/5/4636/25316407448_de5fbf183d_o.jpg", "Havasu Falls"));
-        dataList.add(new CustomPagedListAdapter.Data("https://i.redd.it/tpsnoz5bzo501.jpg", "Trondheim"));
-        dataList.add(new CustomPagedListAdapter.Data("https://i.redd.it/qn7f9oqu7o501.jpg", "Portugal"));
-        dataList.add(new CustomPagedListAdapter.Data("https://i.redd.it/j6myfqglup501.jpg", "Rocky Mountain National Park"));
-        dataList.add(new CustomPagedListAdapter.Data("https://i.redd.it/0h2gm1ix6p501.jpg", "Mahahual"));
-        dataList.add(new CustomPagedListAdapter.Data("https://i.redd.it/k98uzl68eh501.jpg", "Frozen Lake"));
-        dataList.add(new CustomPagedListAdapter.Data("https://i.redd.it/glin0nwndo501.jpg", "White Sands Desert"));
-        dataList.add(new CustomPagedListAdapter.Data("https://i.redd.it/obx4zydshg601.jpg", "Austrailia"));
-        dataList.add(new CustomPagedListAdapter.Data("https://i.imgur.com/ZcLLrkY.jpg", "Washington"));
+        public Data(String imageUri, String imageTile) {
+            this.imageUri = imageUri;
+            this.imageTile = imageTile;
+        }
 
-        listMutableLiveData.setValue(dataList);
-        return listMutableLiveData;
-    }
+        public String getImageUri() {
+            return imageUri;
+        }
+
+        public String getImageTile() {
+            return imageTile;
+        }
+    }*/
 
 }

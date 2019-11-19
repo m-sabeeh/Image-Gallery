@@ -29,29 +29,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class CustomPagedListAdapter extends PagedListAdapter<Hit, CustomPagedListAdapter.ViewHolder> {
     private static final String TAG = "CustomPagedListAdapter";
-    private PagedList<Hit> mDataList;
+    //private PagedList<Hit> mDataList;
     private Context mContext;
     private OnItemInteractionListener mListener;
     private ConstraintSet set = new ConstraintSet();
     String ratio;
 
-    public CustomPagedListAdapter(Context mContext, PagedList<Hit> mDataList) {
+    public CustomPagedListAdapter(Context mContext) {
         super(DIFF_CALLBACK);
-        this.mDataList = mDataList;
         this.mContext = mContext;
     }
-
-/*    public CustomPagedListAdapter(@NonNull DiffUtil.ItemCallback<List<Hit>> diffCallback, List<Hit> mDataList, Context mContext) {
-        super(DIFF_CALLBACK);
-        this.mDataList = mDataList;
-        this.mContext = mContext;
-    }*/
-
-/*    public CustomPagedListAdapter(Context context, @NonNull List<Hit> dataList) {
-        mDataList = dataList;
-        mContext = context;
-
-    }*/
 
     public void setOnItemInteractionListener(OnItemInteractionListener listener) {
         mListener = listener;
@@ -67,38 +54,33 @@ public class CustomPagedListAdapter extends PagedListAdapter<Hit, CustomPagedLis
 
     @Override
     public void onBindViewHolder(@NonNull final CustomPagedListAdapter.ViewHolder holder, final int position) {
-        if(mDataList!=null){
-            Log.d(TAG, "onBindViewHolder: null");
-            ratio = String.format(Locale.getDefault(), "%d:%d", mDataList.get(position).getPreviewWidth(), mDataList.get(position).getPreviewHeight());
-            set.clone(holder.constraintLayout);
-            set.setDimensionRatio(holder.imageView.getId(), ratio);
-            set.applyTo(holder.constraintLayout);
-            Log.d(TAG, "onBindViewHolder: ");
-            Glide.with(mContext)
-                    //.asBitmap()
-                    .load(mDataList.get(position).getPreviewURL())
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    //.apply(options)
-                    .into(holder.imageView);
-        }
+        Hit hit = getItem(position);
+        ratio = String.format(Locale.getDefault(), "%d:%d", hit.getPreviewWidth(), hit.getPreviewHeight());
+        set.clone(holder.constraintLayout);
+        set.setDimensionRatio(holder.imageView.getId(), ratio);
+        set.applyTo(holder.constraintLayout);
+
+        Glide.with(mContext)
+                //.asBitmap()
+                .load(hit.getPreviewURL())
+                .transition(DrawableTransitionOptions.withCrossFade())
+                //.apply(options)
+                .into(holder.imageView);
+
 
         //holder.imageTitle.setText(mDataList.get(position).getUser());
     }
 
-
-/*    @Override
-    public int getItemCount() {
-        return mDataList.size();
-    }*/
-
     public static final DiffUtil.ItemCallback<Hit> DIFF_CALLBACK = new DiffUtil.ItemCallback<Hit>() {
         @Override
         public boolean areItemsTheSame(@NonNull Hit oldItem, @NonNull Hit newItem) {
+            Log.d(TAG, "areItemsTheSame: ");
             return false;
         }
 
         @Override
         public boolean areContentsTheSame(@NonNull Hit oldItem, @NonNull Hit newItem) {
+            Log.d(TAG, "areContentsTheSame: ");
             return false;
         }
     };
@@ -120,6 +102,7 @@ public class CustomPagedListAdapter extends PagedListAdapter<Hit, CustomPagedLis
                 @Override
                 public void onClick(View v) {
                     if (mListener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
+                        Log.d(TAG, "onClick: Adapter" + getItem(getAdapterPosition()));
                         mListener.onItemClick(v, getAdapterPosition());
                     }
                 }
@@ -138,23 +121,5 @@ public class CustomPagedListAdapter extends PagedListAdapter<Hit, CustomPagedLis
 
     public interface OnItemInteractionListener {
         void onItemClick(View view, int position);
-    }
-
-    public static class Data {
-        private String imageUri;
-        private String imageTile;
-
-        public Data(String imageUri, String imageTile) {
-            this.imageUri = imageUri;
-            this.imageTile = imageTile;
-        }
-
-        public String getImageUri() {
-            return imageUri;
-        }
-
-        public String getImageTile() {
-            return imageTile;
-        }
     }
 }

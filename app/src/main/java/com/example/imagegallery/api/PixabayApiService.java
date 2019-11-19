@@ -30,7 +30,7 @@ public class PixabayApiService {
         //this.dataService = service;
         this.listener = listener;
         this.q = q;
-
+/*
         Call<DataList> dataListCall = getPixabayApi().serchRepo(q);
         dataListCall.enqueue(new Callback<DataList>() {
             @Override
@@ -46,7 +46,7 @@ public class PixabayApiService {
                 Log.d(TAG, "onFailure: Failed to get data");
                 listener.onFailure(t.getMessage() == null ? "Unknown error" : t.getMessage());
             }
-        });
+        });*/
     }
 
     //pixabay endpoints communication interface
@@ -59,7 +59,7 @@ public class PixabayApiService {
         Call<Hit> getHitById(@Query("id") String id);
 
         @GET("?key=" + API_key)
-        Call<DataList> serchRepo(@Query("q") String q);
+        Call<DataList> serchRepo(@Query("q") String q, @Query("page") int page, @Query("per_page") int per_page);
 
         Call<DataList> getNextPage();
     }

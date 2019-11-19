@@ -38,9 +38,10 @@ public class MainFragment extends Fragment {
     private CustomPagedListAdapter mAdapter;
     private LiveData<PagedList<Hit>> liveData;
     ProgressDialog progressDialog;
-    String mSearchTerm;
+
     int count = 1;
     public static final String DEFAULT_SEARCH_TERM = "abstract";
+    String mSearchTerm = DEFAULT_SEARCH_TERM;
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -58,84 +59,64 @@ public class MainFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //final ProgressDialog dialog = ProgressDialog.show(getActivity(), "Loading...", "Please wait...", true);
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        mViewModel.initOnlineData();
-        liveData = mViewModel.getLiveHitList();
-        //mAdapter.submitList(liveData.getValue());
-        liveData.observe(this, new Observer<PagedList<Hit>>() {
-            @Override
-            public void onChanged(PagedList<Hit> hits) {
-                if (mAdapter != null && !hits.isEmpty()) {
-                    mAdapter.submitList(hits);
-                    //mAdapter.notifyItemRangeChanged(0, mAdapter.getItemCount());
-                    //dialog.dismiss();
-                    //count = hits.size();
-                    mViewModel.invalidateDataSource();
-                }
-                Log.d(TAG, "onChanged: MainFragment" + hits);
-                mAdapter.submitList(hits);
+        liveData = mViewModel.getLiveHitList(mSearchTerm);
 
-                mViewModel.invalidateDataSource();
+        initAdapter();
+        initFab();
 
-                //mAdapter.submitList(hits);
-            }
-        });
-        initRecyclerView();
+    }
+
+    private void initFab() {
         FloatingActionButton button = getView().findViewById(R.id.fab);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "onClick: ");
-                mViewModel.invalidateDataSource();
-                //initSearch();
-
-
+                //mViewModel.invalidateDataSource();
+                initSearch();
+                //mAdapter.submitList(null);
             }
         });
     }
 
-    private void initSearch() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Search Images on Pixabay");
-        View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.user_input_dialog, (ViewGroup) getView(), false);
-        final TextInputEditText input = viewInflated.findViewById(R.id.input);
-        builder.setView(viewInflated);
-
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                mSearchTerm = input.getText().toString();
-                mViewModel.fetchRequiredData(mSearchTerm);
-            }
-        });
-        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        builder.show();
-    }
-
-
-    private void initRecyclerView() {
-        RecyclerView recyclerView = getView().findViewById(R.id.recyclerView);
-        mAdapter = new CustomPagedListAdapter(getContext(), liveData.getValue());
+    private void initAdapter() {
+        Log.d(TAG, "initAdapter: ");
+        mAdapter = new CustomPagedListAdapter(getContext());
         mAdapter.setOnItemInteractionListener(new CustomPagedListAdapter.OnItemInteractionListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Toast.makeText(getContext(), position + " " + mViewModel.getLiveHitList().getValue().get(position).getUser(), Toast.LENGTH_SHORT).show();
-                mAdapter.submitList(mViewModel.getLiveHitList().getValue());
+                //Toast.makeText(getContext(), position + " " + liveData.getValue().get(position).getUser(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onItemClick: ");
+                //mViewModel.invalidateDataSource();
+
+                //liveData = mViewModel.getLiveHitList(" ");
+                //mAdapter.submitList(liveData.getValue());
+                //mAdapter.notifyDataSetChanged();
+                //mViewModel.fetchRequiredData(" ");
+                //mViewModel.invalidateDataSource();
+               // mAdapter.submitList(mViewModel.getLiveHitList(" ").getValue());
                 //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, MainFragment.newInstance()).commit();
                 //Intent intent = new Intent(getContext(), ContainerActivity.class);
                 //Intent intent = Utils.IntentUtils.buildImageFragmentIntent(getContext());
                 //startActivity(intent);
             }
         });
+        liveData.observe(this, new Observer<PagedList<Hit>>() {
+            @Override
+            public void onChanged(PagedList<Hit> hits) {
+                Log.d(TAG, "onChanged: ");
+               mAdapter.submitList(hits);
 
+                //mViewModel.invalidateDataSource();
+                //mAdapter.notifyItemRangeChanged(0, mAdapter.getItemCount());
+                // mAdapter.notifyDataSetChanged();
+                //mAdapter.submitList(hits);
+            }
+        });
+
+
+        RecyclerView recyclerView = getView().findViewById(R.id.recyclerView);
         int columns = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 3 : 2;
         RecyclerView.LayoutManager staggeredGridManager =
                 new StaggeredGridLayoutManager(columns, LinearLayoutManager.VERTICAL) {
@@ -152,5 +133,36 @@ public class MainFragment extends Fragment {
         //RecyclerView.LayoutManager linearLayoutManger = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(staggeredGridManager);
         recyclerView.setAdapter(mAdapter);
+        Log.d(TAG, "initAdapter: end");
     }
+
+    private void initSearch() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Search Images on Pixabay");
+        View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.user_input_dialog, (ViewGroup) getView(), false);
+        final TextInputEditText input = viewInflated.findViewById(R.id.input);
+        builder.setView(viewInflated);
+
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                mSearchTerm = input.getText().toString();
+                mViewModel.fetchRequiredData(mSearchTerm);
+                mViewModel.invalidateDataSource();
+
+                liveData = mViewModel.getLiveHitList(mSearchTerm);
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+
 }

@@ -67,18 +67,21 @@ public class CustomPagedListAdapter extends PagedListAdapter<Hit, CustomPagedLis
 
     @Override
     public void onBindViewHolder(@NonNull final CustomPagedListAdapter.ViewHolder holder, final int position) {
+        if(mDataList!=null){
+            Log.d(TAG, "onBindViewHolder: null");
+            ratio = String.format(Locale.getDefault(), "%d:%d", mDataList.get(position).getPreviewWidth(), mDataList.get(position).getPreviewHeight());
+            set.clone(holder.constraintLayout);
+            set.setDimensionRatio(holder.imageView.getId(), ratio);
+            set.applyTo(holder.constraintLayout);
+            Log.d(TAG, "onBindViewHolder: ");
+            Glide.with(mContext)
+                    //.asBitmap()
+                    .load(mDataList.get(position).getPreviewURL())
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    //.apply(options)
+                    .into(holder.imageView);
+        }
 
-        ratio = String.format(Locale.getDefault(), "%d:%d", mDataList.get(position).getPreviewWidth(), mDataList.get(position).getPreviewHeight());
-        set.clone(holder.constraintLayout);
-        set.setDimensionRatio(holder.imageView.getId(), ratio);
-        set.applyTo(holder.constraintLayout);
-
-        Glide.with(mContext)
-                //.asBitmap()
-                .load(mDataList.get(position).getPreviewURL())
-                .transition(DrawableTransitionOptions.withCrossFade())
-                //.apply(options)
-                .into(holder.imageView);
         //holder.imageTitle.setText(mDataList.get(position).getUser());
     }
 
@@ -91,12 +94,12 @@ public class CustomPagedListAdapter extends PagedListAdapter<Hit, CustomPagedLis
     public static final DiffUtil.ItemCallback<Hit> DIFF_CALLBACK = new DiffUtil.ItemCallback<Hit>() {
         @Override
         public boolean areItemsTheSame(@NonNull Hit oldItem, @NonNull Hit newItem) {
-            return oldItem.getId() == newItem.getId();
+            return false;
         }
 
         @Override
         public boolean areContentsTheSame(@NonNull Hit oldItem, @NonNull Hit newItem) {
-            return oldItem.getId() == newItem.getId();
+            return false;
         }
     };
 

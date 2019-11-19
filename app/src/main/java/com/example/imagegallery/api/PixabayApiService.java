@@ -58,7 +58,7 @@ public class PixabayApiService {
         @GET("?key=" + API_key + "&id=")
         Call<Hit> getHitById(@Query("id") String id);
 
-        @GET("?key=" + API_key + "&q=")
+        @GET("?key=" + API_key)
         Call<DataList> serchRepo(@Query("q") String q);
 
         Call<DataList> getNextPage();

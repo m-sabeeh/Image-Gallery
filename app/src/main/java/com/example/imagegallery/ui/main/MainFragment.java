@@ -71,9 +71,14 @@ public class MainFragment extends Fragment {
                     //mAdapter.notifyItemRangeChanged(0, mAdapter.getItemCount());
                     //dialog.dismiss();
                     //count = hits.size();
+                    mViewModel.invalidateDataSource();
                 }
-                mAdapter.submitList(hits);
                 Log.d(TAG, "onChanged: MainFragment" + hits);
+                mAdapter.submitList(hits);
+
+                mViewModel.invalidateDataSource();
+
+                //mAdapter.submitList(hits);
             }
         });
         initRecyclerView();
@@ -82,7 +87,8 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "onClick: ");
-                initSearch();
+                mViewModel.invalidateDataSource();
+                //initSearch();
 
 
             }
@@ -122,6 +128,7 @@ public class MainFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 Toast.makeText(getContext(), position + " " + mViewModel.getLiveHitList().getValue().get(position).getUser(), Toast.LENGTH_SHORT).show();
+                mAdapter.submitList(mViewModel.getLiveHitList().getValue());
                 //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, MainFragment.newInstance()).commit();
                 //Intent intent = new Intent(getContext(), ContainerActivity.class);
                 //Intent intent = Utils.IntentUtils.buildImageFragmentIntent(getContext());

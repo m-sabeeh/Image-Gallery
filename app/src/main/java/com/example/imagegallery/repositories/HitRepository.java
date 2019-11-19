@@ -25,10 +25,13 @@ public class HitRepository {
     private LiveData<PagedList<Hit>> liveData;
     private PixabayApiService.PixabayApi dataService;
     PixabayApiService.PixabayApi pixabayApi;
+    DataSource latestDataSource;
 
     public HitRepository(PixabayApiService.PixabayApi pixabayApi) {
         Log.d(TAG, "HitRepository: Constructor "+pixabayApi);
         this.pixabayApi = pixabayApi;
+        //init();
+
     }
 
     public static HitRepository getInstance(PixabayApiService.PixabayApi pixabayApi) {
@@ -41,7 +44,7 @@ public class HitRepository {
     public LiveData<PagedList<Hit>> getLiveHitList() {
         Log.d(TAG, "getLiveHitList: HitRepo");
         if (liveData == null) {
-            init();
+            //init();
         }
         return liveData;
     }
@@ -51,6 +54,7 @@ public class HitRepository {
         //String s = "";
 
         DataSource.Factory<String, Hit> factory = new PixabayDataSourceFactory(pixabayApi);
+        latestDataSource = factory.create();
         PagedList.Config config = new PagedList.Config.Builder()
                 .setPageSize(30)
                 .setInitialLoadSizeHint(50)
@@ -68,6 +72,10 @@ public class HitRepository {
         List<Hit> hitList = liveData.getValue();
         hitList.addAll(newHits);
         //liveData.setValue(hitList);
+    }
+    public void invalidate(){
+        Log.d(TAG, "invalidate: Hitrepo"+latestDataSource.toString());
+        latestDataSource.invalidate();
     }
 
     private void updateRepo(List<Hit> newHits) {

@@ -25,7 +25,41 @@ public class MainViewModel extends ViewModel {
     private HitRepository mHitRepo;
     DataSource latestDataSource;
     private Executor executor;
-    private MutableLiveData<String> searchQuery = new MutableLiveData<>();
+    //private MutableLiveData<String> searchQuery = new MutableLiveData<>();
+    public static final String DEFAULT_SEARCH_TERM = "abstract";
+
+    public MainViewModel() {
+        initializeSampleData();
+    }
+
+    private void initializeSampleData() {
+        fetchRequiredData(DEFAULT_SEARCH_TERM);
+    }
+
+    public LiveData<PagedList<Hit>> getLiveHitList() {
+        Log.d(TAG, "getLiveHitList ViewModel: " + mLiveData + " ");
+
+        if (mLiveData == null) {
+            initializeSampleData();
+        }
+        return mLiveData;
+    }
+
+    public void fetchRequiredData(String query) {
+        //searchQuery.setValue(query);
+        // mHitRepo.fetchRequestedData(query);
+        //LiveData<PagedList<Hit>> liveData;
+        Log.d(TAG, "fetchRequiredData: " + query);
+        DataSource.Factory<Integer, Hit> factory = new PixabayDataSourceFactory(PixabayApiService.getPixabayApi(), query);
+        latestDataSource = factory.create();
+        PagedList.Config config = new PagedList.Config.Builder()
+                .setPageSize(200)
+                .setInitialLoadSizeHint(100)
+                .setPrefetchDistance(60)
+                .setEnablePlaceholders(true)
+                .build();
+        mLiveData = new LivePagedListBuilder<>(factory, config).build();
+    }
 
     public void initOnlineData() {
         if (mLiveData != null) {
@@ -37,51 +71,5 @@ public class MainViewModel extends ViewModel {
         //mHitRepo.init();
         //mLiveData = mHitRepo.getLiveHitList();
 
-    }
-
-    public void invalidateDataSource() {
-        Log.d(TAG, "invalidateDataSource: ViewModel");
-        //mHitRepo.invalidate();
-        Log.d(TAG, "invalidateDataSource: "+latestDataSource.isInvalid());
-        latestDataSource.invalidate();
-        Log.d(TAG, "invalidateDataSource: "+latestDataSource.isInvalid());
-    }
-
-    public void fetchRequiredData(String q) {
-        this.searchQuery.setValue(q);
-        // mHitRepo.fetchRequestedData(q);
-        LiveData<PagedList<Hit>> liveData;
-        Log.d(TAG, "fetchRequiredData: " + q);
-        executor = Executors.newFixedThreadPool(5);
-        DataSource.Factory<Integer, Hit> factory = new PixabayDataSourceFactory(PixabayApiService.getPixabayApi(), q);
-        latestDataSource = factory.create();
-        PagedList.Config config = new PagedList.Config.Builder()
-                .setPageSize(30)
-                .setInitialLoadSizeHint(20)
-                .setPrefetchDistance(20)
-                .setEnablePlaceholders(true)
-                .build();
-        liveData = new LivePagedListBuilder<>(factory, config).setFetchExecutor(executor).build();
-
-        mLiveData = liveData;
-        /*mLiveData = Transformations.map(liveData, new Function<PagedList<Hit>, PagedList<Hit>>() {
-            @Override
-            public PagedList<Hit> apply(PagedList<Hit> input) {
-
-                return input;
-            }
-        });*/
-
-    }
-
-    public LiveData<PagedList<Hit>> getLiveHitList(String q) {
-        Log.d(TAG, "getLiveHitList ViewModel: " + mLiveData + " ");
-        this.searchQuery.setValue(q);
-        //if (mLiveData == null) {
-        fetchRequiredData(searchQuery.getValue());
-        //latestDataSource.invalidate();
-
-        // }
-        return mLiveData;
     }
 }

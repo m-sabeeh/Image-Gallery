@@ -37,11 +37,8 @@ public class MainFragment extends Fragment {
     private MainViewModel mViewModel;
     private CustomPagedListAdapter mAdapter;
     private LiveData<PagedList<Hit>> liveData;
-    ProgressDialog progressDialog;
 
-    int count = 1;
-    public static final String DEFAULT_SEARCH_TERM = "abstract";
-    String mSearchTerm = DEFAULT_SEARCH_TERM;
+    private String mSearchTerm;
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -60,12 +57,12 @@ public class MainFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        liveData = mViewModel.getLiveHitList(mSearchTerm);
+        liveData = mViewModel.getLiveHitList();
 
         initAdapter();
         initFab();
-
     }
+
 
     private void initFab() {
         FloatingActionButton button = getView().findViewById(R.id.fab);
@@ -86,35 +83,16 @@ public class MainFragment extends Fragment {
         mAdapter.setOnItemInteractionListener(new CustomPagedListAdapter.OnItemInteractionListener() {
             @Override
             public void onItemClick(View view, int position) {
-                //Toast.makeText(getContext(), position + " " + liveData.getValue().get(position).getUser(), Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "onItemClick: ");
-                //mViewModel.invalidateDataSource();
-
-                //liveData = mViewModel.getLiveHitList(" ");
-                //mAdapter.submitList(liveData.getValue());
-                //mAdapter.notifyDataSetChanged();
-                //mViewModel.fetchRequiredData(" ");
-                //mViewModel.invalidateDataSource();
-               // mAdapter.submitList(mViewModel.getLiveHitList(" ").getValue());
+                Toast.makeText(getContext(), position + " " + liveData.getValue().get(position).getUser(), Toast.LENGTH_SHORT).show();
+                //start new activity with intent containing full url
                 //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, MainFragment.newInstance()).commit();
                 //Intent intent = new Intent(getContext(), ContainerActivity.class);
                 //Intent intent = Utils.IntentUtils.buildImageFragmentIntent(getContext());
                 //startActivity(intent);
             }
         });
-        liveData.observe(this, new Observer<PagedList<Hit>>() {
-            @Override
-            public void onChanged(PagedList<Hit> hits) {
-                Log.d(TAG, "onChanged: ");
-               mAdapter.submitList(hits);
 
-                //mViewModel.invalidateDataSource();
-                //mAdapter.notifyItemRangeChanged(0, mAdapter.getItemCount());
-                // mAdapter.notifyDataSetChanged();
-                //mAdapter.submitList(hits);
-            }
-        });
-
+        initLiveDataObservations();
 
         RecyclerView recyclerView = getView().findViewById(R.id.recyclerView);
         int columns = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 3 : 2;
@@ -136,22 +114,30 @@ public class MainFragment extends Fragment {
         Log.d(TAG, "initAdapter: end");
     }
 
+    private void initLiveDataObservations() {
+        liveData.observe(this, new Observer<PagedList<Hit>>() {
+            @Override
+            public void onChanged(PagedList<Hit> hits) {
+                Log.d(TAG, "onChanged: ");
+                mAdapter.submitList(hits);
+            }
+        });
+    }
+
     private void initSearch() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Search Images on Pixabay");
         View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.user_input_dialog, (ViewGroup) getView(), false);
         final TextInputEditText input = viewInflated.findViewById(R.id.input);
         builder.setView(viewInflated);
-
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 mSearchTerm = input.getText().toString();
                 mViewModel.fetchRequiredData(mSearchTerm);
-                mViewModel.invalidateDataSource();
-
-                liveData = mViewModel.getLiveHitList(mSearchTerm);
+                liveData = mViewModel.getLiveHitList();
+                initLiveDataObservations();
             }
         });
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {

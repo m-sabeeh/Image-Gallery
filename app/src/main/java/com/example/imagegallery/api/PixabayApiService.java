@@ -7,6 +7,7 @@ import com.example.imagegallery.models.Hit;
 
 import java.util.List;
 
+import androidx.annotation.Nullable;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -58,8 +59,10 @@ public class PixabayApiService {
         @GET("?key=" + API_key + "&id=")
         Call<Hit> getHitById(@Query("id") String id);
 
-        @GET("?key=" + API_key)
-        Call<DataList> serchRepo(@Query("q") String q, @Query("page") int page, @Query("per_page") int per_page);
+        @GET("?key=" + API_key +"&editors_choice=true")
+        Call<DataList> serchRepo(@Query("q") String q,
+                                 @Query("page") int page,
+                                 @Query("per_page") int per_page);
 
         Call<DataList> getNextPage();
     }

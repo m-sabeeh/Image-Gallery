@@ -251,4 +251,11 @@ public class Hit {
         this.previewURL = previewURL;
     }
 
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj != null && obj.getClass() == getClass()) {
+            return this.getId().equals(((Hit) obj).getId());
+        }
+        return false;
+    }
 }

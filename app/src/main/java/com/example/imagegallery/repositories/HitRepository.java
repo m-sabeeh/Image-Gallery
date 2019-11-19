@@ -89,7 +89,7 @@ public class HitRepository {
 
     /*private void fetchOnlineData() {
         Log.d(TAG, "fetchOnlineData: ");
-        Call<DataList> dataListCall = PixabayApiService.getPixabayApi().serchRepo("Abstract", 1);
+        Call<DataList> dataListCall = PixabayApiService.getPixabayApi().searchImages("Abstract", 1);
         dataListCall.enqueue(new Callback<DataList>() {
             @Override
             public void onResponse(Call<DataList> call, Response<DataList> response) {
@@ -109,7 +109,7 @@ public class HitRepository {
 
 /*    public void fetchRequestedData(String q) {
         Log.d(TAG, "fetchRequestedData: ");
-        Call<DataList> dataListCall = PixabayApiService.getPixabayApi().serchRepo(q,1);
+        Call<DataList> dataListCall = PixabayApiService.getPixabayApi().searchImages(q,1);
         dataListCall.enqueue(new Callback<DataList>() {
             @Override
             public void onResponse(Call<DataList> call, Response<DataList> response) {

@@ -45,11 +45,17 @@ public class Utils {
             intent.putExtra(IMAGE_FRAGMENT_CLASS, ImageFragment.class.getName());
             intent.putExtra(CONTAINER_ID, R.id.secondaryContainer);
             //intent.putExtra(ACTIVITY_TITLE, context.getString(R.string.imageFragmentActivityTitle));
-    //<include layout="@layout/content_container" />
+            //<include layout="@layout/content_container" />
 
 
             return intent;
 
+        }
+
+
+        public static Fragment buildDialogFragment(Context context) {
+
+            return null;
         }
     }
 

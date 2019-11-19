@@ -75,13 +75,13 @@ public class CustomPagedListAdapter extends PagedListAdapter<Hit, CustomPagedLis
         @Override
         public boolean areItemsTheSame(@NonNull Hit oldItem, @NonNull Hit newItem) {
             Log.d(TAG, "areItemsTheSame: ");
-            return false;
+            return oldItem == newItem;
         }
 
         @Override
         public boolean areContentsTheSame(@NonNull Hit oldItem, @NonNull Hit newItem) {
             Log.d(TAG, "areContentsTheSame: ");
-            return false;
+            return oldItem.equals(newItem);
         }
     };
 

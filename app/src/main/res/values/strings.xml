@@ -3,6 +3,9 @@
     <string name="placeholder_name">Place Holder</string>
     <string name="title_activity_container">ContainerActivity</string>
     <string name="action_settings">Settings</string>
-    <string name="hint_search">Roses</string>
+    <string name="hint_search">Portraits</string>
     <string name="default_search">Abstract</string>
+    <string name="dialog_title">Title</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
 </resources>

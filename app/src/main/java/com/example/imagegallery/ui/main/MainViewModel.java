@@ -8,12 +8,9 @@ import com.example.imagegallery.repositories.HitRepository;
 import com.example.imagegallery.repositories.PixabayDataSourceFactory;
 
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
-import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 import androidx.paging.DataSource;
 import androidx.paging.LivePagedListBuilder;
@@ -23,17 +20,21 @@ public class MainViewModel extends ViewModel {
     private static final String TAG = "MainViewModel";
     private LiveData<PagedList<Hit>> mLiveData;// = new MutableLiveData<>();
     private HitRepository mHitRepo;
+    private MutableLiveData<String> mSearchTermLiveData=new MutableLiveData<>();
     DataSource latestDataSource;
     private Executor executor;
     //private MutableLiveData<String> searchQuery = new MutableLiveData<>();
-    public static final String DEFAULT_SEARCH_TERM = "abstract";
+    public static final String DEFAULT_SEARCH_TERM = "Colors";
 
     public MainViewModel() {
+        //mHitRepo = HitRepository.getInstance();
         initializeSampleData();
     }
 
     private void initializeSampleData() {
-        fetchRequiredData(DEFAULT_SEARCH_TERM);
+        mSearchTermLiveData.setValue(DEFAULT_SEARCH_TERM);
+
+        fetchRequiredData(DEFAULT_SEARCH_TERM.toLowerCase());
     }
 
     public LiveData<PagedList<Hit>> getLiveHitList() {
@@ -43,6 +44,10 @@ public class MainViewModel extends ViewModel {
             initializeSampleData();
         }
         return mLiveData;
+    }
+
+    public MutableLiveData<String> getSearchTermLiveData() {
+        return mSearchTermLiveData;
     }
 
     public void fetchRequiredData(String query) {
@@ -55,8 +60,7 @@ public class MainViewModel extends ViewModel {
         PagedList.Config config = new PagedList.Config.Builder()
                 .setPageSize(200)
                 .setInitialLoadSizeHint(100)
-                .setPrefetchDistance(60)
-                .setEnablePlaceholders(true)
+                .setPrefetchDistance(100)
                 .build();
         mLiveData = new LivePagedListBuilder<>(factory, config).build();
     }

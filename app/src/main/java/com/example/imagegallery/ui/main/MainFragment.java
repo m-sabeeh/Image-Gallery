@@ -58,7 +58,8 @@ public class MainFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         liveData = mViewModel.getLiveHitList();
-
+        mSearchTerm = mViewModel.getSearchTermLiveData().getValue();
+        getActivity().setTitle(mSearchTerm + " Gallery");
         initAdapter();
         initFab();
     }
@@ -135,6 +136,8 @@ public class MainFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 mSearchTerm = input.getText().toString();
+                getActivity().setTitle(mSearchTerm + " Gallery");
+                mSearchTerm = mSearchTerm.toLowerCase();
                 mViewModel.fetchRequiredData(mSearchTerm);
                 liveData = mViewModel.getLiveHitList();
                 initLiveDataObservations();

@@ -32,7 +32,7 @@ public class PixabayApiService {
         this.listener = listener;
         this.q = q;
 /*
-        Call<DataList> dataListCall = getPixabayApi().serchRepo(q);
+        Call<DataList> dataListCall = getPixabayApi().searchImages(q);
         dataListCall.enqueue(new Callback<DataList>() {
             @Override
             public void onResponse(Call<DataList> call, Response<DataList> response) {
@@ -60,9 +60,9 @@ public class PixabayApiService {
         Call<Hit> getHitById(@Query("id") String id);
 
         @GET("?key=" + API_key +"&editors_choice=true")
-        Call<DataList> serchRepo(@Query("q") String q,
-                                 @Query("page") int page,
-                                 @Query("per_page") int per_page);
+        Call<DataList> searchImages(@Query("q") String q,
+                                    @Query("page") int page,
+                                    @Query("per_page") int per_page);
 
         Call<DataList> getNextPage();
     }

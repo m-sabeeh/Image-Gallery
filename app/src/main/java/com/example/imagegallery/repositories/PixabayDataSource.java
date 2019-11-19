@@ -35,7 +35,7 @@ public class PixabayDataSource extends PageKeyedDataSource<Integer, Hit> {
     }
 
     private void sendLoadInitialRequest(LoadInitialParams<Integer> params, final LoadInitialCallback<Integer, Hit> callback, int currentPage, final int nextPage) {
-        Call<DataList> dataListCall = pixabayApi.serchRepo(searchQuery, currentPage, params.requestedLoadSize);
+        Call<DataList> dataListCall = pixabayApi.searchImages(searchQuery, currentPage, params.requestedLoadSize);
         dataListCall.enqueue(new Callback<DataList>() {
             @Override
             public void onResponse(Call<DataList> call, Response<DataList> response) {
@@ -76,7 +76,7 @@ public class PixabayDataSource extends PageKeyedDataSource<Integer, Hit> {
     }
 
     private void sendLoadAfterRequest(LoadParams params, final LoadCallback callback, int currentPage, final int nextPage) {
-        Call<DataList> dataListCall = pixabayApi.serchRepo(searchQuery, currentPage, params.requestedLoadSize);
+        Call<DataList> dataListCall = pixabayApi.searchImages(searchQuery, currentPage, params.requestedLoadSize);
         dataListCall.enqueue(new Callback<DataList>() {
             @Override
             public void onResponse(Call<DataList> call, Response<DataList> response) {

@@ -1,11 +1,10 @@
 
 package com.example.imagegallery.models;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import androidx.paging.PagedList;
+import java.util.List;
 
 public class DataList {
 

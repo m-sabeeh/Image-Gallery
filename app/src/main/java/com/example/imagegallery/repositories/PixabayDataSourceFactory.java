@@ -10,21 +10,21 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.paging.DataSource;
 
 public class PixabayDataSourceFactory extends DataSource.Factory<Integer, Hit> {
-    private PixabayApiService.PixabayApi api;
+    private PixabayApiService apiService;
     private MutableLiveData<PixabayDataSource> dataSourceLiveData = new MutableLiveData<>();
     private String searchQuery;
     private static final String TAG = "PixabayDataSourceFactor";
 
-    public PixabayDataSourceFactory(PixabayApiService.PixabayApi pixabayApi, String query) {
+    public PixabayDataSourceFactory(PixabayApiService service, String query) {
         Log.d(TAG, "PixabayDataSourceFactory: Constructor");
-        this.api = pixabayApi;
+        this.apiService = service;
         searchQuery = query;
     }
 
     @NonNull
     @Override
     public DataSource<Integer, Hit> create() {
-        PixabayDataSource latestDataSource = new PixabayDataSource(api, searchQuery);
+        PixabayDataSource latestDataSource = new PixabayDataSource(apiService, searchQuery);
         dataSourceLiveData.postValue(latestDataSource);
         return latestDataSource;
     }

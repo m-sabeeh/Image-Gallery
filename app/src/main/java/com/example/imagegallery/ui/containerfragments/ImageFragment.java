@@ -1,13 +1,13 @@
 package com.example.imagegallery.ui.containerfragments;
 
-import androidx.fragment.app.Fragment;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.imagegallery.R;
+
+import androidx.fragment.app.Fragment;
 
 /**
  * A placeholder fragment containing a simple view.

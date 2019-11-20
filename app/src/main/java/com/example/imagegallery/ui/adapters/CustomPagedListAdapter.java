@@ -8,19 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.example.imagegallery.models.Hit;
 import com.example.imagegallery.R;
+import com.example.imagegallery.models.Hit;
+import com.example.imagegallery.utils.GlideApp;
 
-import java.util.List;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.paging.PagedList;
 import androidx.paging.PagedListAdapter;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.DiffUtil;
@@ -60,7 +58,7 @@ public class CustomPagedListAdapter extends PagedListAdapter<Hit, CustomPagedLis
         set.setDimensionRatio(holder.imageView.getId(), ratio);
         set.applyTo(holder.constraintLayout);
 
-        Glide.with(mContext)
+        GlideApp.with(mContext)
                 //.asBitmap()
                 .load(hit.getPreviewURL())
                 .transition(DrawableTransitionOptions.withCrossFade())

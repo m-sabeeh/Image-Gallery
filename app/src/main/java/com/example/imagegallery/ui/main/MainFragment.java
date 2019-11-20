@@ -1,36 +1,33 @@
 package com.example.imagegallery.ui.main;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.paging.PagedList;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.imagegallery.models.Hit;
+import com.example.imagegallery.Injection;
 import com.example.imagegallery.R;
+import com.example.imagegallery.models.Hit;
 import com.example.imagegallery.ui.adapters.CustomPagedListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.util.List;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.paging.PagedList;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 public class MainFragment extends Fragment {
     private static final String TAG = "MainFragment";
@@ -56,12 +53,17 @@ public class MainFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        mViewModel = initViewModel();
         liveData = mViewModel.getLiveHitList();
         mSearchTerm = mViewModel.getSearchTermLiveData().getValue();
         getActivity().setTitle(mSearchTerm + " Gallery");
         initAdapter();
         initFab();
+    }
+
+    private MainViewModel initViewModel() {
+        ViewModelProvider.Factory factory = Injection.getViewModelFactory();
+        return ViewModelProviders.of(this, factory).get(MainViewModel.class);
     }
 
 
@@ -71,9 +73,7 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "onClick: ");
-                //mViewModel.invalidateDataSource();
                 initSearch();
-                //mAdapter.submitList(null);
             }
         });
     }
@@ -81,16 +81,13 @@ public class MainFragment extends Fragment {
     private void initAdapter() {
         Log.d(TAG, "initAdapter: ");
         mAdapter = new CustomPagedListAdapter(getContext());
-        mAdapter.setOnItemInteractionListener(new CustomPagedListAdapter.OnItemInteractionListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Toast.makeText(getContext(), position + " " + liveData.getValue().get(position).getUser(), Toast.LENGTH_SHORT).show();
-                //start new activity with intent containing full url
-                //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, MainFragment.newInstance()).commit();
-                //Intent intent = new Intent(getContext(), ContainerActivity.class);
-                //Intent intent = Utils.IntentUtils.buildImageFragmentIntent(getContext());
-                //startActivity(intent);
-            }
+        mAdapter.setOnItemInteractionListener((View view, int position) -> {
+            Toast.makeText(getContext(), position + " " + liveData.getValue().get(position).getUser(), Toast.LENGTH_SHORT).show();
+            //start new activity with intent containing full url
+            //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, MainFragment.newInstance()).commit();
+            //Intent intent = new Intent(getContext(), ContainerActivity.class);
+            //Intent intent = Utils.IntentUtils.buildImageFragmentIntent(getContext());
+            //startActivity(intent);
         });
 
         initLiveDataObservations();
@@ -131,27 +128,20 @@ public class MainFragment extends Fragment {
         View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.user_input_dialog, (ViewGroup) getView(), false);
         final TextInputEditText input = viewInflated.findViewById(R.id.input);
         builder.setView(viewInflated);
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                mSearchTerm = input.getText().toString();
-                getActivity().setTitle(mSearchTerm + " Gallery");
-                mSearchTerm = mSearchTerm.toLowerCase();
-                mViewModel.fetchRequiredData(mSearchTerm);
-                liveData = mViewModel.getLiveHitList();
-                initLiveDataObservations();
-            }
+        builder.setPositiveButton(android.R.string.ok, (DialogInterface dialog, int which) -> {
+            dialog.dismiss();
+            mSearchTerm = input.getText().toString();
+            getActivity().setTitle(mSearchTerm + " Gallery");
+            mSearchTerm = mSearchTerm.toLowerCase();
+            mViewModel.fetchRequiredData(mSearchTerm);
+            liveData = mViewModel.getLiveHitList();
+            initLiveDataObservations();
         });
-        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
+
+        builder.setNegativeButton(android.R.string.cancel, (DialogInterface dialog, int which) -> {
+            dialog.cancel();
         });
 
         builder.show();
     }
-
-
 }

@@ -15,14 +15,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PixabayDataSource extends PageKeyedDataSource<Integer, Hit> {
-    PixabayApiService.PixabayApi pixabayApi;
+    PixabayApiService pixabayApiService;
     private static final java.lang.String TAG = "PixabayDataSource";
     private List<Hit> hitList;
     private String searchQuery;
 
-    public PixabayDataSource(PixabayApiService.PixabayApi api, String query) {
+    public PixabayDataSource(PixabayApiService api, String query) {
         Log.d(TAG, "PixabayDataSource: Constructor");
-        pixabayApi = api;
+        pixabayApiService = api;
         searchQuery = query;
     }
 
@@ -35,7 +35,7 @@ public class PixabayDataSource extends PageKeyedDataSource<Integer, Hit> {
     }
 
     private void sendLoadInitialRequest(LoadInitialParams<Integer> params, final LoadInitialCallback<Integer, Hit> callback, int currentPage, final int nextPage) {
-        Call<DataList> dataListCall = pixabayApi.searchImages(searchQuery, currentPage, params.requestedLoadSize);
+        Call<DataList> dataListCall = pixabayApiService.searchImages(searchQuery, currentPage, params.requestedLoadSize);
         dataListCall.enqueue(new Callback<DataList>() {
             @Override
             public void onResponse(Call<DataList> call, Response<DataList> response) {
@@ -76,7 +76,7 @@ public class PixabayDataSource extends PageKeyedDataSource<Integer, Hit> {
     }
 
     private void sendLoadAfterRequest(LoadParams params, final LoadCallback callback, int currentPage, final int nextPage) {
-        Call<DataList> dataListCall = pixabayApi.searchImages(searchQuery, currentPage, params.requestedLoadSize);
+        Call<DataList> dataListCall = pixabayApiService.searchImages(searchQuery, currentPage, params.requestedLoadSize);
         dataListCall.enqueue(new Callback<DataList>() {
             @Override
             public void onResponse(Call<DataList> call, Response<DataList> response) {

@@ -32,9 +32,9 @@ public interface PixabayApi {
      * build retrofit object. using that object, instantiate pixabay endpoint interface and
      * return it.
      *
-     * @return PixabayApiImp Interface
+     * @return PixabayApi Interface
      */
-    public static PixabayApi getPixabayApi() {
+    static PixabayApi getPixabayApi() {
         //if (pixabayApi == null) {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.level(HttpLoggingInterceptor.Level.BASIC);

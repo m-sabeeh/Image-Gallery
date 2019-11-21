@@ -19,6 +19,7 @@ public class PagedHitRepository implements HitRepository {
     private PixabayApiService pixabayApiService;
     DataSource<Integer, Hit> latestDataSource;
 
+
     public PagedHitRepository(PixabayApiService apiService) {
         Log.d(TAG, "HitRepository: Constructor " + apiService);
         pixabayApiService = apiService;

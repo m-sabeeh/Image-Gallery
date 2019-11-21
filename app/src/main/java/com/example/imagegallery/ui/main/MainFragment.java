@@ -21,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
@@ -34,7 +35,6 @@ public class MainFragment extends Fragment {
     private MainViewModel mViewModel;
     private CustomPagedListAdapter mAdapter;
     private LiveData<PagedList<Hit>> liveData;
-
     private String mSearchTerm;
 
     public static MainFragment newInstance() {
@@ -54,28 +54,15 @@ public class MainFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = initViewModel();
-        liveData = mViewModel.getLiveHitList();
-        mSearchTerm = mViewModel.getSearchTermLiveData().getValue();
-        getActivity().setTitle(mSearchTerm + " Gallery");
         initAdapter();
         initFab();
+        initLiveDataObservations();
+        setActivityTitle();
     }
 
     private MainViewModel initViewModel() {
         ViewModelProvider.Factory factory = Injection.getViewModelFactory();
         return ViewModelProviders.of(this, factory).get(MainViewModel.class);
-    }
-
-
-    private void initFab() {
-        FloatingActionButton button = getView().findViewById(R.id.fab);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "onClick: ");
-                initSearch();
-            }
-        });
     }
 
     private void initAdapter() {
@@ -89,8 +76,6 @@ public class MainFragment extends Fragment {
             //Intent intent = Utils.IntentUtils.buildImageFragmentIntent(getContext());
             //startActivity(intent);
         });
-
-        initLiveDataObservations();
 
         RecyclerView recyclerView = getView().findViewById(R.id.recyclerView);
         int columns = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 3 : 2;
@@ -109,20 +94,27 @@ public class MainFragment extends Fragment {
         //RecyclerView.LayoutManager linearLayoutManger = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(staggeredGridManager);
         recyclerView.setAdapter(mAdapter);
-        Log.d(TAG, "initAdapter: end");
     }
 
+    private void initFab() {
+        FloatingActionButton button = getView().findViewById(R.id.fab);
+        button.setOnClickListener((View view) -> {
+            buildDialog();
+        });
+    }
+
+
     private void initLiveDataObservations() {
+        liveData = mViewModel.getLiveHitList();
         liveData.observe(this, new Observer<PagedList<Hit>>() {
             @Override
             public void onChanged(PagedList<Hit> hits) {
-                Log.d(TAG, "onChanged: ");
                 mAdapter.submitList(hits);
             }
         });
     }
 
-    private void initSearch() {
+    private void buildDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Search Images on Pixabay");
         View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.user_input_dialog, (ViewGroup) getView(), false);
@@ -130,18 +122,19 @@ public class MainFragment extends Fragment {
         builder.setView(viewInflated);
         builder.setPositiveButton(android.R.string.ok, (DialogInterface dialog, int which) -> {
             dialog.dismiss();
-            mSearchTerm = input.getText().toString();
-            getActivity().setTitle(mSearchTerm + " Gallery");
-            mSearchTerm = mSearchTerm.toLowerCase();
-            mViewModel.fetchRequiredData(mSearchTerm);
-            liveData = mViewModel.getLiveHitList();
+            mViewModel.setSearchTerm(input.getText().toString());
+            setActivityTitle();
             initLiveDataObservations();
         });
 
         builder.setNegativeButton(android.R.string.cancel, (DialogInterface dialog, int which) -> {
             dialog.cancel();
         });
-
         builder.show();
+    }
+
+    private void setActivityTitle() {
+        mSearchTerm = mViewModel.getSearchTerm();
+        getActivity().setTitle(mSearchTerm + " Gallery");
     }
 }

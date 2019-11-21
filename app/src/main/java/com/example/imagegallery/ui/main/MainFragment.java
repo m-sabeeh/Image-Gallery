@@ -21,7 +21,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
@@ -122,9 +121,13 @@ public class MainFragment extends Fragment {
         builder.setView(viewInflated);
         builder.setPositiveButton(android.R.string.ok, (DialogInterface dialog, int which) -> {
             dialog.dismiss();
-            mViewModel.setSearchTerm(input.getText().toString());
-            setActivityTitle();
-            initLiveDataObservations();
+            String searchTerm = input.getText().toString().trim();
+            if (!searchTerm.isEmpty()) {
+                mViewModel.setSearchTerm(searchTerm);
+                setActivityTitle();
+                initLiveDataObservations();
+            } else
+                Toast.makeText(getActivity(), "Search term is empty", Toast.LENGTH_SHORT).show();
         });
 
         builder.setNegativeButton(android.R.string.cancel, (DialogInterface dialog, int which) -> {

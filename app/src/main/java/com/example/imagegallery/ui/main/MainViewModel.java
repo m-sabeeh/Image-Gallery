@@ -1,31 +1,25 @@
 package com.example.imagegallery.ui.main;
 
-import android.util.Log;
-
 import com.example.imagegallery.models.Hit;
-import com.example.imagegallery.repositories.PagedHitRepository;
+import com.example.imagegallery.repositories.ImageRepository;
 
-import java.util.concurrent.Executor;
-
-import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
-import androidx.paging.DataSource;
 import androidx.paging.PagedList;
 
 public class MainViewModel extends ViewModel {
     private static final String TAG = "MainViewModel";
     private LiveData<PagedList<Hit>> mLiveData;// = new MutableLiveData<>();
-    private PagedHitRepository mHitRepo;
+    private ImageRepository mImageRepo;
     private String mSearchTerm;
     public static final String DEFAULT_SEARCH_TERM = "Colors";
     public static final int page_size = 200;
 
-    public MainViewModel(PagedHitRepository repository) {
-        //mHitRepo = HitRepository.getInstance();
-        mHitRepo = repository;
+    public MainViewModel(ImageRepository repository) {
+        //mImageRepo = ImageRepository.getInstance();
+        mImageRepo = repository;
         initializeSampleData();
 
     }
@@ -42,7 +36,6 @@ public class MainViewModel extends ViewModel {
         setSearchTerm(mSearchTerm);
     }
 
-
     public String getSearchTerm() {
         return mSearchTerm;
     }
@@ -52,6 +45,6 @@ public class MainViewModel extends ViewModel {
         MutableLiveData<String> searchTermLiveData = new MutableLiveData<>();
         searchTermLiveData.setValue(searchTerm);
         mLiveData = Transformations.switchMap(searchTermLiveData,
-                (String input) -> mHitRepo.searchImages(input.toLowerCase(), page_size));
+                (String input) -> mImageRepo.searchImages(input.toLowerCase(), page_size));
     }
 }

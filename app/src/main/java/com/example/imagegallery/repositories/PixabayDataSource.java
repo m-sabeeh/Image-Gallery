@@ -15,7 +15,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PixabayDataSource extends PageKeyedDataSource<Integer, Hit> {
-    PixabayApiService pixabayApiService;
+    private PixabayApiService pixabayApiService;
     private static final java.lang.String TAG = "PixabayDataSource";
     private List<Hit> hitList;
     private String searchQuery;
@@ -38,7 +38,7 @@ public class PixabayDataSource extends PageKeyedDataSource<Integer, Hit> {
         Call<DataList> dataListCall = pixabayApiService.searchImages(searchQuery, currentPage, params.requestedLoadSize);
         dataListCall.enqueue(new Callback<DataList>() {
             @Override
-            public void onResponse(Call<DataList> call, Response<DataList> response) {
+            public void onResponse(@NonNull Call<DataList> call, @NonNull Response<DataList> response) {
                 if (response.body() != null && !response.body().getHits().isEmpty()) {
                     Log.d(TAG, "onResponse: Load Initial");
                     hitList = response.body().getHits();
@@ -52,9 +52,8 @@ public class PixabayDataSource extends PageKeyedDataSource<Integer, Hit> {
                 }
             }
 
-
             @Override
-            public void onFailure(Call<DataList> call, Throwable t) {
+            public void onFailure(@NonNull Call<DataList> call, @NonNull Throwable t) {
                 Log.d(TAG, "onFailure: " + call + t.getMessage());
             }
         });
@@ -67,19 +66,18 @@ public class PixabayDataSource extends PageKeyedDataSource<Integer, Hit> {
     }
 
     @Override
-    public void loadAfter(@NonNull LoadParams params, @NonNull LoadCallback callback) {
+    public void loadAfter(@NonNull LoadParams<Integer> params, @NonNull LoadCallback<Integer, Hit> callback) {
         Log.d(TAG, "loadAfter: ");
         int currentPage = (int) params.key;
         int nextPage = currentPage + 1;
-
         sendLoadAfterRequest(params, callback, currentPage, nextPage);
     }
 
-    private void sendLoadAfterRequest(LoadParams params, final LoadCallback callback, int currentPage, final int nextPage) {
+    private void sendLoadAfterRequest(LoadParams params, final LoadCallback<Integer, Hit> callback, int currentPage, final int nextPage) {
         Call<DataList> dataListCall = pixabayApiService.searchImages(searchQuery, currentPage, params.requestedLoadSize);
         dataListCall.enqueue(new Callback<DataList>() {
             @Override
-            public void onResponse(Call<DataList> call, Response<DataList> response) {
+            public void onResponse(@NonNull Call<DataList> call, @NonNull Response<DataList> response) {
                 Log.d(TAG, "onResponse: Load After");
                 if (response.body() != null && !response.body().getHits().isEmpty()) {
                     hitList = response.body().getHits();
@@ -88,11 +86,9 @@ public class PixabayDataSource extends PageKeyedDataSource<Integer, Hit> {
             }
 
             @Override
-            public void onFailure(Call<DataList> call, Throwable t) {
+            public void onFailure(@NonNull Call<DataList> call, @NonNull Throwable t) {
                 Log.d(TAG, "onFailure: " + call + t.getMessage());
             }
         });
-
-
     }
 }

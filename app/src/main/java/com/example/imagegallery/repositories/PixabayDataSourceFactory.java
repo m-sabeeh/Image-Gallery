@@ -17,7 +17,7 @@ public class PixabayDataSourceFactory extends DataSource.Factory<Integer, Hit> {
 
     public PixabayDataSourceFactory(PixabayApiService service, String query) {
         Log.d(TAG, "PixabayDataSourceFactory: Constructor");
-        this.apiService = service;
+        apiService = service;
         searchQuery = query;
     }
 
@@ -28,5 +28,4 @@ public class PixabayDataSourceFactory extends DataSource.Factory<Integer, Hit> {
         dataSourceLiveData.postValue(latestDataSource);
         return latestDataSource;
     }
-
 }

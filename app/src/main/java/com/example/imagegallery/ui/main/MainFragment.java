@@ -1,6 +1,6 @@
 package com.example.imagegallery.ui.main;
 
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,17 +9,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.imagegallery.ContainerActivity;
 import com.example.imagegallery.Injection;
 import com.example.imagegallery.R;
 import com.example.imagegallery.models.Hit;
 import com.example.imagegallery.ui.adapters.CustomPagedListAdapter;
+import com.example.imagegallery.utils.Utils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.textfield.TextInputEditText;
+import com.google.gson.Gson;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -29,12 +32,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements SearchInputDialogFragment.SearchInputListener {
     private static final String TAG = "MainFragment";
     private MainViewModel mViewModel;
     private CustomPagedListAdapter mAdapter;
     private LiveData<PagedList<Hit>> liveData;
-    private String mSearchTerm;
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -72,8 +74,10 @@ public class MainFragment extends Fragment {
             //start new activity with intent containing full url
             //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, MainFragment.newInstance()).commit();
             //Intent intent = new Intent(getContext(), ContainerActivity.class);
-            //Intent intent = Utils.IntentUtils.buildImageFragmentIntent(getContext());
-            //startActivity(intent);
+            Intent intent = Utils.IntentUtils.buildImageFragmentIntent(getContext());
+            Gson gson = new Gson();
+            intent.putExtra(Utils.IntentUtils.HIT_JSON, gson.toJson(liveData.getValue().get(position)));
+            startActivity(intent);
         });
 
         RecyclerView recyclerView = getView().findViewById(R.id.recyclerView);
@@ -98,10 +102,9 @@ public class MainFragment extends Fragment {
     private void initFab() {
         FloatingActionButton button = getView().findViewById(R.id.fab);
         button.setOnClickListener((View view) -> {
-            buildDialog();
+            buildDialogFragment();
         });
     }
-
 
     private void initLiveDataObservations() {
         liveData = mViewModel.getLiveHitList();
@@ -113,31 +116,27 @@ public class MainFragment extends Fragment {
         });
     }
 
-    private void buildDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Search Images on Pixabay");
-        View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.user_input_dialog, (ViewGroup) getView(), false);
-        final TextInputEditText input = viewInflated.findViewById(R.id.input);
-        builder.setView(viewInflated);
-        builder.setPositiveButton(android.R.string.ok, (DialogInterface dialog, int which) -> {
-            dialog.dismiss();
-            String searchTerm = input.getText().toString().trim();
-            if (!searchTerm.isEmpty()) {
-                mViewModel.setSearchTerm(searchTerm);
-                setActivityTitle();
-                initLiveDataObservations();
-            } else
-                Toast.makeText(getActivity(), "Search term is empty", Toast.LENGTH_SHORT).show();
-        });
-
-        builder.setNegativeButton(android.R.string.cancel, (DialogInterface dialog, int which) -> {
-            dialog.cancel();
-        });
-        builder.show();
+    private void buildDialogFragment() {
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        DialogFragment dialogFragment = new SearchInputDialogFragment();
+        dialogFragment.setTargetFragment(this, 300);
+        dialogFragment.show(ft, "dialog");
     }
 
     private void setActivityTitle() {
-        mSearchTerm = mViewModel.getSearchTerm();
-        getActivity().setTitle(mSearchTerm + " Gallery");
+        String searchTerm = mViewModel.getSearchTerm();
+        getActivity().setTitle(searchTerm + " Gallery");
+    }
+
+    @Override
+    public void onInputFinished(String query) {
+        mViewModel.setSearchTerm(query);
+        setActivityTitle();
+        initLiveDataObservations();
     }
 }

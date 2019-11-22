@@ -18,7 +18,7 @@
             android:name=".ContainerActivity"
             android:label="@string/title_activity_container"
             android:parentActivityName="androidx.appcompat.app.AppCompatActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.Dark">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="androidx.appcompat.app.AppCompatActivity" />

@@ -1,4 +1,4 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="dialog_title_size">25sp</dimen>
+    <dimen name="dialog_title_size">20sp</dimen>
 </resources>

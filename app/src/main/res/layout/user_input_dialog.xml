@@ -7,8 +7,9 @@
 
     <TextView
         android:id="@+id/titleDialog"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:hint="@string/dialog_title"
         android:textAlignment="center"
         android:textSize="@dimen/dialog_title_size"
@@ -16,8 +17,7 @@
         app:layout_constraintBottom_toTopOf="@+id/textInputLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.52" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout"
@@ -37,25 +37,26 @@
             android:padding="10dp"
             android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
+    <!--
 
+        <Button
+            android:id="@+id/positiveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="@string/ok"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textInputLayout" />-->
 
-    <Button
-        android:id="@+id/positiveButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:text="@string/ok"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textInputLayout"/>
+    <!--
 
-
-    <Button
-        android:id="@+id/negativeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:text="@string/cancel"
-        app:layout_constraintBottom_toBottomOf="@+id/positiveButton"
-        app:layout_constraintEnd_toStartOf="@+id/positiveButton"
-        app:layout_constraintTop_toTopOf="@+id/positiveButton" />
+        <Button
+            android:id="@+id/negativeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="@string/cancel"
+            app:layout_constraintBottom_toBottomOf="@+id/positiveButton"
+            app:layout_constraintEnd_toStartOf="@+id/positiveButton"
+            app:layout_constraintTop_toTopOf="@+id/positiveButton" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>

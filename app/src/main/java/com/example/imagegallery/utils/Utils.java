@@ -25,6 +25,7 @@ public class Utils {
         public static final String IMAGE_FRAGMENT_CLASS = ImageFragment.class.getName();
         public static final String CONTAINER_ID = "Container ID";
         static final String ACTIVITY_TITLE = "Activity Title";
+        public static final String HIT_JSON = "image data";
 
 
         public static void instantiateFragment(FragmentActivity activity, Intent intent) {
@@ -32,15 +33,16 @@ public class Utils {
             String fragmentClass = bundle.getString(IMAGE_FRAGMENT_CLASS);
             int containerID = bundle.getInt(CONTAINER_ID, 0);
 
-            Fragment fragment = activity.getSupportFragmentManager().getFragmentFactory().instantiate(activity.getClassLoader(), fragmentClass);
+            Fragment fragment = activity.getSupportFragmentManager()
+                    .getFragmentFactory().instantiate(activity.getClassLoader(), fragmentClass);
 
             fragment.setArguments(bundle);
-            activity.getSupportFragmentManager().beginTransaction().add(containerID, fragment, fragmentClass).commit();
+            activity.getSupportFragmentManager().beginTransaction()
+                    .add(containerID, fragment, fragmentClass).commit();
         }
 
 
         public static Intent buildImageFragmentIntent(Context context) {
-
             Intent intent = new Intent(context, ContainerActivity.class);
             intent.putExtra(IMAGE_FRAGMENT_CLASS, ImageFragment.class.getName());
             intent.putExtra(CONTAINER_ID, R.id.secondaryContainer);

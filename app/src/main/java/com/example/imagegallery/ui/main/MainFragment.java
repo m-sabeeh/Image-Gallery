@@ -9,14 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.imagegallery.ContainerActivity;
 import com.example.imagegallery.Injection;
 import com.example.imagegallery.R;
 import com.example.imagegallery.models.Hit;
 import com.example.imagegallery.ui.adapters.CustomPagedListAdapter;
 import com.example.imagegallery.utils.Utils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.gson.Gson;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +22,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
@@ -61,6 +60,18 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
         setActivityTitle();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: ");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: ");
+    }
+
     private MainViewModel initViewModel() {
         ViewModelProvider.Factory factory = Injection.getViewModelFactory();
         return ViewModelProviders.of(this, factory).get(MainViewModel.class);
@@ -72,12 +83,28 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
         mAdapter.setOnItemInteractionListener((View view, int position) -> {
             Toast.makeText(getContext(), position + " " + liveData.getValue().get(position).getUser(), Toast.LENGTH_SHORT).show();
             //start new activity with intent containing full url
-            //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, MainFragment.newInstance()).commit();
-            //Intent intent = new Intent(getContext(), ContainerActivity.class);
-            Intent intent = Utils.IntentUtils.buildImageFragmentIntent(getContext());
+
+/*            Fragment fragment = requireActivity().getSupportFragmentManager()
+                    .getFragmentFactory().instantiate(requireActivity().getClassLoader(), ImageFragment.class.getName());
+            Bundle bundle = new Bundle();
             Gson gson = new Gson();
-            intent.putExtra(Utils.IntentUtils.HIT_JSON, gson.toJson(liveData.getValue().get(position)));
-            startActivity(intent);
+            bundle.putString(Utils.IntentUtils.HIT_JSON, gson.toJson(liveData.getValue().get(position)));
+            fragment.setArguments(bundle);
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .addToBackStack(ImageFragment.class.getName())
+                    .add(R.id.container, fragment, ImageFragment.class.getName()).commit();*/
+
+
+            //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, ImageFragment.newInstance()).commit();
+            //Intent intent = new Intent(getContext(), ContainerActivity.class);
+
+
+            Intent intent = Utils.IntentUtils.buildImageFragmentIntent(getContext());
+            //Gson gson = new Gson();
+            //intent.putExtra(Utils.IntentUtils.HIT_JSON, gson.toJson(liveData.getValue().get(position)));
+            intent.putExtra(Utils.IntentUtils.POSITION, position);
+            startActivityForResult(intent, Utils.IntentUtils.RETURN_POSITION_CODE);
+
         });
 
         RecyclerView recyclerView = getView().findViewById(R.id.recyclerView);
@@ -107,10 +134,12 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
     }
 
     private void initLiveDataObservations() {
+        Log.d(TAG, "initLiveDataObservations: ");
         liveData = mViewModel.getLiveHitList();
         liveData.observe(this, new Observer<PagedList<Hit>>() {
             @Override
             public void onChanged(PagedList<Hit> hits) {
+                Log.d(TAG, "onChanged: MainFragment");
                 mAdapter.submitList(hits);
             }
         });
@@ -135,8 +164,52 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
 
     @Override
     public void onInputFinished(String query) {
-        mViewModel.setSearchTerm(query);
-        setActivityTitle();
-        initLiveDataObservations();
+        Log.d(TAG, "onInputFinished: 1");
+
+        /*liveData = Transformations.switchMap(liveData,
+                (PagedList<Hit> pagedList) -> convertToLiveData(pagedList));*/
+/*        MutableLiveData<PagedList<Hit>> mutableLiveData = new MutableLiveData<>();
+        mutableLiveData.setValue(liveData.getValue());
+        Log.d(TAG, "onInputFinished: 2");
+        Log.d(TAG, "onInputFinished: 3"+liveData.getValue().toString());
+        liveData = Transformations.switchMap(liveData,
+                (PagedList<Hit> pagedList) -> convertToLiveData(pagedList));
+        //liveData = Transformations.switchMap(liveData, (this::convertToLiveData));
+        Log.d(TAG, "onInputFinished: 4");
+        Log.d(TAG, "onInputFinished: 5 "+liveData.getValue());
+        liveData.observe(this, new Observer<PagedList<Hit>>() {
+            @Override
+            public void onChanged(PagedList<Hit> pagedList) {
+                Log.d(TAG, "onChanged: "+pagedList.toString());
+
+            }
+        });
+initLiveDataObservations();
+        mAdapter.submitList(liveData.getValue());*/
+        if (query.equals("1"))
+            initLiveDataObservations();
+        else {
+            Log.d(TAG, "onInputFinished: else");
+            mViewModel.setSearchTerm(query);
+            setActivityTitle();
+            initLiveDataObservations();
+
+        }
+    }
+
+    private LiveData<PagedList<Hit>> convertToLiveData(PagedList<Hit> list) {
+        Log.d(TAG, "convertToLiveData: ");
+
+        //PagedList<Hit> hitPagedList = liveData.getValue();
+        PagedList<Hit> newList = list;
+        newList.add(null);
+        //newList.remove(3);
+        //newList.remove(5);
+
+        MutableLiveData<PagedList<Hit>> mutableData1 = new MutableLiveData<>();
+        mutableData1.setValue(newList);
+        Log.d(TAG, "convertToLiveData: " + mutableData1.getValue().toString());
+
+        return mutableData1;
     }
 }

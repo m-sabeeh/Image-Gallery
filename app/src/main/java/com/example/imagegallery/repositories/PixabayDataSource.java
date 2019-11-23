@@ -28,7 +28,7 @@ public class PixabayDataSource extends PageKeyedDataSource<Integer, Hit> {
 
     @Override
     public void loadInitial(@NonNull LoadInitialParams<Integer> params, @NonNull final LoadInitialCallback<Integer, Hit> callback) {
-        Log.d(TAG, "loadInitial: called" + params);
+        Log.d(TAG, "loadInitial: called " + params);
         int currentPage = 1;
         int nextPage = currentPage + 1;
         sendLoadInitialRequest(params, callback, currentPage, nextPage);
@@ -49,7 +49,8 @@ public class PixabayDataSource extends PageKeyedDataSource<Integer, Hit> {
 
                     Log.d(TAG, "onResponse: " + callback.toString());
                     //updateRepo(response.body().getHits());
-                }
+                } else Log.d(TAG, "onResponse: Load Initial error " + response.body());
+
             }
 
             @Override

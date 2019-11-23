@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,8 +25,7 @@ public class SearchInputDialogFragment extends DialogFragment {
         View viewInflated = LayoutInflater.from(getContext())
                 .inflate(R.layout.user_input_dialog, (ViewGroup) getView(), false);
         final TextInputEditText input = viewInflated.findViewById(R.id.input);
-        input.requestFocus();
-        //this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        //input.requestFocus();
         final TextView titleText = viewInflated.findViewById(R.id.titleDialog);
         titleText.setText(getString(R.string.dialog_title));
         builder.setView(viewInflated);

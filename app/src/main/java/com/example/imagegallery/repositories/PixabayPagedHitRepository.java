@@ -15,6 +15,7 @@ public class PixabayPagedHitRepository implements ImageRepository {
     private static ImageRepository mImageRepository;
     private PixabayApiService pixabayApiService;
     private DataSource<Integer, Hit> latestDataSource;
+    private LiveData<PagedList<Hit>> mLiveData;
 
     private PixabayPagedHitRepository(PixabayApiService apiService) {
         Log.d(TAG, "ImageRepository: Constructor " + apiService);
@@ -33,8 +34,22 @@ public class PixabayPagedHitRepository implements ImageRepository {
         DataSource.Factory<Integer, Hit> factory = new PixabayDataSourceFactory(pixabayApiService, query);
         latestDataSource = factory.create();
         PagedList.Config config = initPagedListConfig(page_size);
-        return new LivePagedListBuilder<>(factory, config).build();
+        mLiveData = new LivePagedListBuilder<>(factory, config).build();
+        return mLiveData;
     }
+
+    /**
+     * as this repository is singleton and is supposed to serve data to all the activities, I am
+     * writing this method to be called from container activity's view model to get live data and
+     * observe it.
+     *
+     * @return
+     */
+    @Override
+    public LiveData<PagedList<Hit>> getLiveHitList() {
+        return mLiveData;
+    }
+
 
     private PagedList.Config initPagedListConfig(int pageSize) {
         return new PagedList.Config.Builder()

@@ -1,9 +1,10 @@
-package com.example.imagegallery.repositories;
+package com.example.imagegallery.factories;
 
 import android.util.Log;
 
 import com.example.imagegallery.api.PixabayApiService;
 import com.example.imagegallery.models.Hit;
+import com.example.imagegallery.repositories.PixabayDataSource;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;

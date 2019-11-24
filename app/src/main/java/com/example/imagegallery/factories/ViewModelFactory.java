@@ -1,4 +1,4 @@
-package com.example.imagegallery.ui;
+package com.example.imagegallery.factories;
 
 import com.example.imagegallery.repositories.ImageRepository;
 import com.example.imagegallery.ui.main.MainViewModel;

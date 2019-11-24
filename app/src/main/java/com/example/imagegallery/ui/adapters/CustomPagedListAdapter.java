@@ -45,7 +45,7 @@ public class CustomPagedListAdapter extends PagedListAdapter<Hit, CustomPagedLis
     @NonNull
     @Override
     public CustomPagedListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_view, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recycler_view, parent, false);
         return new ViewHolder(itemView);
     }
 

@@ -1,10 +1,10 @@
-package com.example.imagegallery;
+package com.example.imagegallery.utils;
 
 import com.example.imagegallery.api.PixabayApi;
 import com.example.imagegallery.api.PixabayApiService;
 import com.example.imagegallery.repositories.ImageRepository;
 import com.example.imagegallery.repositories.PixabayPagedHitRepository;
-import com.example.imagegallery.ui.ViewModelFactory;
+import com.example.imagegallery.factories.ViewModelFactory;
 
 import androidx.lifecycle.ViewModelProvider;
 

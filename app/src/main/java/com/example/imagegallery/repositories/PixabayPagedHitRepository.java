@@ -3,6 +3,7 @@ package com.example.imagegallery.repositories;
 import android.util.Log;
 
 import com.example.imagegallery.api.PixabayApiService;
+import com.example.imagegallery.factories.PixabayDataSourceFactory;
 import com.example.imagegallery.models.Hit;
 
 import androidx.lifecycle.LiveData;
@@ -38,24 +39,23 @@ public class PixabayPagedHitRepository implements ImageRepository {
         return mLiveData;
     }
 
-    /**
-     * as this repository is singleton and is supposed to serve data to all the activities, I am
-     * writing this method to be called from container activity's view model to get live data and
-     * observe it.
-     *
-     * @return
-     */
-    @Override
-    public LiveData<PagedList<Hit>> getLiveHitList() {
-        return mLiveData;
-    }
-
-
     private PagedList.Config initPagedListConfig(int pageSize) {
         return new PagedList.Config.Builder()
                 .setPageSize(pageSize)
                 .setInitialLoadSizeHint(100)
                 .setPrefetchDistance(100)
                 .build();
+    }
+
+    /**
+     * as this repository is singleton and is supposed to serve data to all the activities, I am
+     * writing this method to be called from container activity's view model to get currently fetched
+     * data.
+     *
+     * @return
+     */
+    @Override
+    public LiveData<PagedList<Hit>> getLiveHitList() {
+        return mLiveData;
     }
 }

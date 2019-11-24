@@ -1,5 +1,7 @@
 package com.example.imagegallery.ui.main;
 
+import android.util.Log;
+
 import com.example.imagegallery.models.Hit;
 import com.example.imagegallery.repositories.ImageRepository;
 
@@ -11,11 +13,11 @@ import androidx.paging.PagedList;
 
 public class MainViewModel extends ViewModel {
     private static final String TAG = "MainViewModel";
-    private LiveData<PagedList<Hit>> mLiveData;// = new MutableLiveData<>();
+    private LiveData<PagedList<Hit>> mLiveData;
     private ImageRepository mImageRepo;
     private String mSearchTerm;
-    public static final String DEFAULT_SEARCH_TERM = "Colors";
-    public static final int page_size = 200;
+    private static final String DEFAULT_SEARCH_TERM = "Colors";
+    private static final int page_size = 200;
 
     public MainViewModel(ImageRepository repository) {
         //mImageRepo = ImageRepository.getInstance();
@@ -25,7 +27,9 @@ public class MainViewModel extends ViewModel {
     }
 
     public LiveData<PagedList<Hit>> getLiveHitList() {
+        Log.d(TAG, "getLiveHitList: "+mLiveData);
         if (mLiveData == null) {
+            Log.d(TAG, "getLiveHitList: Null");
             initializeSampleData();
         }
         return mLiveData;

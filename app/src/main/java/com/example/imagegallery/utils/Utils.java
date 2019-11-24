@@ -10,6 +10,7 @@ import com.example.imagegallery.ui.containerfragments.ViewPagerFragment;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 /**
  * This Activity allows the user to edit a note's title. It displays a floating window
@@ -22,46 +23,33 @@ import androidx.fragment.app.FragmentActivity;
  */
 public class Utils {
     public static class IntentUtils {
-        public static final String VIEW_PAGER_FRAGMENT_CLASS = ViewPagerFragment.class.getName();
+        public static final String FRAGMENT_CLASS = ViewPagerFragment.class.getName();
         public static final String CONTAINER_ID = "Container ID";
         static final String ACTIVITY_TITLE = "Activity Title";
         public static final String POSITION = "position";
-        public static final String LARGE_URL = "large url";
-        public static final int RETURN_POSITION_CODE = 100;
+        public static final int CODE_RETURN_POSITION = 100;
         public static final String RETURN_POSITION = "return position";
 
 
         public static void instantiateFragment(FragmentActivity activity, Intent intent) {
             Bundle bundle = intent.getExtras();
-            String fragmentClass = bundle.getString(VIEW_PAGER_FRAGMENT_CLASS);
+            String fragmentClass = bundle.getString(FRAGMENT_CLASS);
             int containerID = bundle.getInt(CONTAINER_ID, 0);
-
-            Fragment fragment = activity.getSupportFragmentManager()
-                    .getFragmentFactory().instantiate(activity.getClassLoader(), fragmentClass);
+            FragmentManager fragmentManager = activity.getSupportFragmentManager();
+            Fragment fragment = fragmentManager.getFragmentFactory().
+                    instantiate(activity.getClassLoader(), fragmentClass);
 
             fragment.setArguments(bundle);
-            activity.getSupportFragmentManager().beginTransaction()
-                    .add(containerID, fragment, fragmentClass).commit();
+            fragmentManager.beginTransaction().add(containerID, fragment, fragmentClass).commit();
         }
 
 
         public static Intent buildImageFragmentIntent(Context context) {
             Intent intent = new Intent(context, ContainerActivity.class);
-            intent.putExtra(VIEW_PAGER_FRAGMENT_CLASS, ViewPagerFragment.class.getName());
+            intent.putExtra(FRAGMENT_CLASS, ViewPagerFragment.class.getName());
             intent.putExtra(CONTAINER_ID, R.id.secondaryContainer);
             //intent.putExtra(ACTIVITY_TITLE, context.getString(R.string.imageFragmentActivityTitle));
-            //<include layout="@layout/content_container" />
-
-
             return intent;
-
-        }
-
-
-        public static Fragment buildDialogFragment(Context context) {
-
-            return null;
         }
     }
-
 }

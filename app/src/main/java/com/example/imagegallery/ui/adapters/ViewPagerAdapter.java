@@ -33,10 +33,13 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
+import java.util.Locale;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.paging.PagedListAdapter;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.DiffUtil;
@@ -72,6 +75,7 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
     @Override
     public void onBindViewHolder(@NonNull final ViewPagerAdapter.ViewHolder holder, final int position) {
         Hit hit = Objects.requireNonNull(getItem(position));
+
         //holder.progressBar.setVisibility(View.VISIBLE);
         GenericDraweeHierarchy hierarchy = holder.draweeView.getHierarchy();
         hierarchy.setProgressBarImage(new ProgressBarDrawable());
@@ -136,7 +140,7 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
 
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView imageView;
+        //private ImageView imageView;
         //private SimpleDraweeView draweeView;
         private PhotoDraweeView draweeView;
         //private ProgressBar progressBar;
@@ -145,7 +149,6 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
             super(itemView);
             //imageView = itemView.findViewById(R.id.main_image);
             draweeView = itemView.findViewById(R.id.main_image);
-
             //progressBar = itemView.findViewById(R.id.indeterminateBar);
         }
     }

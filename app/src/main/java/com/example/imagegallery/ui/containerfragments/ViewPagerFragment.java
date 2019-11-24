@@ -3,9 +3,12 @@ package com.example.imagegallery.ui.containerfragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.example.imagegallery.R;
 import com.example.imagegallery.models.Hit;
@@ -16,6 +19,7 @@ import com.example.imagegallery.utils.Utils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.paging.PagedList;

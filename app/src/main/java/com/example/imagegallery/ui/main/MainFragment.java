@@ -3,6 +3,8 @@ package com.example.imagegallery.ui.main;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,6 +31,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.paging.PagedList;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -99,6 +102,8 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
         //RecyclerView.LayoutManager linearLayoutManger = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(staggeredGridManager);
         recyclerView.setAdapter(mAdapter);
+        int spacingPixels = getResources().getDimensionPixelSize(R.dimen.recycler_view_spacing);
+        recyclerView.addItemDecoration(new SpaceItemDecoration(spacingPixels));
     }
 
     private void initFab() {

@@ -18,11 +18,38 @@ import androidx.annotation.ColorRes;
 public class CustomButton extends Button {
 
 
-    @ColorRes
-    int backGroundTintA = 0;
+    String backGroundTintA = "0";
 
-    @ColorRes
-    int strokeTintColor = 0;
+
+    String strokeTintColor = "0";
+
+    public String getBackGroundTintA() {
+        return backGroundTintA;
+    }
+
+    public String getStrokeTintColor() {
+        return strokeTintColor;
+    }
+
+    public void setBackGroundTintA(String backGroundTintA) {
+        this.backGroundTintA = backGroundTintA;
+    }
+
+    public void setStrokeTintColor(String strokeTintColor) {
+        this.strokeTintColor = strokeTintColor;
+    }
+
+    public void setAnInt(String anInt) {
+        this.anInt = anInt;
+    }
+
+    public String getAnInt() {
+        return anInt;
+    }
+
+    String anInt = "0";
+
+
 
     public CustomButton(Context context) {
         super(context);
@@ -36,19 +63,4 @@ public class CustomButton extends Button {
         super(context, attrs, defStyleAttr);
     }
 
-    public int getBackGroundTintA() {
-        return backGroundTintA;
-    }
-
-    public int getStrokeTintColor() {
-        return strokeTintColor;
-    }
-
-    public void setBackGroundTintA(int backGroundTintA) {
-        this.backGroundTintA = backGroundTintA;
-    }
-
-    public void setStrokeTintColor(int strokeTintColor) {
-        this.strokeTintColor = strokeTintColor;
-    }
 }

@@ -5,7 +5,9 @@
         motion:constraintSetEnd="@+id/end"
         motion:constraintSetStart="@+id/start"
         motion:duration="100"
-        motion:motionInterpolator="linear">
+        motion:maxAcceleration="100"
+        motion:motionInterpolator="linear"
+        motion:onTouchUp="autoComplete">
 
         <OnSwipe
             motion:dragDirection="dragRight"
@@ -19,19 +21,19 @@
         <Constraint android:id="@+id/messageType">
             <CustomAttribute
                 motion:attributeName="StrokeTintColor"
-                motion:customColorValue="#D68739" />
+                motion:customStringValue="#D68739" />
             <CustomAttribute
                 motion:attributeName="TextColor"
                 motion:customColorValue="#2D70FF" />
+            <!--            <CustomAttribute
+                            motion:attributeName="BackgroundTintA"
+                            motion:customColorValue="#2D70FF" />-->
             <CustomAttribute
-                motion:attributeName="BackgroundTintA"
-                motion:customColorValue="#2D70FF" />
-            <!--<CustomAttribute
                 motion:attributeName="AnInt"
-                motion:customColorValue="#F1F6FF" />
+                motion:customStringValue="#F1F6FF" />
             <CustomAttribute
                 motion:attributeName="Text"
-                motion:customStringValue="0" />-->
+                motion:customStringValue="0" />
 
         </Constraint>
     </ConstraintSet>
@@ -40,16 +42,22 @@
         <Constraint android:id="@id/messageType">
             <CustomAttribute
                 motion:attributeName="StrokeTintColor"
-                motion:customColorValue="#D68739" />
+                motion:customStringValue="#D68739" />
+            <CustomAttribute
+                motion:attributeName="AnInt"
+                motion:customStringValue="#F1F6FF" />
             <CustomAttribute
                 motion:attributeName="TextColor"
                 motion:customColorValue="#D68739" />
             <CustomAttribute
-                motion:attributeName="BackgroundTint"
-                motion:customColorValue="#D68739" />
-            <CustomAttribute
-                motion:attributeName="BackgroundTint"
-                motion:customColorValue="#FFFCF3" />
+                motion:attributeName="Text"
+                motion:customStringValue="2" />
+            <!-- <CustomAttribute
+                 motion:attributeName="BackgroundTintA"
+                 motion:customColorValue="#D68739" />
+             <CustomAttribute
+                 motion:attributeName="BackgroundTintA"
+                 motion:customColorValue="#D68739" />-->
 
         </Constraint>
     </ConstraintSet>

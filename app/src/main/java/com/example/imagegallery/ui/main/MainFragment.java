@@ -89,7 +89,7 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
 
         recyclerView = Objects.requireNonNull(getView()).findViewById(R.id.recyclerView);
         int columns = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 3 : 2;
-        RecyclerView.LayoutManager staggeredGridManager =
+        StaggeredGridLayoutManager staggeredGridManager =
                 new StaggeredGridLayoutManager(columns, LinearLayoutManager.VERTICAL) {
                     /**
                      * Disable predictive animations. There is a bug in RecyclerView which causes views that
@@ -101,11 +101,12 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
                         return false;
                     }
                 };
+        staggeredGridManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);//to correctly handle the decorations.
         //RecyclerView.LayoutManager linearLayoutManger = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(staggeredGridManager);
         recyclerView.setAdapter(mAdapter);
         int spacingPixels = getResources().getDimensionPixelSize(R.dimen.recycler_view_spacing);
-        recyclerView.addItemDecoration(new SpaceItemDecoration(spacingPixels));
+        recyclerView.addItemDecoration(new SpaceItemDecoration(spacingPixels, columns));
     }
 
     private void initFab() {

@@ -5,17 +5,24 @@
         motion:constraintSetEnd="@+id/end"
         motion:constraintSetStart="@+id/start"
         motion:duration="100"
-        motion:maxAcceleration="100"
-        motion:motionInterpolator="linear"
-        >
+        motion:maxAcceleration="0"
+        motion:motionInterpolator="linear">
 
         <OnSwipe
             motion:dragDirection="dragUp"
             motion:touchAnchorId="@+id/recyclerView"
             motion:touchAnchorSide="top"
-            motion:touchRegionId="@+id/recyclerView"/>
+            motion:touchRegionId="@+id/recyclerView" />
     </Transition>
     <ConstraintSet android:id="@+id/start">
+        <Constraint
+            android:id="@+id/scrollView"
+            motion:layout_constraintBottom_toTopOf="@+id/recyclerView"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent">
+
+        </Constraint>
         <Constraint
             android:id="@+id/recyclerView"
             motion:layout_constraintBottom_toBottomOf="parent"
@@ -38,12 +45,21 @@
     <ConstraintSet android:id="@+id/end">
 
         <Constraint
+            android:id="@+id/scrollView"
+            motion:layout_constraintBottom_toTopOf="@+id/guideline"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent">
+
+        </Constraint>
+
+        <Constraint
             android:id="@+id/recyclerView"
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintHorizontal_bias="0.0"
             motion:layout_constraintStart_toStartOf="parent"
-            motion:layout_constraintTop_toTopOf="@+id/guideline">
+            motion:layout_constraintTop_toTopOf="parent">
 
         </Constraint>
         <Constraint

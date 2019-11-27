@@ -70,4 +70,7 @@ dependencies {
     //photoDraweeView
     implementation 'me.relex:photodraweeview:2.0.0'
 
+    //swiperefresh
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+
 }

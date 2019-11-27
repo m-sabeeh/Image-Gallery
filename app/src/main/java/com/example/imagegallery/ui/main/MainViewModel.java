@@ -27,7 +27,7 @@ public class MainViewModel extends ViewModel {
     }
 
     public LiveData<PagedList<Hit>> getLiveHitList() {
-        Log.d(TAG, "getLiveHitList: "+mLiveData);
+        Log.d(TAG, "getLiveHitList: " + mLiveData);
         if (mLiveData == null) {
             Log.d(TAG, "getLiveHitList: Null");
             initializeSampleData();
@@ -41,6 +41,8 @@ public class MainViewModel extends ViewModel {
     }
 
     public String getSearchTerm() {
+        if (mSearchTerm == null)
+            mSearchTerm = DEFAULT_SEARCH_TERM;
         return mSearchTerm;
     }
 

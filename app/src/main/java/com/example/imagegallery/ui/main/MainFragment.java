@@ -37,12 +37,14 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class MainFragment extends Fragment implements SearchInputDialogFragment.SearchInputListener {
     private static final String TAG = "MainFragment";
     private MainViewModel mViewModel;
     private CustomPagedListAdapter mAdapter;
-    RecyclerView recyclerView;
+    private SwipeRefreshLayout refreshLayout;
+    private RecyclerView recyclerView;
     private LiveData<PagedList<Hit>> liveData;
     private int dataPosition = -1;
 
@@ -64,7 +66,17 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
         initAdapter();
         initFab();
         initLiveDataObservations();
+        initSwipeRefreshLayout();
         setActivityTitle();
+    }
+
+    private void initSwipeRefreshLayout() {
+        refreshLayout = Objects.requireNonNull(getView()).findViewById(R.id.swipeRefresh);
+        refreshLayout.setOnRefreshListener(() -> {
+            mViewModel.setSearchTerm(mViewModel.getSearchTerm());
+            initLiveDataObservations();
+            refreshLayout.setRefreshing(false);
+        });
     }
 
     private MainViewModel initViewModel() {
@@ -112,10 +124,10 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
     private void initFab() {
         FloatingActionButton button = getView().findViewById(R.id.fab);
         button.setOnClickListener((View view) -> {
-            //buildDialogFragment();
+            buildDialogFragment();
 
-            Intent intent = new Intent(getContext(), MyMotionActivity2.class);
-            startActivity(intent);
+            /*Intent intent = new Intent(getContext(), MyMotionActivity2.class);
+            startActivity(intent);*/
         });
     }
 

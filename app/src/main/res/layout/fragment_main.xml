@@ -10,6 +10,7 @@
     tools:context=".ui.main.MainFragment"
     tools:showPaths="true">
 
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"

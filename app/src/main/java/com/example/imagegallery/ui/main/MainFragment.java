@@ -25,6 +25,8 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -62,6 +64,8 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        /*Toolbar toolbar = getView().findViewById(R.id.toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);*/
         mViewModel = initViewModel();
         initAdapter();
         initFab();
@@ -73,7 +77,7 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
     private void initSwipeRefreshLayout() {
         refreshLayout = Objects.requireNonNull(getView()).findViewById(R.id.swipeRefresh);
         refreshLayout.setOnRefreshListener(() -> {
-            mViewModel.setSearchTerm(mViewModel.getSearchTerm());
+            mViewModel.setSearchTerm(mViewModel.getSearchTerm());//should only retry to fetch data, instead of doing this.
             initLiveDataObservations();
             refreshLayout.setRefreshing(false);
         });

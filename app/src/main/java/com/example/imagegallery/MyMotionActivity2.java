@@ -10,7 +10,7 @@ public class MyMotionActivity2 extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_motion2);
+        setContentView(R.layout.chris_bane);
         CustomButton button = findViewById(R.id.messageType);
         //button.setB
 

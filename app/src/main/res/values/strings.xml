@@ -8,4 +8,6 @@
     <string name="dialog_title">"Search Images on Pixabay"</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+    <string name="share">Share</string>
+    <string name="download">Download</string>
 </resources>

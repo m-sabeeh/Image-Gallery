@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
@@ -20,6 +19,11 @@ import com.bumptech.glide.request.target.Target;
 import com.example.imagegallery.R;
 import com.example.imagegallery.models.Hit;
 import com.example.imagegallery.utils.GlideApp;
+import com.facebook.common.executors.UiThreadImmediateExecutorService;
+import com.facebook.common.references.CloseableReference;
+import com.facebook.datasource.BaseDataSubscriber;
+import com.facebook.datasource.DataSource;
+import com.facebook.datasource.DataSubscriber;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -29,6 +33,9 @@ import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.core.ImagePipeline;
+import com.facebook.imagepipeline.image.CloseableBitmap;
+import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
@@ -50,7 +57,7 @@ import static android.provider.CalendarContract.CalendarCache.URI;
 
 
 public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.ViewHolder> {
-    private static final String TAG = "CustomPagedListAdapter";
+    private static final String TAG = "ViewPagerAdapter";
     private Context mContext;
     private OnItemInteractionListener mListener;
 
@@ -67,7 +74,7 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
     @Override
     public ViewPagerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.page_view_pager, parent, false);
+                .inflate(R.layout.page_view_pager2, parent, false);
         return new ViewPagerAdapter.ViewHolder(itemView);
     }
 
@@ -105,8 +112,41 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
                 });
         holder.draweeView.setController(controllerBuilder.build());
         //////////
+        ImagePipeline imagePipeline = Fresco.getImagePipeline();
+        DataSource<CloseableReference<CloseableImage>>
+                dataSource = imagePipeline.fetchDecodedImage(request, this);
+        DataSubscriber dataSubscriber = new BaseDataSubscriber<CloseableReference<CloseableBitmap>>() {
+            @Override
+            public void onNewResultImpl(
+                    DataSource<CloseableReference<CloseableBitmap>> dataSource) {
+                if (!dataSource.isFinished()) {
+                    return;
+                }
+                CloseableReference<CloseableBitmap> imageReference = dataSource.getResult();
+                if (imageReference != null) {
+                    final CloseableReference<CloseableBitmap> closeableReference = imageReference.clone();
+                    try {
+                        CloseableBitmap closeableBitmap = closeableReference.get();
+                        Bitmap bitmap = closeableBitmap.getUnderlyingBitmap();
+                        if (bitmap != null && !bitmap.isRecycled()) {
+                            Log.d(TAG, "onNewResultImpl: " + bitmap);
+                            createPaletteAsync(bitmap, position);
+                        }
+                    } finally {
+                        imageReference.close();
+                        closeableReference.close();
+                    }
+                }
+            }
 
-
+            @Override
+            public void onFailureImpl(DataSource dataSource) {
+                Throwable throwable = dataSource.getFailureCause();
+                // handle failure
+            }
+        };
+        dataSource.subscribe(dataSubscriber, UiThreadImmediateExecutorService.getInstance());
+//////////////
 /*        Uri uri = Uri.parse(hit.getLargeImageURL());
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
                 .setProgressiveRenderingEnabled(true)
@@ -143,6 +183,7 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
         //private ImageView imageView;
         //private SimpleDraweeView draweeView;
         private PhotoDraweeView draweeView;
+        View view;
         //private ProgressBar progressBar;
 
         public ViewHolder(@NonNull View itemView) {
@@ -150,13 +191,14 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
             //imageView = itemView.findViewById(R.id.main_image);
             draweeView = itemView.findViewById(R.id.main_image);
             //progressBar = itemView.findViewById(R.id.indeterminateBar);
+            view = itemView.findViewById(R.id.color1);
         }
     }
 
     public void createPaletteAsync(Bitmap bitmap, final int position) {
         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
             public void onGenerated(Palette p) {
-                notifyItemChanged(position, p);
+                //notifyItemChanged(position, p);
                 Log.d(TAG, "onGenerated: " + p.toString());
             }
         });

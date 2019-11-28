@@ -2,6 +2,8 @@ package com.example.imagegallery;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.example.imagegallery.utils.Utils;
 

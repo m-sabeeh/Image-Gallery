@@ -9,4 +9,5 @@
     <color name="colorIcons">#FFFFFF</color>
     <color name="colorDivider">#BDBDBD</color>
     <color name="colorBlack">#000000</color>
+    <color name="status_bar_scrim">#B3FFFFFF</color>
 </resources>

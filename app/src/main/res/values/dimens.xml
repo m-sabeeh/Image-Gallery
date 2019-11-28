@@ -2,4 +2,28 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="dialog_title_size">20sp</dimen>
     <dimen name="recycler_view_spacing">0.5dp</dimen>
+
+
+    <dimen name="header_margin">14dp</dimen>
+    <dimen name="image_round_rect_radius">4dp</dimen>
+
+    <dimen name="elevation_appbar">4dp</dimen>
+
+    <dimen name="spacing_xlarge">48dp</dimen>
+    <dimen name="spacing_large">24dp</dimen>
+    <dimen name="spacing_normal">16dp</dimen>
+    <dimen name="spacing_small">8dp</dimen>
+    <dimen name="spacing_micro">4dp</dimen>
+
+    <dimen name="details_corner_cutout">64dp</dimen>
+    <dimen name="details_poster_not_elevation">0dp</dimen>
+    <dimen name="details_poster_elevation">4dp</dimen>
+
+    <dimen name="details_seasons_expanded_elevation">2dp</dimen>
+
+    <dimen name="backdrop_corner_radius">16dp</dimen>
+    <dimen name="sticky_header_elevation">6dp</dimen>
+    <dimen name="fast_scroller_radius">6dp</dimen>
+
+
 </resources>

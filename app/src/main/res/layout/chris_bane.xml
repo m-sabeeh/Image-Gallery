@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<!--    <data>
+        <variable
+            name="textCreator"
+            type="app.tivi.showdetails.details.ShowDetailsTextCreator" />
+
+        <variable
+            name="state"
+            type="app.tivi.showdetails.details.ShowDetailsViewState" />
+    </data>-->
+
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/details_motion"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layoutDescription="@xml/chris_bane_scene">
+
+    <ImageView
+        android:id="@+id/details_backdrop"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/pebbles"
+        android:scaleType="centerCrop"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintDimensionRatio="h,4:3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_max="270dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/details_backdrop_scrim"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/details_backdrop"
+        app:layout_constraintEnd_toEndOf="@id/details_backdrop"
+        app:layout_constraintStart_toStartOf="@id/details_backdrop"
+        app:layout_constraintTop_toTopOf="@id/details_backdrop" />
+
+    <!-- Needed to fill a rounding error gap in MotionLayout. See https://issuetracker.google.com/112728689 -->
+    <View
+        android:id="@+id/details_gap_filler"
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="?android:attr/colorBackground"
+        app:layout_constraintBottom_toTopOf="@id/details_rv" />
+
+    <View
+        android:id="@+id/details_appbar_background"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="?android:attr/colorBackground" />
+
+    <TextView
+        android:id="@+id/details_title"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center_vertical"
+        android:lineSpacingMultiplier="0.9"
+        android:text="@{state.show.title}"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        app:autoSizeMaxTextSize="22sp"
+        app:autoSizeTextType="uniform"
+        tools:text="@tools:sample/cities" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/details_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.MaterialComponents.ActionBar"
+        app:layout_constraintTop_toBottomOf="@id/details_status_bar_anchor"
+        app:menu="@menu/view_pager_toolbar_menu"
+        app:navigationIcon="?attr/homeAsUpIndicator">
+
+        <ProgressBar
+            android:id="@+id/details_toolbar_progress"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="end|center_vertical" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/details_rv"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="?android:attr/colorBackground"
+        android:clipToPadding="false"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/details_appbar_background"
+        app:spanCount="2" />
+
+    <!-- We need to use an intermediary FrameLayout here since MotionLayout is very
+         zealous in wanting to control children's visibility via constraint sets. Since
+         the ExpandablePageLayout will change visibility on it's own accord, the intermediary
+         layers means the MotionLayout just sees a single always visible view. -->
+<!--    <FrameLayout
+        android:id="@+id/details_expanded_pane_holder"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/details_rv"
+        app:layout_constraintEnd_toEndOf="@id/details_rv"
+        app:layout_constraintStart_toStartOf="@id/details_rv"
+        app:layout_constraintTop_toTopOf="@id/details_rv">
+
+&lt;!&ndash;        <me.saket.inboxrecyclerview.page.ExpandablePageLayout
+            android:id="@+id/details_expanded_pane"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/colorPrimary"
+            android:clickable="true"
+            android:elevation="2dp" />&ndash;&gt;
+
+    </FrameLayout>-->
+
+    <!-- The height of this is updated via an OnApplyWindowInsetsListener  -->
+    <View
+        android:id="@+id/details_status_bar_anchor"
+        android:layout_width="0dp"
+        android:layout_height="1px"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/details_follow_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/spacing_normal"
+        android:scaleType="centerInside"
+        android:src="@android:drawable/ic_menu_search"
+        app:layout_constraintBottom_toTopOf="@id/details_appbar_background"
+        app:layout_constraintEnd_toEndOf="@id/details_appbar_background"
+        app:layout_constraintTop_toTopOf="@id/details_appbar_background" />
+
+</androidx.constraintlayout.motion.widget.MotionLayout>

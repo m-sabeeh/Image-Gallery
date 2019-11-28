@@ -128,11 +128,26 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
     private void initFab() {
         FloatingActionButton button = getView().findViewById(R.id.fab);
         button.setOnClickListener((View view) -> {
-            buildDialogFragment();
+            //buildDialogFragment();
 
-            /*Intent intent = new Intent(getContext(), MyMotionActivity2.class);
-            startActivity(intent);*/
+            //Intent intent = new Intent(getContext(), MyMotionActivity2.class);
+            //startActivity(intent);
+            shareTextUrl();
+
         });
+    }
+
+    private void shareTextUrl() {
+        Intent share = new Intent(android.content.Intent.ACTION_SEND);
+        share.setType("text/plain");
+        share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+
+        // Add data to the intent, the receiving app will decide
+        // what to do with it.
+        share.putExtra(Intent.EXTRA_SUBJECT, "Title Of The Post");
+        share.putExtra(Intent.EXTRA_TEXT, "http://www.codeofaninja.com");
+
+        startActivity(Intent.createChooser(share, "Share link!"));
     }
 
     private void initLiveDataObservations() {

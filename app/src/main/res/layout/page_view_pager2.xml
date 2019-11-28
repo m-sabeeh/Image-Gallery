@@ -24,7 +24,7 @@
         android:id="@+id/bottomSheet"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/status_bar_scrim"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="@id/line"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,7 +40,8 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/guideline2" />
+        app:layout_constraintTop_toTopOf="@id/guideline2"
+        />
 
     <View
         android:id="@+id/color2"
@@ -50,7 +51,8 @@
         android:background="@drawable/pallete"
         app:layout_constraintEnd_toStartOf="@+id/color3"
         app:layout_constraintStart_toEndOf="@+id/color1"
-        app:layout_constraintTop_toTopOf="@id/color1" />
+        app:layout_constraintTop_toTopOf="@id/color1"
+        />
 
     <!--    </LinearLayout>-->
 
@@ -62,7 +64,8 @@
         android:background="@drawable/pallete"
         app:layout_constraintEnd_toEndOf="@id/line"
         app:layout_constraintStart_toEndOf="@+id/color2"
-        app:layout_constraintTop_toTopOf="@id/color2" />
+        app:layout_constraintTop_toTopOf="@id/color2"
+        />
 
     <View
         android:id="@+id/line"

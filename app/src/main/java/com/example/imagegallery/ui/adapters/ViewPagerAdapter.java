@@ -2,23 +2,18 @@ package com.example.imagegallery.ui.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Animatable;
-import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.example.imagegallery.R;
 import com.example.imagegallery.models.Hit;
-import com.example.imagegallery.utils.GlideApp;
 import com.facebook.common.executors.UiThreadImmediateExecutorService;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.BaseDataSubscriber;
@@ -28,32 +23,24 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
-import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
-import com.facebook.drawee.interfaces.DraweeController;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.core.ImagePipeline;
+import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber;
 import com.facebook.imagepipeline.image.CloseableBitmap;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
-import java.util.Locale;
+import java.util.List;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.paging.PagedListAdapter;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import me.relex.photodraweeview.PhotoDraweeView;
-
-import static android.provider.CalendarContract.CalendarCache.URI;
 
 
 public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.ViewHolder> {
@@ -78,6 +65,22 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
         return new ViewPagerAdapter.ViewHolder(itemView);
     }
 
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull List<Object> payloads) {
+        if (!payloads.isEmpty()) {
+            //Log.d(TAG, "onBindViewHolder: " + payloads.get(0).getClass());
+            Palette p = ((Palette) payloads.get(0));
+            //holder.viewColor1.setVisibility(View.VISIBLE);
+            //holder.viewColor2.setVisibility(View.VISIBLE);
+            //holder.viewColor3.setVisibility(View.VISIBLE);
+            //holder.viewColor1.setBackgroundColor((p.getDarkVibrantColor(0)));
+            //holder.viewColor2.setBackgroundColor((p.getLightVibrantColor(0)));
+            holder.viewColor1.getBackground().setColorFilter(p.getDarkVibrantColor(0), PorterDuff.Mode.SRC_ATOP);
+            holder.viewColor2.getBackground().setColorFilter(p.getLightVibrantColor(0), PorterDuff.Mode.SRC_ATOP);
+            holder.viewColor3.getBackground().setColorFilter(p.getDarkMutedColor(0), PorterDuff.Mode.SRC_ATOP);
+        } else
+            super.onBindViewHolder(holder, position, payloads);
+    }
 
     @Override
     public void onBindViewHolder(@NonNull final ViewPagerAdapter.ViewHolder holder, final int position) {
@@ -145,7 +148,21 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
                 // handle failure
             }
         };
-        dataSource.subscribe(dataSubscriber, UiThreadImmediateExecutorService.getInstance());
+
+        DataSubscriber dataSubscriber2 = new BaseBitmapDataSubscriber() {
+            @Override
+            protected void onNewResultImpl(Bitmap bitmap) {
+                if (bitmap != null)
+                    createPaletteAsync(bitmap, position);
+            }
+
+            @Override
+            protected void onFailureImpl(DataSource<CloseableReference<CloseableImage>> dataSource) {
+
+            }
+        };
+        dataSource.subscribe(dataSubscriber2, UiThreadImmediateExecutorService.getInstance());
+
 //////////////
 /*        Uri uri = Uri.parse(hit.getLargeImageURL());
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
@@ -183,7 +200,9 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
         //private ImageView imageView;
         //private SimpleDraweeView draweeView;
         private PhotoDraweeView draweeView;
-        View view;
+        View viewColor1;
+        View viewColor2;
+        View viewColor3;
         //private ProgressBar progressBar;
 
         public ViewHolder(@NonNull View itemView) {
@@ -191,15 +210,21 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
             //imageView = itemView.findViewById(R.id.main_image);
             draweeView = itemView.findViewById(R.id.main_image);
             //progressBar = itemView.findViewById(R.id.indeterminateBar);
-            view = itemView.findViewById(R.id.color1);
+            viewColor1 = itemView.findViewById(R.id.color1);
+            viewColor2 = itemView.findViewById(R.id.color2);
+            viewColor3 = itemView.findViewById(R.id.color3);
+            //viewColor1.setVisibility(View.GONE);
+            //viewColor2.setVisibility(View.GONE);
+            //viewColor3.setVisibility(View.GONE);
         }
     }
 
     public void createPaletteAsync(Bitmap bitmap, final int position) {
         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
             public void onGenerated(Palette p) {
-                //notifyItemChanged(position, p);
-                Log.d(TAG, "onGenerated: " + p.toString());
+                notifyItemChanged(position, p);
+
+               // Log.d(TAG, "onGenerated: " + p.toString());
             }
         });
     }

@@ -29,6 +29,9 @@ public class ViewPagerFragment extends Fragment {
     private static final String TAG = "ViewPagerFragment";
     private ViewPager2 mViewPager;
     ViewPagerAdapter mPagerAdapter;
+    Intent intent = new Intent();
+    int mPosition;
+    LiveData<PagedList<Hit>> liveData;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,7 +51,7 @@ public class ViewPagerFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ImageRepository mImageRepo = PixabayPagedHitRepository.getInstance(null);//repository is already initialized
-        LiveData<PagedList<Hit>> liveData = mImageRepo.getLiveHitList();
+        liveData = mImageRepo.getLiveHitList();
         mPagerAdapter = new ViewPagerAdapter(getContext());
         mViewPager.setAdapter(mPagerAdapter);
         mPagerAdapter.submitList(liveData.getValue());
@@ -57,8 +60,9 @@ public class ViewPagerFragment extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                Log.d(TAG, "onPageSelected: "+position);
-                Intent intent = new Intent();
+                mPosition = position;
+                Log.d(TAG, "onPageSelected: " + position);
+                intent.removeExtra(Utils.IntentUtils.RETURN_POSITION);
                 intent.putExtra(Utils.IntentUtils.RETURN_POSITION, position);
                 requireActivity().setResult(Activity.RESULT_OK, intent);
             }
@@ -78,15 +82,31 @@ public class ViewPagerFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item_download:
-                Log.d(TAG, "onOptionsItemSelectedFragemnt: item Download");
+
+                //Log.d(TAG, "onOptionsItemSelectedFragemnt: item Download " + liveData.getValue().get(mPosition).getLargeImageURL());
 
                 return true;
             case R.id.item_share:
                 Log.d(TAG, "onOptionsItemSelectedFragemnt: item Share");
+                shareTextUrl(liveData.getValue().get(mPosition).getLargeImageURL());
+
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void shareTextUrl(String uri) {
+        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+
+        // Add data to the intent, the receiving app will decide
+        // what to do with it.
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Title Of The Post");
+        intent.putExtra(Intent.EXTRA_TEXT, uri);
+
+        startActivity(Intent.createChooser(intent, "Share link!"));
     }
 }
 

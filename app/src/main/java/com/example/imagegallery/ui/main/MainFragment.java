@@ -128,11 +128,11 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
     private void initFab() {
         FloatingActionButton button = getView().findViewById(R.id.fab);
         button.setOnClickListener((View view) -> {
-            //buildDialogFragment();
+            buildDialogFragment();
 
             //Intent intent = new Intent(getContext(), MyMotionActivity2.class);
             //startActivity(intent);
-            shareTextUrl();
+            //shareTextUrl();
 
         });
     }

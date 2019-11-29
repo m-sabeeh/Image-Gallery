@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import com.example.imagegallery.R;
 import com.example.imagegallery.models.Hit;
 import com.facebook.common.executors.UiThreadImmediateExecutorService;
+import com.facebook.common.internal.Supplier;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.BaseDataSubscriber;
 import com.facebook.datasource.DataSource;
@@ -29,6 +30,7 @@ import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber;
 import com.facebook.imagepipeline.image.CloseableBitmap;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.imagepipeline.request.BasePostprocessor;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
@@ -85,23 +87,11 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
     @Override
     public void onBindViewHolder(@NonNull final ViewPagerAdapter.ViewHolder holder, final int position) {
         Hit hit = Objects.requireNonNull(getItem(position));
-
-        //holder.progressBar.setVisibility(View.VISIBLE);
         GenericDraweeHierarchy hierarchy = holder.draweeView.getHierarchy();
         hierarchy.setProgressBarImage(new ProgressBarDrawable());
-        /*GenericDraweeHierarchyBuilder.newInstance(mContext.getResources())
-                .setProgressBarImage(new ProgressBarDrawable())
-                .setProgressBarImageScaleType(ScalingUtils.ScaleType.CENTER_INSIDE)
-                .build();*/
         holder.draweeView.setHierarchy(hierarchy);
-////
-        Uri uri = Uri.parse(hit.getLargeImageURL());
-        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
-                .setProgressiveRenderingEnabled(true)
-                .build();
         PipelineDraweeControllerBuilder controllerBuilder = Fresco.newDraweeControllerBuilder()
-                //.setUri(hit.getLargeImageURL())
-                .setImageRequest(request)
+                .setDataSourceSupplier(() -> getDataSource(hit.getLargeImageURL(), position))
                 .setOldController(holder.draweeView.getController())
                 .setControllerListener(new BaseControllerListener<ImageInfo>() {
                     @Override
@@ -115,44 +105,16 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
                 });
         holder.draweeView.setController(controllerBuilder.build());
         //////////
-        ImagePipeline imagePipeline = Fresco.getImagePipeline();
+/*        ImagePipeline imagePipeline = Fresco.getImagePipeline();
         DataSource<CloseableReference<CloseableImage>>
-                dataSource = imagePipeline.fetchDecodedImage(request, this);
-        DataSubscriber dataSubscriber = new BaseDataSubscriber<CloseableReference<CloseableBitmap>>() {
-            @Override
-            public void onNewResultImpl(
-                    DataSource<CloseableReference<CloseableBitmap>> dataSource) {
-                if (!dataSource.isFinished()) {
-                    return;
-                }
-                CloseableReference<CloseableBitmap> imageReference = dataSource.getResult();
-                if (imageReference != null) {
-                    final CloseableReference<CloseableBitmap> closeableReference = imageReference.clone();
-                    try {
-                        CloseableBitmap closeableBitmap = closeableReference.get();
-                        Bitmap bitmap = closeableBitmap.getUnderlyingBitmap();
-                        if (bitmap != null && !bitmap.isRecycled()) {
-                            Log.d(TAG, "onNewResultImpl: " + bitmap);
-                            createPaletteAsync(bitmap, position);
-                        }
-                    } finally {
-                        imageReference.close();
-                        closeableReference.close();
-                    }
-                }
-            }
+                dataSource = imagePipeline.fetchDecodedImage(request, this);*/
 
-            @Override
-            public void onFailureImpl(DataSource dataSource) {
-                Throwable throwable = dataSource.getFailureCause();
-                // handle failure
-            }
-        };
 
-        DataSubscriber dataSubscriber2 = new BaseBitmapDataSubscriber() {
+/*        DataSubscriber dataSubscriber2 = new BaseBitmapDataSubscriber() {
             @Override
             protected void onNewResultImpl(Bitmap bitmap) {
                 if (bitmap != null)
+
                     createPaletteAsync(bitmap, position);
             }
 
@@ -161,8 +123,14 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
 
             }
         };
-        dataSource.subscribe(dataSubscriber2, UiThreadImmediateExecutorService.getInstance());
 
+        try {
+            dataSource.subscribe(dataSubscriber2, UiThreadImmediateExecutorService.getInstance());
+        } finally {
+            if (dataSource != null) {
+                dataSource.close();
+            }
+        }*/
 //////////////
 /*        Uri uri = Uri.parse(hit.getLargeImageURL());
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
@@ -195,6 +163,22 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
                 .into(holder.imageView);*/
     }
 
+    private DataSource<CloseableReference<CloseableImage>> getDataSource(String imageUri, int position) {
+        Uri uri = Uri.parse(imageUri);
+        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
+                .setProgressiveRenderingEnabled(true)
+                .setPostprocessor(new BasePostprocessor() {
+                    @Override
+                    public void process(Bitmap bitmap) {
+                        super.process(bitmap);
+                        createPaletteAsync(bitmap, position);
+                    }
+                })
+                .build();
+        ImagePipeline imagePipeline = Fresco.getImagePipeline();
+        return imagePipeline.fetchDecodedImage(request, this);
+    }
+
 
     class ViewHolder extends RecyclerView.ViewHolder {
         //private ImageView imageView;
@@ -224,7 +208,7 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
             public void onGenerated(Palette p) {
                 notifyItemChanged(position, p);
 
-               // Log.d(TAG, "onGenerated: " + p.toString());
+                // Log.d(TAG, "onGenerated: " + p.toString());
             }
         });
     }

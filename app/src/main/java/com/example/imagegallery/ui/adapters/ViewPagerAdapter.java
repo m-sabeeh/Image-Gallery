@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.imagegallery.R;
 import com.example.imagegallery.models.Hit;
@@ -35,6 +36,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
@@ -105,6 +107,13 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
                     }
                 });
         holder.draweeView.setController(controllerBuilder.build());
+
+        holder.likes.setText(withSuffix(hit.getLikes()));
+        holder.shares.setText(withSuffix(hit.getFavorites()));
+        holder.comments.setText(withSuffix(hit.getComments()));
+        holder.views.setText(withSuffix(hit.getViews()));
+        holder.downloads.setText(withSuffix(hit.getDownloads()));
+
         //////////
 /*        ImagePipeline imagePipeline = Fresco.getImagePipeline();
         DataSource<CloseableReference<CloseableImage>>
@@ -182,14 +191,22 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
         return imageRequest;
     }
 
+    public static String withSuffix(long count) {
+        if (count < 1000) return "" + count;
+        int exp = (int) (Math.log(count) / Math.log(1000));
+        return String.format(Locale.getDefault(), "%.1f%c",
+                count / Math.pow(1000, exp),
+                "kMGTPE".charAt(exp - 1));
+    }
+
 
     class ViewHolder extends RecyclerView.ViewHolder {
         //private ImageView imageView;
         //private SimpleDraweeView draweeView;
         private PhotoDraweeView draweeView;
-        View viewColor1;
-        View viewColor2;
-        View viewColor3;
+        View viewColor1, viewColor2, viewColor3;
+        TextView likes, shares, comments, views, downloads;
+
         //private ProgressBar progressBar;
 
         public ViewHolder(@NonNull View itemView) {
@@ -199,9 +216,12 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
             viewColor1 = itemView.findViewById(R.id.color1);
             viewColor2 = itemView.findViewById(R.id.color2);
             viewColor3 = itemView.findViewById(R.id.color3);
-            //viewColor1.setVisibility(View.GONE);
-            //viewColor2.setVisibility(View.GONE);
-            //viewColor3.setVisibility(View.GONE);
+            likes = itemView.findViewById(R.id.likes);
+            shares = itemView.findViewById(R.id.shares);
+            comments = itemView.findViewById(R.id.comments);
+            views = itemView.findViewById(R.id.views);
+            downloads = itemView.findViewById(R.id.downloads);
+
         }
     }
 

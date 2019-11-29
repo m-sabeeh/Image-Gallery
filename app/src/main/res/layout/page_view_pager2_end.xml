@@ -5,8 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
     <me.relex.photodraweeview.PhotoDraweeView
         android:id="@+id/main_image"
@@ -34,57 +33,100 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
+        android:drawableLeft="@drawable/ic_favorite_border_white_24dp"
+        android:drawablePadding="8dp"
+        android:gravity="center"
         android:text="Likes"
         android:textColor="@color/colorPrimaryLight"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/line" />
+        app:layout_constraintBottom_toTopOf="@+id/first_line"
+        app:layout_constraintEnd_toStartOf="@+id/shares"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="@id/startGuideline" />
+
+
+    <TextView
+        android:id="@+id/shares"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:drawableLeft="@drawable/ic_share_white_24dp"
+        android:drawablePadding="8dp"
+        android:gravity="center"
+        android:text="Shares"
+        android:textColor="@color/colorPrimaryLight"
+        app:layout_constraintBottom_toTopOf="@id/first_line"
+        app:layout_constraintEnd_toStartOf="@id/endGuideline"
+        app:layout_constraintStart_toEndOf="@+id/likes" />
 
     <TextView
         android:id="@+id/comments"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:text="Likes"
+        android:drawableLeft="@drawable/ic_comment_white_24dp"
+        android:drawablePadding="8dp"
+        android:gravity="center"
+        android:text="Comments"
         android:textColor="@color/colorPrimaryLight"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/likes" />
+        app:layout_constraintBottom_toTopOf="@+id/second_line"
+        app:layout_constraintEnd_toStartOf="@+id/views"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="@id/startGuideline" />
+
+    <TextView
+        android:id="@+id/views"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_sentiment_satisfied_white_24dp"
+        android:drawablePadding="8dp"
+        android:gravity="center"
+        android:text="Views"
+        android:textColor="@color/colorPrimaryLight"
+        app:layout_constraintBottom_toTopOf="@id/second_line"
+        app:layout_constraintEnd_toStartOf="@+id/downloads"
+        app:layout_constraintStart_toEndOf="@id/comments" />
+
+    <TextView
+        android:id="@+id/downloads"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_file_download_white_24dp"
+        android:drawablePadding="8dp"
+        android:gravity="center"
+        android:text="Downloads"
+        android:textColor="@color/colorPrimaryLight"
+        app:layout_constraintBottom_toTopOf="@id/second_line"
+        app:layout_constraintEnd_toStartOf="@id/endGuideline"
+        app:layout_constraintStart_toEndOf="@+id/views" />
 
 
     <View
         android:id="@+id/color1"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="24dp"
         android:background="@drawable/pallete"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/topGuideline" />
+        app:layout_constraintStart_toStartOf="@id/color2"
+        app:layout_constraintTop_toBottomOf="@+id/color2" />
 
 
     <View
         android:id="@+id/color3"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/pallete"
-        android:layout_marginStart="8dp"
-        app:layout_constraintStart_toStartOf="@id/color1"
-        app:layout_constraintTop_toBottomOf="@id/color1" />
+        app:layout_constraintStart_toEndOf="@id/color2"
+        app:layout_constraintTop_toTopOf="@id/color2" />
 
 
     <View
         android:id="@+id/color2"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="16sp"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:background="@drawable/pallete"
-        app:layout_constraintStart_toEndOf="@id/color1"
-        app:layout_constraintTop_toTopOf="@id/color1" />
+        app:layout_constraintStart_toStartOf="@id/startGuideline"
+        app:layout_constraintTop_toTopOf="@id/topGuideline" />
 
-    <View
-        android:id="@+id/line"
-        android:layout_width="0dp"
-        android:layout_height="1px"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/color2" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/topGuideline"
@@ -92,6 +134,43 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent=".75" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/startGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".10" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/endGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".90" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/screenBottomGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="0dp" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/first_line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent=".90" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/second_line"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent=".98" />
+
 
     <!--    <ImageView
             android:id="@+id/main_image"

@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent=".85">
+            app:layout_constraintGuide_percent=".88">
 
         </Constraint>
 
@@ -34,7 +34,7 @@
             android:layout_height="80dp"
             app:layout_constraintEnd_toStartOf="@+id/color2"
             app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@id/startGuideline"
             app:layout_constraintTop_toTopOf="@id/topGuideline">
 
         </Constraint>
@@ -42,7 +42,7 @@
             android:id="@+id/color3"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            app:layout_constraintEnd_toEndOf="@id/line"
+            app:layout_constraintEnd_toStartOf="@id/endGuideline"
             app:layout_constraintStart_toEndOf="@+id/color2"
             app:layout_constraintTop_toTopOf="@id/color2">
 
@@ -71,6 +71,91 @@
 
         </Constraint>
 
+        <Constraint
+            android:id="@+id/first_line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="1">
+
+        </Constraint>
+
+        <Constraint
+            android:id="@+id/second_line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="1">
+
+        </Constraint>
+
+
+        <Constraint
+            android:id="@+id/likes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:alpha="0"
+            android:drawablePadding="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/first_line"
+            app:layout_constraintEnd_toStartOf="@+id/shares"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="@id/startGuideline">
+
+        </Constraint>
+
+
+        <Constraint
+            android:id="@+id/shares"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:alpha="0"
+            android:drawablePadding="8dp"
+            android:textColor="@color/colorPrimaryLight"
+            app:layout_constraintBottom_toTopOf="@id/first_line"
+            app:layout_constraintEnd_toStartOf="@id/endGuideline"
+            app:layout_constraintStart_toEndOf="@+id/likes">
+
+        </Constraint>
+
+        <Constraint
+            android:id="@+id/comments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0"
+            android:drawablePadding="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/second_line"
+            app:layout_constraintEnd_toStartOf="@+id/views"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="@id/startGuideline">
+
+        </Constraint>
+
+        <Constraint
+            android:id="@+id/views"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0"
+            android:drawablePadding="8dp"
+            app:layout_constraintBottom_toTopOf="@id/second_line"
+            app:layout_constraintEnd_toStartOf="@+id/downloads"
+            app:layout_constraintStart_toEndOf="@id/comments">
+
+        </Constraint>
+
+        <Constraint
+            android:id="@+id/downloads"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0"
+            android:drawablePadding="8dp"
+            app:layout_constraintBottom_toTopOf="@id/second_line"
+            app:layout_constraintEnd_toStartOf="@id/endGuideline"
+            app:layout_constraintStart_toEndOf="@+id/views">
+
+        </Constraint>
+
 
     </ConstraintSet>
 
@@ -87,31 +172,31 @@
 
         <Constraint
             android:id="@+id/color1"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/topGuideline">
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="24dp"
+            app:layout_constraintStart_toStartOf="@id/color2"
+            app:layout_constraintTop_toBottomOf="@+id/color2">
 
         </Constraint>
 
         <Constraint
             android:id="@+id/color3"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="8dp"
-            app:layout_constraintStart_toStartOf="@id/color1"
-            app:layout_constraintTop_toBottomOf="@id/color1">
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toEndOf="@id/color2"
+            app:layout_constraintTop_toTopOf="@id/color2">
 
         </Constraint>
 
 
         <Constraint
             android:id="@+id/color2"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="16sp"
-            app:layout_constraintStart_toEndOf="@id/color1"
-            app:layout_constraintTop_toTopOf="@id/color1">
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            app:layout_constraintStart_toStartOf="@id/startGuideline"
+            app:layout_constraintTop_toTopOf="@id/topGuideline">
 
         </Constraint>
 
@@ -120,11 +205,95 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_margin="50dp"
-            android:alpha="1"
+            android:alpha="0"
             app:layout_constraintBottom_toBottomOf="@id/screenBottomGuideline"
             app:layout_constraintEnd_toEndOf="@id/endGuideline"
             app:layout_constraintStart_toStartOf="@id/startGuideline"
             app:layout_constraintTop_toBottomOf="@+id/topGuideline">
+
+        </Constraint>
+
+        <Constraint
+            android:id="@+id/first_line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent=".90">
+
+        </Constraint>
+
+        <Constraint
+            android:id="@+id/second_line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent=".98">
+
+        </Constraint>
+
+        <Constraint
+            android:id="@+id/likes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:alpha="1"
+            android:drawablePadding="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/first_line"
+            app:layout_constraintEnd_toStartOf="@+id/shares"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="@id/startGuideline">
+
+        </Constraint>
+
+
+        <Constraint
+            android:id="@+id/shares"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:alpha="1"
+            android:drawablePadding="8dp"
+            android:textColor="@color/colorPrimaryLight"
+            app:layout_constraintBottom_toTopOf="@id/first_line"
+            app:layout_constraintEnd_toStartOf="@id/endGuideline"
+            app:layout_constraintStart_toEndOf="@+id/likes">
+
+        </Constraint>
+
+        <Constraint
+            android:id="@+id/comments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="1"
+            android:drawablePadding="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/second_line"
+            app:layout_constraintEnd_toStartOf="@+id/views"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="@id/startGuideline">
+
+        </Constraint>
+
+        <Constraint
+            android:id="@+id/views"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="1"
+            android:drawablePadding="8dp"
+            app:layout_constraintBottom_toTopOf="@id/second_line"
+            app:layout_constraintEnd_toStartOf="@+id/downloads"
+            app:layout_constraintStart_toEndOf="@id/comments">
+
+        </Constraint>
+
+        <Constraint
+            android:id="@+id/downloads"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="1"
+            android:drawablePadding="8dp"
+            app:layout_constraintBottom_toTopOf="@id/second_line"
+            app:layout_constraintEnd_toStartOf="@id/endGuideline"
+            app:layout_constraintStart_toEndOf="@+id/views">
 
         </Constraint>
 
@@ -136,6 +305,26 @@
         app:constraintSetStart="@id/start"
         app:duration="250"
         app:motionInterpolator="easeInOut">
+
+        <KeyFrameSet>
+            <KeyAttribute
+                android:alpha="0"
+                app:framePosition="95"
+                app:motionTarget="@id/first_line" />
+
+            <KeyAttribute
+                app:framePosition="99"
+                app:motionTarget="@id/color1">
+                <CustomAttribute
+                    app:attributeName="layout_width"
+                    app:customDimension="30dp" />
+                <CustomAttribute
+                    app:attributeName="layout_height"
+                    app:customDimension="30dp" />
+            </KeyAttribute>
+
+
+        </KeyFrameSet>
 
         <OnClick
             app:clickAction="toggle"

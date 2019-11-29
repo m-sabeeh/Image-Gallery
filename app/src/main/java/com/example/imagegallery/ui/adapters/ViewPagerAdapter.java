@@ -91,7 +91,8 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
         hierarchy.setProgressBarImage(new ProgressBarDrawable());
         holder.draweeView.setHierarchy(hierarchy);
         PipelineDraweeControllerBuilder controllerBuilder = Fresco.newDraweeControllerBuilder()
-                .setDataSourceSupplier(() -> getDataSource(hit.getLargeImageURL(), position))
+                .setImageRequest(getImageRequest(hit.getLargeImageURL(), position))
+                //.setDataSourceSupplier(() -> getDataSource(hit.getLargeImageURL(), position))
                 .setOldController(holder.draweeView.getController())
                 .setControllerListener(new BaseControllerListener<ImageInfo>() {
                     @Override
@@ -163,9 +164,12 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
                 .into(holder.imageView);*/
     }
 
-    private DataSource<CloseableReference<CloseableImage>> getDataSource(String imageUri, int position) {
+    //private DataSource<CloseableReference<CloseableImage>> getImageRequest(String imageUri, int position) {
+    private ImageRequest getImageRequest(String imageUri, int position) {
         Uri uri = Uri.parse(imageUri);
-        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
+        //ImagePipeline imagePipeline = Fresco.getImagePipeline();
+        //imagePipeline.fetchDecodedImage(request, this);
+        ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(uri)
                 .setProgressiveRenderingEnabled(true)
                 .setPostprocessor(new BasePostprocessor() {
                     @Override
@@ -175,8 +179,7 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
                     }
                 })
                 .build();
-        ImagePipeline imagePipeline = Fresco.getImagePipeline();
-        return imagePipeline.fetchDecodedImage(request, this);
+        return imageRequest;
     }
 
 
@@ -191,7 +194,6 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            //imageView = itemView.findViewById(R.id.main_image);
             draweeView = itemView.findViewById(R.id.main_image);
             //progressBar = itemView.findViewById(R.id.indeterminateBar);
             viewColor1 = itemView.findViewById(R.id.color1);
@@ -203,12 +205,10 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
         }
     }
 
-    public void createPaletteAsync(Bitmap bitmap, final int position) {
+    private void createPaletteAsync(Bitmap bitmap, final int position) {
         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
             public void onGenerated(Palette p) {
                 notifyItemChanged(position, p);
-
-                // Log.d(TAG, "onGenerated: " + p.toString());
             }
         });
     }

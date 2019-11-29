@@ -14,85 +14,100 @@
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
         fresco:actualImageScaleType="fitCenter"
         fresco:backgroundImage="@color/colorBlack"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
+
     <View
         android:id="@+id/bottomSheet"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@android:color/transparent"
-        app:layout_constraintBottom_toBottomOf="@id/line"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guideline2" />
+        android:background="@color/colorPrimaryLight"
+        app:layout_constraintBottom_toBottomOf="@id/screenBottomGuideline"
+        app:layout_constraintEnd_toEndOf="@id/endGuideline"
+        app:layout_constraintStart_toStartOf="@id/startGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/topGuideline" />
+
 
     <View
         android:id="@+id/color1"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_margin="0dp"
         android:background="@drawable/pallete"
         app:layout_constraintEnd_toStartOf="@+id/color2"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/guideline2"
-        />
+        app:layout_constraintTop_toTopOf="@id/topGuideline" />
 
-    <View
-        android:id="@+id/color2"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_margin="0dp"
-        android:background="@drawable/pallete"
-        app:layout_constraintEnd_toStartOf="@+id/color3"
-        app:layout_constraintStart_toEndOf="@+id/color1"
-        app:layout_constraintTop_toTopOf="@id/color1"
-        />
-
-    <!--    </LinearLayout>-->
 
     <View
         android:id="@+id/color3"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_margin="0dp"
         android:background="@drawable/pallete"
         app:layout_constraintEnd_toEndOf="@id/line"
         app:layout_constraintStart_toEndOf="@+id/color2"
-        app:layout_constraintTop_toTopOf="@id/color2"
-        />
+        app:layout_constraintTop_toTopOf="@id/color2" />
+
+    <View
+        android:id="@+id/color2"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@drawable/pallete"
+        app:layout_constraintEnd_toStartOf="@+id/color3"
+        app:layout_constraintStart_toEndOf="@+id/color1"
+        app:layout_constraintTop_toTopOf="@id/color1" />
 
     <View
         android:id="@+id/line"
         android:layout_width="0dp"
         android:layout_height="1px"
+
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/color1" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
+        android:id="@+id/topGuideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent=".85" />
 
-    <!--    <ImageView
-            android:id="@+id/main_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorBlack"
-            android:scaleType="centerInside"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/backgrounds/scenic" />-->
+
+    <TextView
+        android:id="@+id/likes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Likes"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintTop_toBottomOf="@+id/line" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/startGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".10" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/endGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".90" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/screenBottomGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="0dp" />
 
     <!--    <ProgressBar
             android:id="@+id/indeterminateBar"

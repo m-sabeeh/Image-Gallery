@@ -100,7 +100,7 @@ public class CustomPagedListAdapter extends PagedListAdapter<Hit, CustomPagedLis
                 @Override
                 public void onClick(View v) {
                     if (mListener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
-                        Log.d(TAG, "onClick: Adapter" + getItem(getAdapterPosition()));
+                        Log.d(TAG, "onClick: Adapter" + " " + getAdapterPosition() + " " + getItem(getAdapterPosition()));
                         mListener.onItemClick(v, getAdapterPosition());
                     }
                 }

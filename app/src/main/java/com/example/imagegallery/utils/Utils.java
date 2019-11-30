@@ -8,6 +8,8 @@ import com.example.imagegallery.ContainerActivity;
 import com.example.imagegallery.R;
 import com.example.imagegallery.ui.containerfragments.ViewPagerFragment;
 
+import java.util.Locale;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -21,7 +23,7 @@ import androidx.fragment.app.FragmentManager;
  * application should use the {@link android.content.AsyncQueryHandler}
  * or {@link android.os.AsyncTask} object to perform operations asynchronously on a separate thread.
  */
-public class Utils {
+public final class Utils {
     public static class IntentUtils {
         public static final String FRAGMENT_CLASS = ViewPagerFragment.class.getName();
         public static final String CONTAINER_ID = "Container ID";
@@ -50,6 +52,16 @@ public class Utils {
             intent.putExtra(CONTAINER_ID, R.id.secondaryContainer);
             //intent.putExtra(ACTIVITY_TITLE, context.getString(R.string.imageFragmentActivityTitle));
             return intent;
+        }
+    }
+
+    public static class General {
+        public static String withSuffix(long count) {
+            if (count < 1000) return "" + count;
+            int exp = (int) (Math.log(count) / Math.log(1000));
+            return String.format(Locale.getDefault(), "%.1f%c",
+                    count / Math.pow(1000, exp),
+                    "kMGTPE".charAt(exp - 1));
         }
     }
 }

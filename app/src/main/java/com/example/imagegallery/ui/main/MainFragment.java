@@ -76,10 +76,9 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
 
     private void initSwipeRefreshLayout() {
         refreshLayout = Objects.requireNonNull(getView()).findViewById(R.id.swipeRefresh);
+        refreshLayout.setColorSchemeResources(R.color.colorPrimary,R.color.colorPrimaryDark,R.color.colorPrimaryLight);
         refreshLayout.setOnRefreshListener(() -> {
-            mViewModel.setSearchTerm(mViewModel.getSearchTerm());//should only retry to fetch data, instead of doing this.
-            initLiveDataObservations();
-            refreshLayout.setRefreshing(false);
+            mViewModel.invalidateSource();
         });
     }
 
@@ -158,6 +157,7 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
             public void onChanged(PagedList<Hit> hits) {
                 Log.d(TAG, "onChanged: MainFragment");
                 mAdapter.submitList(hits);
+                refreshLayout.setRefreshing(false);
             }
         });
     }
@@ -199,7 +199,7 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
     public void onResume() {
         super.onResume();
         if (recyclerView != null && Integer.signum(dataPosition) == 1) {
-            recyclerView.smoothScrollToPosition(dataPosition);
+            recyclerView.scrollToPosition(dataPosition);
         }
     }
 

@@ -14,7 +14,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.imagegallery.R;
+import com.example.imagegallery.databinding.PageViewPager2Binding;
 import com.example.imagegallery.models.Hit;
+import com.example.imagegallery.utils.Utils;
 import com.facebook.common.executors.UiThreadImmediateExecutorService;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.references.CloseableReference;
@@ -40,6 +42,9 @@ import java.util.Locale;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.BindingAdapter;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.paging.PagedListAdapter;
 import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.DiffUtil;
@@ -51,10 +56,12 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
     private static final String TAG = "ViewPagerAdapter";
     private Context mContext;
     private OnItemInteractionListener mListener;
+    private LifecycleOwner lifecycleOwner;
 
-    public ViewPagerAdapter(Context context) {
+    public ViewPagerAdapter(Context context, LifecycleOwner owner) {
         super(DIFF_CALLBACK);
         mContext = context;
+        lifecycleOwner = owner;
     }
 
     public void setOnItemInteractionListener(OnItemInteractionListener listener) {
@@ -64,9 +71,10 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
     @NonNull
     @Override
     public ViewPagerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.page_view_pager2, parent, false);
-        return new ViewPagerAdapter.ViewHolder(itemView);
+        //View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.page_view_pager2, parent, false);
+        PageViewPager2Binding pager2Binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.page_view_pager2, parent, false);
+        //pager2Binding.setLifecycleOwner(lifecycleOwner);
+        return new ViewPagerAdapter.ViewHolder(pager2Binding);
     }
 
     @Override
@@ -74,22 +82,20 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
         if (!payloads.isEmpty()) {
             //Log.d(TAG, "onBindViewHolder: " + payloads.get(0).getClass());
             Palette p = ((Palette) payloads.get(0));
-            //holder.viewColor1.setVisibility(View.VISIBLE);
-            //holder.viewColor2.setVisibility(View.VISIBLE);
-            //holder.viewColor3.setVisibility(View.VISIBLE);
-            //holder.viewColor1.setBackgroundColor((p.getDarkVibrantColor(0)));
-            //holder.viewColor2.setBackgroundColor((p.getLightVibrantColor(0)));
-            holder.viewColor1.getBackground().setColorFilter(p.getDarkVibrantColor(0), PorterDuff.Mode.SRC_ATOP);
+            holder.bindPalette(p);
+            /*holder.viewColor1.getBackground().setColorFilter(p.getDarkVibrantColor(0), PorterDuff.Mode.SRC_ATOP);
             holder.viewColor2.getBackground().setColorFilter(p.getLightVibrantColor(0), PorterDuff.Mode.SRC_ATOP);
-            holder.viewColor3.getBackground().setColorFilter(p.getDarkMutedColor(0), PorterDuff.Mode.SRC_ATOP);
+            holder.viewColor3.getBackground().setColorFilter(p.getDarkMutedColor(0), PorterDuff.Mode.SRC_ATOP);*/
         } else
             super.onBindViewHolder(holder, position, payloads);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final ViewPagerAdapter.ViewHolder holder, final int position) {
+
         Hit hit = Objects.requireNonNull(getItem(position));
-        GenericDraweeHierarchy hierarchy = holder.draweeView.getHierarchy();
+        holder.bind(hit);
+        /*GenericDraweeHierarchy hierarchy = holder.draweeView.getHierarchy();
         hierarchy.setProgressBarImage(new ProgressBarDrawable());
         holder.draweeView.setHierarchy(hierarchy);
         PipelineDraweeControllerBuilder controllerBuilder = Fresco.newDraweeControllerBuilder()
@@ -106,13 +112,16 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
                         holder.draweeView.update(imageInfo.getWidth(), imageInfo.getHeight());
                     }
                 });
-        holder.draweeView.setController(controllerBuilder.build());
+        holder.draweeView.setController(controllerBuilder.build());*/
 
-        holder.likes.setText(withSuffix(hit.getLikes()));
-        holder.shares.setText(withSuffix(hit.getFavorites()));
-        holder.comments.setText(withSuffix(hit.getComments()));
-        holder.views.setText(withSuffix(hit.getViews()));
-        holder.downloads.setText(withSuffix(hit.getDownloads()));
+
+        //--------------------------------------------------------------------------------------
+
+        //holder.likes.setText(withSuffix(hit.getLikes()));
+        //holder.shares.setText(withSuffix(hit.getFavorites()));
+        //holder.comments.setText(withSuffix(hit.getComments()));
+        //holder.views.setText(withSuffix(hit.getViews()));
+        //holder.downloads.setText(withSuffix(hit.getDownloads()));
 
         //////////
 /*        ImagePipeline imagePipeline = Fresco.getImagePipeline();
@@ -183,7 +192,7 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
                 .setPostprocessor(new BasePostprocessor() {
                     @Override
                     public void process(Bitmap bitmap) {
-                        super.process(bitmap);
+                        //super.process(bitmap);
                         createPaletteAsync(bitmap, position);
                     }
                 })
@@ -191,43 +200,48 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
         return imageRequest;
     }
 
-    public static String withSuffix(long count) {
-        if (count < 1000) return "" + count;
-        int exp = (int) (Math.log(count) / Math.log(1000));
-        return String.format(Locale.getDefault(), "%.1f%c",
-                count / Math.pow(1000, exp),
-                "kMGTPE".charAt(exp - 1));
-    }
-
-
     class ViewHolder extends RecyclerView.ViewHolder {
         //private ImageView imageView;
         //private SimpleDraweeView draweeView;
+        private final PageViewPager2Binding itemBinding;
         private PhotoDraweeView draweeView;
         View viewColor1, viewColor2, viewColor3;
         TextView likes, shares, comments, views, downloads;
 
         //private ProgressBar progressBar;
 
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            draweeView = itemView.findViewById(R.id.main_image);
-            //progressBar = itemView.findViewById(R.id.indeterminateBar);
-            viewColor1 = itemView.findViewById(R.id.color1);
-            viewColor2 = itemView.findViewById(R.id.color2);
-            viewColor3 = itemView.findViewById(R.id.color3);
-            likes = itemView.findViewById(R.id.likes);
-            shares = itemView.findViewById(R.id.shares);
-            comments = itemView.findViewById(R.id.comments);
-            views = itemView.findViewById(R.id.views);
-            downloads = itemView.findViewById(R.id.downloads);
+        public ViewHolder(@NonNull PageViewPager2Binding pager2Binding) {
+            super(pager2Binding.getRoot());
+            itemBinding = pager2Binding;
+            //draweeView = viewItem.findViewById(R.id.main_image);
+            //progressBar = viewItem.findViewById(R.id.indeterminateBar);
+            //viewColor1 = viewItem.findViewById(R.id.color1);
+            //viewColor2 = viewItem.findViewById(R.id.color2);
+            //viewColor3 = viewItem.findViewById(R.id.color3);
 
+        }
+
+        public void bindPalette(Palette p) {
+            itemBinding.setPalette(p);
+            itemBinding.executePendingBindings();
+
+        }
+
+        public void bind(Hit hit) {
+            itemBinding.setViewModel(hit);
+            itemBinding.executePendingBindings();
         }
     }
 
     private void createPaletteAsync(Bitmap bitmap, final int position) {
         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
             public void onGenerated(Palette p) {
+                /*for (Palette.Swatch swatch : p.getSwatches()) {
+                    //Color color = Color.valueOf(swatch.getRgb());
+                    //Log.d(TAG, "onGenerated: " + position + " " + p.getTargets().size() + " " + p.getSwatches().size());
+                    //Log.d(TAG, "onGenerated: " + position + " " + color.red() * 255 + " " + color.green() * 255 + " " + color.blue() * 255);
+                }*/
+                //Log.d(TAG, "onGenerated: " + p.getSwatches());
                 notifyItemChanged(position, p);
             }
         });
@@ -250,4 +264,39 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
             return oldItem.equals(newItem);
         }
     };
+
+    @BindingAdapter({"android:imageUri"})
+    public void loadImage(PhotoDraweeView view, String imageUrl) {
+        GenericDraweeHierarchy hierarchy = view.getHierarchy();
+        hierarchy.setProgressBarImage(new ProgressBarDrawable());
+        view.setHierarchy(hierarchy);
+        Uri uri = Uri.parse(imageUrl);
+        ImageRequest imageRequest = ImageRequestBuilder.newBuilderWithSource(uri)
+                .setProgressiveRenderingEnabled(true)
+                .setPostprocessor(new BasePostprocessor() {
+                    @Override
+                    public void process(Bitmap bitmap) {
+                        //super.process(bitmap);
+                        //createPaletteAsync(bitmap, position);
+                    }
+                })
+                .build();
+
+        PipelineDraweeControllerBuilder controllerBuilder = Fresco.newDraweeControllerBuilder()
+                //.setImageRequest(getImageRequest(imageUrl, position))
+                .setImageRequest(imageRequest)
+                //.setDataSourceSupplier(() -> getDataSource(hit.getLargeImageURL(), position))
+                .setOldController(view.getController())
+                .setControllerListener(new BaseControllerListener<ImageInfo>() {
+                    @Override
+                    public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
+                        super.onFinalImageSet(id, imageInfo, animatable);
+                        if (imageInfo == null || view == null) {
+                            return;
+                        }
+                        view.update(imageInfo.getWidth(), imageInfo.getHeight());
+                    }
+                });
+        view.setController(controllerBuilder.build());
+    }
 }

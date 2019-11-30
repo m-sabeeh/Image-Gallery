@@ -48,7 +48,6 @@ public class PixabayDataSource extends PageKeyedDataSource<Integer, Hit> {
                     //callback.onResult(hitList, null, null);
 
                     Log.d(TAG, "onResponse: " + callback.toString());
-                    //updateRepo(response.body().getHits());
                 } else Log.d(TAG, "onResponse: Load Initial error " + response.body());
 
             }
@@ -91,5 +90,9 @@ public class PixabayDataSource extends PageKeyedDataSource<Integer, Hit> {
                 Log.d(TAG, "onFailure: " + call + t.getMessage());
             }
         });
+    }
+
+    interface ResponseListener {
+        void onSuccess();
     }
 }

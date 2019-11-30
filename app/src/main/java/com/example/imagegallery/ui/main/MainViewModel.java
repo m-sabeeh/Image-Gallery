@@ -53,4 +53,8 @@ public class MainViewModel extends ViewModel {
         mLiveData = Transformations.switchMap(searchTermLiveData,
                 (String input) -> mImageRepo.searchImages(input.toLowerCase(), page_size));
     }
+
+    public void invalidateSource() {
+        mImageRepo.invalidateDataSource();
+    }
 }

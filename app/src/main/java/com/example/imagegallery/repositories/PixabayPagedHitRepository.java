@@ -12,11 +12,11 @@ import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
 
 public class PixabayPagedHitRepository implements ImageRepository {
-    private static final String TAG = "ImageRepository";
+    private static final String TAG = "PixabayPagedHitRepository";
     private static ImageRepository mImageRepository;
     private PixabayApiService pixabayApiService;
-    private DataSource<Integer, Hit> latestDataSource;
     private LiveData<PagedList<Hit>> mLiveData;
+    PixabayDataSourceFactory factory;
 
     private PixabayPagedHitRepository(PixabayApiService apiService) {
         Log.d(TAG, "ImageRepository: Constructor " + apiService);
@@ -32,8 +32,7 @@ public class PixabayPagedHitRepository implements ImageRepository {
 
     @Override
     public LiveData<PagedList<Hit>> searchImages(String query, int page_size) {
-        DataSource.Factory<Integer, Hit> factory = new PixabayDataSourceFactory(pixabayApiService, query);
-        latestDataSource = factory.create();
+        factory = new PixabayDataSourceFactory(pixabayApiService, query);
         PagedList.Config config = initPagedListConfig(page_size);
         mLiveData = new LivePagedListBuilder<>(factory, config).build();
         return mLiveData;
@@ -57,5 +56,10 @@ public class PixabayPagedHitRepository implements ImageRepository {
     @Override
     public LiveData<PagedList<Hit>> getLiveHitList() {
         return mLiveData;
+    }
+
+    @Override
+    public void invalidateDataSource() {
+        factory.invalidateDataSource();
     }
 }

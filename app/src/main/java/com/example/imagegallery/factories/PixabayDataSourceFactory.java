@@ -26,7 +26,13 @@ public class PixabayDataSourceFactory extends DataSource.Factory<Integer, Hit> {
     @Override
     public DataSource<Integer, Hit> create() {
         PixabayDataSource latestDataSource = new PixabayDataSource(apiService, searchQuery);
-        //dataSourceLiveData.postValue(latestDataSource);
+        dataSourceLiveData.postValue(latestDataSource);
         return latestDataSource;
+    }
+
+    public void invalidateDataSource() {
+        PixabayDataSource dataSource = dataSourceLiveData.getValue();
+        if (dataSource != null)
+            dataSource.invalidate();
     }
 }

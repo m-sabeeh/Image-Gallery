@@ -52,7 +52,7 @@ public class ViewPagerFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         ImageRepository mImageRepo = PixabayPagedHitRepository.getInstance(null);//repository is already initialized
         liveData = mImageRepo.getLiveHitList();
-        mPagerAdapter = new ViewPagerAdapter(getContext(), this);
+        mPagerAdapter = new ViewPagerAdapter(getContext());
         mViewPager.setAdapter(mPagerAdapter);
         mPagerAdapter.submitList(liveData.getValue());
         int position = getArguments().getInt(Utils.IntentUtils.POSITION, 0);

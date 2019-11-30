@@ -312,18 +312,6 @@
                 app:framePosition="95"
                 app:motionTarget="@id/first_line" />
 
-            <KeyAttribute
-                app:framePosition="99"
-                app:motionTarget="@id/color1">
-                <CustomAttribute
-                    app:attributeName="layout_width"
-                    app:customDimension="30dp" />
-                <CustomAttribute
-                    app:attributeName="layout_height"
-                    app:customDimension="30dp" />
-            </KeyAttribute>
-
-
         </KeyFrameSet>
 
         <OnClick

@@ -54,10 +54,10 @@ public class SearchInputDialogFragment extends DialogFragment {
 
     }
 
-    private MainViewModel initViewModel() {
-        ViewModelProvider.Factory factory = Injection.getViewModelFactory();
+   /* private MainViewModel initViewModel() {
+        //ViewModelProvider.Factory factory = Injection.getViewModelFactory();
         return ViewModelProviders.of(this, factory).get(MainViewModel.class);
-    }
+    }*/
 
     private void sendResultBack(String s) {
         SearchInputListener inputListener = (SearchInputListener) getTargetFragment();

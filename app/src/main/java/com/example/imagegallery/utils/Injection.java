@@ -1,5 +1,7 @@
 package com.example.imagegallery.utils;
 
+import android.os.Bundle;
+
 import com.example.imagegallery.api.PixabayApi;
 import com.example.imagegallery.api.PixabayApiService;
 import com.example.imagegallery.repositories.ImageRepository;
@@ -7,6 +9,7 @@ import com.example.imagegallery.repositories.PixabayPagedHitRepository;
 import com.example.imagegallery.factories.ViewModelFactory;
 
 import androidx.lifecycle.ViewModelProvider;
+import androidx.savedstate.SavedStateRegistryOwner;
 
 public class Injection {
     private static PixabayApiService getPixabayApiService() {
@@ -17,8 +20,8 @@ public class Injection {
         return PixabayPagedHitRepository.getInstance(getPixabayApiService());
     }
 
-    public static ViewModelProvider.Factory getViewModelFactory() {
-        return new ViewModelFactory(getPixabayHitRepository());
+    public static ViewModelProvider.Factory getViewModelFactory(SavedStateRegistryOwner owner, Bundle defaultArgs) {
+        return new ViewModelFactory(owner, defaultArgs, getPixabayHitRepository());
     }
 
 

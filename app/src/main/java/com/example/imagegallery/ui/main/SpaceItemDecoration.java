@@ -21,9 +21,10 @@ public class SpaceItemDecoration extends RecyclerView.ItemDecoration {
         mColumns = columns;
     }
 
-    
+
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+        Log.d(TAG, "getItemOffsets: " + mColumns);
         StaggeredGridLayoutManager.LayoutParams lp = (StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
         int spanIndex = lp.getSpanIndex();
         if (mColumns == 2) {

@@ -2,7 +2,6 @@ package com.example.imagegallery.ui.main;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,16 +19,13 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class MainFragment extends Fragment implements SearchInputDialogFragment.SearchInputListener {
@@ -40,9 +36,15 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
     private RecyclerView recyclerView;
     private int dataPosition = -1;
     FragmentMainBinding fragmentMainBinding;
+    Bundle bundle = new Bundle();
 
     public static MainFragment newInstance() {
         return new MainFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Nullable
@@ -64,7 +66,9 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
         super.onActivityCreated(savedInstanceState);
         /*Toolbar toolbar = getView().findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);*/
-        mViewModel = initViewModel();
+        Log.d(TAG, "onActivityCreated: " + savedInstanceState);
+        mViewModel = initViewModel(savedInstanceState);
+        //MainViewModel.orientation = getResources().getConfiguration().orientation;
         fragmentMainBinding.setMainViewModel(mViewModel);
         initAdapter();
         initFab();
@@ -80,8 +84,10 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
         });
     }
 
-    private MainViewModel initViewModel() {
-        ViewModelProvider.Factory factory = Injection.getViewModelFactory();
+    // TODO: 03/12/2019 Do I really need SavedStateViewModel?
+    private MainViewModel initViewModel(Bundle savedInstanceState) {
+        Log.d(TAG, "initViewModel: ");
+        ViewModelProvider.Factory factory = Injection.getViewModelFactory(this, savedInstanceState);
         return ViewModelProviders.of(this, factory).get(MainViewModel.class);
     }
 
@@ -114,8 +120,8 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
         //RecyclerView.LayoutManager linearLayoutManger = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         //recyclerView.setLayoutManager(staggeredGridManager);
         recyclerView.setAdapter(mAdapter);
-        int spacingPixels = getResources().getDimensionPixelSize(R.dimen.recycler_view_spacing);
-        recyclerView.addItemDecoration(new SpaceItemDecoration(spacingPixels, 2));
+        //int spacingPixels = getResources().getDimensionPixelSize(R.dimen.recycler_view_spacing);
+        //recyclerView.addItemDecoration(new SpaceItemDecoration(spacingPixels, 2));
     }
 
 

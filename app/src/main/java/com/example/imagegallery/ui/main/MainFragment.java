@@ -3,21 +3,16 @@ package com.example.imagegallery.ui.main;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Canvas;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.example.imagegallery.MyMotionActivity;
-import com.example.imagegallery.MyMotionActivity2;
-import com.example.imagegallery.utils.Injection;
 import com.example.imagegallery.R;
-import com.example.imagegallery.models.Hit;
+import com.example.imagegallery.databinding.FragmentMainBinding;
 import com.example.imagegallery.ui.adapters.CustomPagedListAdapter;
+import com.example.imagegallery.utils.Injection;
 import com.example.imagegallery.utils.Utils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -25,17 +20,13 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.databinding.BindingAdapter;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.paging.PagedList;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -47,8 +38,8 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
     private CustomPagedListAdapter mAdapter;
     private SwipeRefreshLayout refreshLayout;
     private RecyclerView recyclerView;
-    private LiveData<PagedList<Hit>> liveData;
     private int dataPosition = -1;
+    FragmentMainBinding fragmentMainBinding;
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -58,7 +49,14 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_main, container, false);
+
+        fragmentMainBinding = DataBindingUtil.inflate(
+                inflater, R.layout.fragment_main, container, false);
+
+        /*FragmentMainBinding fragmentMainBinding = DataBindingUtil
+                .inflate(LayoutInflater.from(parent.getContext()), R.layout.page_view_pager2, parent, false);*/
+
+        return fragmentMainBinding.getRoot();
     }
 
     @Override
@@ -67,16 +65,16 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
         /*Toolbar toolbar = getView().findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);*/
         mViewModel = initViewModel();
+        fragmentMainBinding.setMainViewModel(mViewModel);
         initAdapter();
         initFab();
         initLiveDataObservations();
         initSwipeRefreshLayout();
-        setActivityTitle();
     }
 
     private void initSwipeRefreshLayout() {
         refreshLayout = Objects.requireNonNull(getView()).findViewById(R.id.swipeRefresh);
-        refreshLayout.setColorSchemeResources(R.color.colorPrimary,R.color.colorPrimaryDark,R.color.colorPrimaryLight);
+        refreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorPrimaryLight);
         refreshLayout.setOnRefreshListener(() -> {
             mViewModel.invalidateSource();
         });
@@ -87,30 +85,58 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
         return ViewModelProviders.of(this, factory).get(MainViewModel.class);
     }
 
-    private void initAdapter() {
-        Log.d(TAG, "initAdapter: ");
+    //@BindingAdapter("android:initAdapter")
+    // @BindingAdapter("android:initAdapter")
+    public void initAdapter() {
         mAdapter = new CustomPagedListAdapter(getContext());
         mAdapter.setOnItemInteractionListener((View view, int position) -> {
-            //Toast.makeText(getContext(), position + " " + liveData.getValue().get(position)
-            //        .getUser(), Toast.LENGTH_SHORT).show();
             //start new activity with intent containing full url
             Intent intent = Utils.IntentUtils.buildImageFragmentIntent(getContext());
-            //Gson gson = new Gson();
-            //intent.putExtra(Utils.IntentUtils.HIT_JSON, gson.toJson(liveData.getValue().get(position)));
             intent.putExtra(Utils.IntentUtils.POSITION, position);
             startActivityForResult(intent, Utils.IntentUtils.CODE_RETURN_POSITION);
+        });
+        recyclerView = fragmentMainBinding.recyclerView;
+        //recyclerView = Objects.requireNonNull(getView()).findViewById(R.id.recyclerView);
+        //int columns = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 3 : 2;
+        /*StaggeredGridLayoutManager staggeredGridManager =
+                new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL) {
+                    *//* *
+         * Disable predictive animations. There is a bug in RecyclerView which causes views that
+         * are being reloaded to pull invalid ViewHolders from the internal recycler stack if the
+         * adapter size has decreased since the ViewHolder was recycled.*//*
 
+                    @Override
+                    public boolean supportsPredictiveItemAnimations() {
+                        return false;
+                    }
+                };*/
+        //staggeredGridManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);//to correctly handle the decorations.
+        //RecyclerView.LayoutManager linearLayoutManger = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        //recyclerView.setLayoutManager(staggeredGridManager);
+        recyclerView.setAdapter(mAdapter);
+        int spacingPixels = getResources().getDimensionPixelSize(R.dimen.recycler_view_spacing);
+        recyclerView.addItemDecoration(new SpaceItemDecoration(spacingPixels, 2));
+    }
+
+
+   /* public static void initAdapter(View view, int i) {
+        mAdapter = new CustomPagedListAdapter(getContext());
+        mAdapter.setOnItemInteractionListener((View view, int position) -> {
+            //start new activity with intent containing full url
+            Intent intent = Utils.IntentUtils.buildImageFragmentIntent(getContext());
+            intent.putExtra(Utils.IntentUtils.POSITION, position);
+            startActivityForResult(intent, Utils.IntentUtils.CODE_RETURN_POSITION);
         });
 
         recyclerView = Objects.requireNonNull(getView()).findViewById(R.id.recyclerView);
         int columns = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 3 : 2;
         StaggeredGridLayoutManager staggeredGridManager =
                 new StaggeredGridLayoutManager(columns, LinearLayoutManager.VERTICAL) {
-                    /**
-                     * Disable predictive animations. There is a bug in RecyclerView which causes views that
-                     * are being reloaded to pull invalid ViewHolders from the internal recycler stack if the
-                     * adapter size has decreased since the ViewHolder was recycled.
-                     */
+                    *//* *
+     * Disable predictive animations. There is a bug in RecyclerView which causes views that
+     * are being reloaded to pull invalid ViewHolders from the internal recycler stack if the
+     * adapter size has decreased since the ViewHolder was recycled.*//*
+
                     @Override
                     public boolean supportsPredictiveItemAnimations() {
                         return false;
@@ -122,7 +148,7 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
         recyclerView.setAdapter(mAdapter);
         int spacingPixels = getResources().getDimensionPixelSize(R.dimen.recycler_view_spacing);
         recyclerView.addItemDecoration(new SpaceItemDecoration(spacingPixels, columns));
-    }
+    }*/
 
     private void initFab() {
         FloatingActionButton button = getView().findViewById(R.id.fab);
@@ -136,30 +162,13 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
         });
     }
 
-    private void shareTextUrl() {
-        Intent share = new Intent(android.content.Intent.ACTION_SEND);
-        share.setType("text/plain");
-        share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-
-        // Add data to the intent, the receiving app will decide
-        // what to do with it.
-        share.putExtra(Intent.EXTRA_SUBJECT, "Title Of The Post");
-        share.putExtra(Intent.EXTRA_TEXT, "http://www.codeofaninja.com");
-
-        startActivity(Intent.createChooser(share, "Share link!"));
-    }
-
     private void initLiveDataObservations() {
-        Log.d(TAG, "initLiveDataObservations: ");
-        liveData = mViewModel.getLiveHitList();
-        liveData.observe(this, new Observer<PagedList<Hit>>() {
-            @Override
-            public void onChanged(PagedList<Hit> hits) {
-                Log.d(TAG, "onChanged: MainFragment");
-                mAdapter.submitList(hits);
-                refreshLayout.setRefreshing(false);
-            }
+        mViewModel.mLiveData.observe(this, hits -> {
+            mAdapter.submitList(hits);
+            refreshLayout.setRefreshing(false);
         });
+
+        mViewModel.searchTermLiveData.observe(this, this::setActivityTitle);
     }
 
     private void buildDialogFragment() {
@@ -174,16 +183,13 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
         dialogFragment.show(ft, "dialog");
     }
 
-    private void setActivityTitle() {
-        String searchTerm = mViewModel.getSearchTerm();
-        getActivity().setTitle(searchTerm + " Gallery");
+    private void setActivityTitle(String s) {
+        getActivity().setTitle(s + " Gallery");
     }
 
     @Override
     public void onInputFinished(String query) {
         mViewModel.setSearchTerm(query);
-        setActivityTitle();
-        initLiveDataObservations();
     }
 
     @Override

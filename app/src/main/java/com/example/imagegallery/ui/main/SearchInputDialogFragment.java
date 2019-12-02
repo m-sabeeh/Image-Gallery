@@ -10,17 +10,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.imagegallery.R;
+import com.example.imagegallery.utils.Injection;
 import com.google.android.material.textfield.TextInputEditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 
 public class SearchInputDialogFragment extends DialogFragment {
+
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+
+        //MainViewModel mainViewModel = initViewModel();
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View viewInflated = LayoutInflater.from(getContext())
                 .inflate(R.layout.user_input_dialog, (ViewGroup) getView(), false);
@@ -33,6 +41,7 @@ public class SearchInputDialogFragment extends DialogFragment {
             dialog.dismiss();
             String searchTerm = input.getText().toString().trim();
             if (!searchTerm.isEmpty()) {
+                //mainViewModel.setSearchTerm(searchTerm);
                 sendResultBack(searchTerm);
             } else
                 Toast.makeText(getActivity(), "Search term is empty", Toast.LENGTH_SHORT).show();
@@ -42,6 +51,12 @@ public class SearchInputDialogFragment extends DialogFragment {
             dialog.cancel();
         });
         return builder.create();
+
+    }
+
+    private MainViewModel initViewModel() {
+        ViewModelProvider.Factory factory = Injection.getViewModelFactory();
+        return ViewModelProviders.of(this, factory).get(MainViewModel.class);
     }
 
     private void sendResultBack(String s) {

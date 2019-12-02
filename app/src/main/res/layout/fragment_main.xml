@@ -1,112 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".MainActivity"
-    tools:showPaths="true">
+    xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="mainViewModel"
+            type="com.example.imagegallery.ui.main.MainViewModel" />
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefresh"
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:fitsSystemWindows="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".MainActivity"
+        tools:showPaths="true">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefresh"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:clipToPadding="false"
-            android:padding="0dp"
+            android:fitsSystemWindows="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline" />
+            app:layout_constraintTop_toTopOf="@+id/guideline">
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:clipToPadding="false"
+                android:padding="0dp"
+                app:layoutManager="@{mainViewModel.getLayoutManager()}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/guideline" />
 
-    <!--   <HorizontalScrollView
-           android:id="@+id/scrollView"
-           android:layout_width="match_parent"
-           android:layout_height="0dp"
-           android:background="@android:color/transparent"
-           android:clipToPadding="false"
-           android:padding="4dp"
-           android:scrollbars="none"
-           app:layout_constraintBottom_toTopOf="@+id/guideline"
-           app:layout_constraintEnd_toEndOf="parent"
-           app:layout_constraintStart_toStartOf="parent"
-           app:layout_constraintTop_toTopOf="parent">
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-           <LinearLayout
-               android:layout_width="wrap_content"
-               android:layout_height="match_parent"
-               android:orientation="horizontal">
+        <!--   <HorizontalScrollView
+               android:id="@+id/scrollView"
+               android:layout_width="match_parent"
+               android:layout_height="0dp"
+               android:background="@android:color/transparent"
+               android:clipToPadding="false"
+               android:padding="4dp"
+               android:scrollbars="none"
+               app:layout_constraintBottom_toTopOf="@+id/guideline"
+               app:layout_constraintEnd_toEndOf="parent"
+               app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintTop_toTopOf="parent">
 
-               <ImageView
-                   android:layout_width="80dp"
-                   android:layout_height="match_parent"
-                   android:layout_margin="4dp"
-                   android:background="@color/colorAccent"
-                   android:clickable="true"
-                   android:focusable="true"
-                   android:foreground="?android:attr/selectableItemBackground"
-                   android:hapticFeedbackEnabled="true"
-                   android:scaleType="centerCrop"
-                   android:src="@drawable/art" />
-
-               <ImageView
-                   android:layout_width="80dp"
-                   android:layout_height="match_parent"
-                   android:layout_margin="4dp"
-                   android:background="@color/colorAccent"
-                   android:clickable="true"
-                   android:focusable="true"
-                   android:foreground="?android:attr/selectableItemBackground"
-                   android:hapticFeedbackEnabled="true"
-                   android:scaleType="centerCrop"
-                   android:src="@drawable/ic_launcher_background" />
-
-               <Button
+               <LinearLayout
                    android:layout_width="wrap_content"
                    android:layout_height="match_parent"
-                   android:text="button 1button 1button 1button 1" />
+                   android:orientation="horizontal">
 
-               <Button
-                   android:layout_width="wrap_content"
-                   android:layout_height="match_parent"
-                   android:text="@string/cancel" />
+                   <ImageView
+                       android:layout_width="80dp"
+                       android:layout_height="match_parent"
+                       android:layout_margin="4dp"
+                       android:background="@color/colorAccent"
+                       android:clickable="true"
+                       android:focusable="true"
+                       android:foreground="?android:attr/selectableItemBackground"
+                       android:hapticFeedbackEnabled="true"
+                       android:scaleType="centerCrop"
+                       android:src="@drawable/art" />
 
-           </LinearLayout>
+                   <ImageView
+                       android:layout_width="80dp"
+                       android:layout_height="match_parent"
+                       android:layout_margin="4dp"
+                       android:background="@color/colorAccent"
+                       android:clickable="true"
+                       android:focusable="true"
+                       android:foreground="?android:attr/selectableItemBackground"
+                       android:hapticFeedbackEnabled="true"
+                       android:scaleType="centerCrop"
+                       android:src="@drawable/ic_launcher_background" />
 
-       </HorizontalScrollView>
-   -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:layout_constraintBottom_toBottomOf="@+id/swipeRefresh"
-        app:layout_constraintEnd_toEndOf="@+id/swipeRefresh"
-        app:srcCompat="@android:drawable/ic_menu_search" />
+                   <Button
+                       android:layout_width="wrap_content"
+                       android:layout_height="match_parent"
+                       android:text="button 1button 1button 1button 1" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.10" />
+                   <Button
+                       android:layout_width="wrap_content"
+                       android:layout_height="match_parent"
+                       android:text="@string/cancel" />
+
+               </LinearLayout>
+
+           </HorizontalScrollView>
+       -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            app:layout_constraintBottom_toBottomOf="@+id/swipeRefresh"
+            app:layout_constraintEnd_toEndOf="@+id/swipeRefresh"
+            app:srcCompat="@android:drawable/ic_menu_search" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.10" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

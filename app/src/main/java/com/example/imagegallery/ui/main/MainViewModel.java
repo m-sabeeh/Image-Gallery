@@ -10,51 +10,71 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 import androidx.paging.PagedList;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 public class MainViewModel extends ViewModel {
     private static final String TAG = "MainViewModel";
-    private LiveData<PagedList<Hit>> mLiveData;
     private ImageRepository mImageRepo;
-    private String mSearchTerm;
     private static final String DEFAULT_SEARCH_TERM = "Colors";
-    private static final int page_size = 200;
+    public static final int page_size = 200;
+
+
+    private MutableLiveData<String> mutableSearchTerm = new MutableLiveData<>();
+    LiveData<String> searchTermLiveData = Transformations.map(mutableSearchTerm, input -> input);
+    LiveData<PagedList<Hit>> mLiveData = Transformations.switchMap(searchTermLiveData,
+            (String input) -> mImageRepo.searchImages(input.toLowerCase(), page_size));
+
+    /*public MainViewModel() {
+        super();
+    }*/
 
     public MainViewModel(ImageRepository repository) {
         //mImageRepo = ImageRepository.getInstance();
         mImageRepo = repository;
         initializeSampleData();
-
-    }
-
-    public LiveData<PagedList<Hit>> getLiveHitList() {
-        Log.d(TAG, "getLiveHitList: " + mLiveData);
-        if (mLiveData == null) {
-            Log.d(TAG, "getLiveHitList: Null");
-            initializeSampleData();
-        }
-        return mLiveData;
     }
 
     private void initializeSampleData() {
-        mSearchTerm = DEFAULT_SEARCH_TERM;
-        setSearchTerm(mSearchTerm);
-    }
-
-    public String getSearchTerm() {
-        if (mSearchTerm == null)
-            mSearchTerm = DEFAULT_SEARCH_TERM;
-        return mSearchTerm;
+        setSearchTerm(DEFAULT_SEARCH_TERM);
     }
 
     public void setSearchTerm(String searchTerm) {
-        mSearchTerm = searchTerm;
-        MutableLiveData<String> searchTermLiveData = new MutableLiveData<>();
-        searchTermLiveData.setValue(searchTerm);
-        mLiveData = Transformations.switchMap(searchTermLiveData,
-                (String input) -> mImageRepo.searchImages(input.toLowerCase(), page_size));
+        Log.d(TAG, "setSearchTerm: ");
+        mutableSearchTerm.setValue(searchTerm);
     }
 
     public void invalidateSource() {
         mImageRepo.invalidateDataSource();
+    }
+
+
+    public static RecyclerView.LayoutManager getLayoutManager() {
+        /*RecyclerView recyclerView1 = (RecyclerView) view;
+        mAdapter = new CustomPagedListAdapter(getContext());
+        mAdapter.setOnItemInteractionListener((View view, int position) -> {
+            //start new activity with intent containing full url
+            Intent intent = Utils.IntentUtils.buildImageFragmentIntent(getContext());
+            intent.putExtra(Utils.IntentUtils.POSITION, position);
+            startActivityForResult(intent, Utils.IntentUtils.CODE_RETURN_POSITION);
+        });*/
+
+        //recyclerView = Objects.requireNonNull(getView()).findViewById(R.id.recyclerView);
+        //int columns = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 3 : 2;
+        StaggeredGridLayoutManager staggeredGridManager =
+                new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL) {
+                    /* *
+                     * Disable predictive animations. There is a bug in RecyclerView which causes views that
+                     * are being reloaded to pull invalid ViewHolders from the internal recycler stack if the
+                     * adapter size has decreased since the ViewHolder was recycled.*/
+
+                    @Override
+                    public boolean supportsPredictiveItemAnimations() {
+                        return false;
+                    }
+                };
+        staggeredGridManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);//to correctly handle the decorations.
+        return staggeredGridManager;
     }
 }

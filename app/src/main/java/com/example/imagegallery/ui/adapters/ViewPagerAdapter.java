@@ -4,10 +4,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.example.imagegallery.R;
 import com.example.imagegallery.databinding.PageViewPager2Binding;
@@ -16,6 +18,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
+import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.BasePostprocessor;
@@ -26,10 +29,12 @@ import java.util.List;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.paging.PagedListAdapter;
 import androidx.palette.graphics.Palette;
+import androidx.palette.graphics.Target;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import me.relex.photodraweeview.PhotoDraweeView;
@@ -76,6 +81,7 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
         holder.bind(hit);
 
         GenericDraweeHierarchy hierarchy = holder.draweeView.getHierarchy();
+        //hierarchy.setPlaceholderImage(R.drawable.pebbles, ScalingUtils.ScaleType.FIT_CENTER);
         hierarchy.setProgressBarImage(new ProgressBarDrawable());
         holder.draweeView.setHierarchy(hierarchy);
         PipelineDraweeControllerBuilder controllerBuilder = Fresco.newDraweeControllerBuilder()
@@ -106,7 +112,9 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
                     @Override
                     public void process(Bitmap bitmap) {
                         //super.process(bitmap);
-                        createPaletteAsync(bitmap, position);
+                        if (bitmap != null)
+                            createPaletteAsync(bitmap, position);
+                        else Log.d(TAG, "process: null");
                     }
                 })
                 .build();
@@ -136,19 +144,31 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
     }
 
     private void createPaletteAsync(Bitmap bitmap, final int position) {
-        Palette.from(bitmap).generate(p -> notifyItemChanged(position, p));
+        Palette.from(bitmap)
+                .clearTargets()
+                .addTarget(Target.DARK_VIBRANT)
+                .addTarget(Target.LIGHT_VIBRANT)
+                .addTarget(Target.DARK_MUTED)
+                .generate(palette -> {
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            notifyItemChanged(position, palette);
+                        }
+                    }, 500);
+
+                });
     }
 
     private static final DiffUtil.ItemCallback<Hit> DIFF_CALLBACK = new DiffUtil.ItemCallback<Hit>() {
         @Override
         public boolean areItemsTheSame(@NonNull Hit oldItem, @NonNull Hit newItem) {
-            Log.d(TAG, "areItemsTheSame: ");
             return oldItem == newItem;
         }
 
         @Override
         public boolean areContentsTheSame(@NonNull Hit oldItem, @NonNull Hit newItem) {
-            Log.d(TAG, "areContentsTheSame: ");
             return oldItem.equals(newItem);
         }
     };

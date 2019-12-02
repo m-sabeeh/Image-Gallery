@@ -127,7 +127,7 @@
             android:drawablePadding="8dp"
             app:layout_constraintBottom_toTopOf="@+id/second_line"
             app:layout_constraintEnd_toStartOf="@+id/views"
-            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="@id/startGuideline">
 
         </Constraint>

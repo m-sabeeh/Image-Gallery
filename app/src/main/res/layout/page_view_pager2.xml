@@ -9,7 +9,7 @@
         <import type="com.example.imagegallery.utils.Utils.General" />
 
         <variable
-            name="viewModel"
+            name="hit"
             type="com.example.imagegallery.models.Hit" />
 
         <variable
@@ -58,7 +58,7 @@
             android:drawableStart="@drawable/ic_favorite_border_white_24dp"
             android:drawablePadding="8dp"
             android:gravity="center"
-            android:text="@{General.withSuffix(viewModel.likes)}"
+            android:text="@{General.withSuffix(hit.likes)}"
             android:textColor="@color/colorPrimaryLight"
             app:layout_constraintBottom_toTopOf="@+id/first_line"
             app:layout_constraintEnd_toStartOf="@+id/shares"
@@ -74,7 +74,7 @@
             android:drawableStart="@drawable/ic_share_white_24dp"
             android:drawablePadding="8dp"
             android:gravity="center"
-            android:text="@{General.withSuffix(viewModel.favorites)}"
+            android:text="@{General.withSuffix(hit.favorites)}"
             android:textColor="@color/colorPrimaryLight"
             app:layout_constraintBottom_toTopOf="@id/first_line"
             app:layout_constraintEnd_toStartOf="@id/endGuideline"
@@ -87,7 +87,7 @@
             android:drawableStart="@drawable/ic_comment_white_24dp"
             android:drawablePadding="8dp"
             android:gravity="center"
-            android:text="@{General.withSuffix(viewModel.comments)}"
+            android:text="@{General.withSuffix(hit.comments)}"
             android:textColor="@color/colorPrimaryLight"
             app:layout_constraintBottom_toTopOf="@+id/second_line"
             app:layout_constraintEnd_toStartOf="@+id/views"
@@ -101,7 +101,7 @@
             android:drawableStart="@drawable/ic_sentiment_satisfied_white_24dp"
             android:drawablePadding="8dp"
             android:gravity="center"
-            android:text="@{General.withSuffix(viewModel.views)}"
+            android:text="@{General.withSuffix(hit.views)}"
             android:textColor="@color/colorPrimaryLight"
             app:layout_constraintBottom_toTopOf="@id/second_line"
             app:layout_constraintEnd_toStartOf="@+id/downloads"
@@ -114,7 +114,7 @@
             android:drawableStart="@drawable/ic_file_download_white_24dp"
             android:drawablePadding="8dp"
             android:gravity="center"
-            android:text="@{General.withSuffix(viewModel.downloads)}"
+            android:text="@{General.withSuffix(hit.downloads)}"
             android:textColor="@color/colorPrimaryLight"
             app:layout_constraintBottom_toTopOf="@id/second_line"
             app:layout_constraintEnd_toStartOf="@id/endGuideline"

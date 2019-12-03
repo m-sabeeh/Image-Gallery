@@ -1,7 +1,6 @@
 package com.example.imagegallery.ui.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,28 +9,28 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.imagegallery.R;
+import com.example.imagegallery.databinding.ItemRecyclerViewBinding;
 import com.example.imagegallery.models.Hit;
 import com.example.imagegallery.utils.GlideApp;
 
 import java.util.Locale;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.databinding.DataBindingUtil;
 import androidx.paging.PagedListAdapter;
-import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 
 public class CustomPagedListAdapter extends PagedListAdapter<Hit, CustomPagedListAdapter.ViewHolder> {
     private static final String TAG = "CustomPagedListAdapter";
-    //private PagedList<Hit> mDataList;
     private Context mContext;
     private OnItemInteractionListener mListener;
     private ConstraintSet set = new ConstraintSet();
-    String ratio;
 
     public CustomPagedListAdapter(Context mContext) {
         super(DIFF_CALLBACK);
@@ -45,15 +44,15 @@ public class CustomPagedListAdapter extends PagedListAdapter<Hit, CustomPagedLis
     @NonNull
     @Override
     public CustomPagedListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recycler_view, parent, false);
-        return new ViewHolder(itemView);
+        ItemRecyclerViewBinding binding = DataBindingUtil
+                .inflate(LayoutInflater.from(parent.getContext()), R.layout.item_recycler_view, parent, false);
+        return new ViewHolder(binding);
     }
-
 
     @Override
     public void onBindViewHolder(@NonNull final CustomPagedListAdapter.ViewHolder holder, final int position) {
-        Hit hit = getItem(position);
-        ratio = String.format(Locale.getDefault(), "%d:%d", hit.getPreviewWidth(), hit.getPreviewHeight());
+        Hit hit = Objects.requireNonNull(getItem(position));
+        String ratio = String.format(Locale.getDefault(), "%d:%d", hit.getPreviewWidth(), hit.getPreviewHeight());
         set.clone(holder.constraintLayout);
         set.setDimensionRatio(holder.imageView.getId(), ratio);
         set.applyTo(holder.constraintLayout);
@@ -64,52 +63,40 @@ public class CustomPagedListAdapter extends PagedListAdapter<Hit, CustomPagedLis
                 .transition(DrawableTransitionOptions.withCrossFade())
                 //.apply(options)
                 .into(holder.imageView);
-
-
-        //holder.imageTitle.setText(mDataList.get(position).getUser());
     }
 
-    public static final DiffUtil.ItemCallback<Hit> DIFF_CALLBACK = new DiffUtil.ItemCallback<Hit>() {
-        @Override
-        public boolean areItemsTheSame(@NonNull Hit oldItem, @NonNull Hit newItem) {
-            Log.d(TAG, "areItemsTheSame: ");
-            return oldItem == newItem;
-        }
-
-        @Override
-        public boolean areContentsTheSame(@NonNull Hit oldItem, @NonNull Hit newItem) {
-            Log.d(TAG, "areContentsTheSame: ");
-            return oldItem.equals(newItem);
-        }
-    };
-
     class ViewHolder extends RecyclerView.ViewHolder {
-        private CardView cardView;
         private ImageView imageView;
-        //private TextView imageTitle;
         private ConstraintLayout constraintLayout;
 
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            constraintLayout = itemView.findViewById(R.id.constraintLayout);
-            cardView = itemView.findViewById(R.id.cardView);
-            imageView = itemView.findViewById(R.id.imageView);
-            //imageTitle = itemView.findViewById(R.id.imageTitle);
+        ViewHolder(@NonNull ItemRecyclerViewBinding itemRecyclerViewBinding) {
+            super(itemRecyclerViewBinding.getRoot());
+            constraintLayout = itemRecyclerViewBinding.constraintLayout;
+            CardView cardView = itemRecyclerViewBinding.cardView;
+            imageView = itemRecyclerViewBinding.imageView;
 
-            cardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mListener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
-                        Log.d(TAG, "onClick: Adapter" + " " + getAdapterPosition() + " " + getItem(getAdapterPosition()));
-                        mListener.onItemClick(v, getAdapterPosition());
-                    }
+            cardView.setOnClickListener(v -> {
+                if (mListener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
+                    Log.d(TAG, "onClick: Adapter" + " " + getAdapterPosition() + " " + getItem(getAdapterPosition()));
+                    mListener.onItemClick(v, getAdapterPosition());
                 }
             });
         }
     }
 
-
     public interface OnItemInteractionListener {
         void onItemClick(View view, int position);
     }
+
+    private static final DiffUtil.ItemCallback<Hit> DIFF_CALLBACK = new DiffUtil.ItemCallback<Hit>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Hit oldItem, @NonNull Hit newItem) {
+            return oldItem == newItem;
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Hit oldItem, @NonNull Hit newItem) {
+            return oldItem.equals(newItem);
+        }
+    };
 }

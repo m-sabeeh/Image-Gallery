@@ -49,37 +49,21 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        /*Toolbar toolbar = getView().findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);*/
         fragmentMainBinding.setMainViewModel(mViewModel = initViewModel(savedInstanceState));
         initAdapter();
         initFab();
         initLiveDataObservations();
     }
 
-    /*private void initSwipeRefreshLayout() {
-        refreshLayout = fragmentMainBinding.swipeRefresh;
-        //refreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorPrimaryLight);
-        refreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.refreshLayoutColors));
-
-        *//*refreshLayout.setOnRefreshListener(() -> {
-            mViewModel.invalidateSource();
-        });*//*
-    }*/
-
     // TODO: 03/12/2019 Do I really need SavedStateViewModel?
     private MainViewModel initViewModel(Bundle savedInstanceState) {
-        Log.d(TAG, "initViewModel: ");
         ViewModelProvider.Factory factory = Injection.getViewModelFactory(this, savedInstanceState);
         return ViewModelProviders.of(this, factory).get(MainViewModel.class);
     }
 
-    //@BindingAdapter("android:initAdapter")
-    // @BindingAdapter("android:initAdapter")
     private void initAdapter() {
         mAdapter = new CustomPagedListAdapter(getContext());
         mAdapter.setOnItemInteractionListener((View view, int position) -> {
-            //start new activity with intent containing full url
             Intent intent = Utils.IntentUtils.buildImageFragmentIntent(getContext());
             intent.putExtra(Utils.IntentUtils.POSITION, position);
             startActivityForResult(intent, Utils.IntentUtils.CODE_RETURN_POSITION);
@@ -89,16 +73,10 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
     }
 
     private void initFab() {
-        //FloatingActionButton button = getView().findViewById(R.id.fab);
         //fall back to viewbinding?
         FloatingActionButton button = fragmentMainBinding.fab;
         button.setOnClickListener((View view) -> {
             buildDialogFragment();
-
-            //Intent intent = new Intent(getContext(), MyMotionActivity2.class);
-            //startActivity(intent);
-            //shareTextUrl();
-
         });
     }
 

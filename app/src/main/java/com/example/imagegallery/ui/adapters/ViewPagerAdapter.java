@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
 import com.example.imagegallery.R;
 import com.example.imagegallery.databinding.PageViewPager2Binding;
@@ -18,7 +17,6 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
-import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.BasePostprocessor;
@@ -29,9 +27,7 @@ import java.util.List;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.paging.PagedListAdapter;
 import androidx.palette.graphics.Palette;
 import androidx.palette.graphics.Target;
@@ -39,12 +35,10 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import me.relex.photodraweeview.PhotoDraweeView;
 
-
 public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.ViewHolder> {
     private static final String TAG = "ViewPagerAdapter";
     private Context mContext;
     private OnItemInteractionListener mListener;
-    private LifecycleOwner lifecycleOwner;
 
     public ViewPagerAdapter(Context context) {
         super(DIFF_CALLBACK);
@@ -138,7 +132,7 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
         }
 
         void bind(Hit hit) {
-            itemBinding.setViewModel(hit);
+            itemBinding.setHit(hit);
             itemBinding.executePendingBindings();
         }
     }
@@ -151,13 +145,7 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
                 .addTarget(Target.DARK_MUTED)
                 .generate(palette -> {
                     Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            notifyItemChanged(position, palette);
-                        }
-                    }, 500);
-
+                    handler.postDelayed(() -> notifyItemChanged(position, palette), 500);
                 });
     }
 

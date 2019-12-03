@@ -11,4 +11,5 @@
     <string name="share">Share</string>
     <string name="download">Download</string>
     <string name="activity_title">%s Gallery</string>
+    <string name="image_description">beautiful image</string>
 </resources>

@@ -5,22 +5,17 @@ import android.content.res.Configuration;
 import android.view.View;
 
 import com.example.imagegallery.ui.adapters.CustomPagedListAdapter;
+import com.example.imagegallery.ui.main.SearchInputDialogFragment;
 import com.example.imagegallery.ui.main.SpaceItemDecoration;
 
 import androidx.databinding.BindingAdapter;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-/**
- * This Activity allows the user to edit a note's title. It displays a floating window
- * containing an EditText.
- * <p>
- * NOTE: Notice that the provider operations in this Activity are taking place on the UI thread.
- * This is not a good practice. It is only done here to make the code more readable. A real
- * application should use the {@link android.content.AsyncQueryHandler}
- * or {@link android.os.AsyncTask} object to perform operations asynchronously on a separate thread.
- */
 public class BindingAdaptersMainFragment {
 
     // TODO: 03/12/2019 Discuss about this implementation approach. Data-binding requires at-least one custom argument (view passed is a default argument)
@@ -51,4 +46,5 @@ public class BindingAdaptersMainFragment {
         recyclerView.setLayoutManager(staggeredGridManager);
 
     }
+
 }

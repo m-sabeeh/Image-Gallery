@@ -43,7 +43,6 @@
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="@id/startGuideline" />
 
-
     <TextView
         android:id="@+id/shares"
         android:layout_width="wrap_content"
@@ -98,7 +97,6 @@
         app:layout_constraintEnd_toStartOf="@id/endGuideline"
         app:layout_constraintStart_toEndOf="@+id/views" />
 
-
     <View
         android:id="@+id/color1"
         android:layout_width="30dp"
@@ -107,7 +105,6 @@
         android:background="@drawable/pallete"
         app:layout_constraintStart_toStartOf="@id/color2"
         app:layout_constraintTop_toBottomOf="@+id/color2" />
-
 
     <View
         android:id="@+id/color3"
@@ -156,7 +153,6 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_end="0dp" />
 
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/first_line"
         android:layout_width="wrap_content"
@@ -171,19 +167,6 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent=".98" />
 
-
-    <!--    <ImageView
-            android:id="@+id/main_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorBlack"
-            android:scaleType="centerInside"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@tools:sample/backgrounds/scenic" />-->
-
     <!--    <ProgressBar
             android:id="@+id/indeterminateBar"
             android:layout_width="wrap_content"
@@ -192,6 +175,5 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />-->
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -108,14 +108,6 @@ public class CustomPagedListAdapter extends PagedListAdapter<Hit, CustomPagedLis
         }
     }
 
-    public void createPaletteAsync(Bitmap bitmap, final int position) {
-        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-            public void onGenerated(Palette p) {
-                notifyItemChanged(position, p);
-                Log.d(TAG, "onGenerated: " + p.toString());
-            }
-        });
-    }
 
     public interface OnItemInteractionListener {
         void onItemClick(View view, int position);

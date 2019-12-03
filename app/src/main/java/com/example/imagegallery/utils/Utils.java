@@ -1,5 +1,7 @@
 package com.example.imagegallery.utils;
 
+import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,7 +42,6 @@ public final class Utils {
             FragmentManager fragmentManager = activity.getSupportFragmentManager();
             Fragment fragment = fragmentManager.getFragmentFactory().
                     instantiate(activity.getClassLoader(), fragmentClass);
-
             fragment.setArguments(bundle);
             fragmentManager.beginTransaction().add(containerID, fragment, fragmentClass).commit();
         }

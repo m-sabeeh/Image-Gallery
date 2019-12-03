@@ -51,6 +51,14 @@ public class ViewPagerFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ImageRepository mImageRepo = PixabayPagedHitRepository.getInstance(null);//repository is already initialized
+        // TODO: 3/12/2019 why not share the same viewmodel as mentioned in the link.
+        //  The document describes calling the ViewModelProviders.of(same activity/fragment) with same
+        //  activity or fragment will return the same viewmodel. but here I am in another activity.
+        //  https://developer.android.com/topic/libraries/architecture/viewmodel.html#sharing
+        //use the same livedata from repo for now, not liking this. I should be using the same
+        //view model as described in the link for Master>Detail fragment type navigation. Consider
+        //launching the viewPagerFragment directly from withing the MainFragment to implement this
+        //approach.
         liveData = mImageRepo.getLiveHitList();
         mPagerAdapter = new ViewPagerAdapter(getContext());
         mViewPager.setAdapter(mPagerAdapter);
@@ -69,6 +77,7 @@ public class ViewPagerFragment extends Fragment {
         });
         mViewPager.setCurrentItem(position, false);
         mViewPager.setOffscreenPageLimit(5);
+        Log.d(TAG, "onActivityCreated: " + getTargetFragment());
         //setActivityTitle();
     }
 

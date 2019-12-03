@@ -17,10 +17,13 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </com.google.android.material.appbar.AppBarLayout>
+
+<!--
+    app:layout_scrollFlags="scroll|enterAlways"
+-->
 
     <!--   <LinearLayout
            android:id="@+id/newContainer"

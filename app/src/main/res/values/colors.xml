@@ -10,4 +10,10 @@
     <color name="colorDivider">#BDBDBD</color>
     <color name="colorBlack">#000000</color>
     <color name="status_bar_scrim">#B3FFFFFF</color>
+
+    <array name="refreshLayoutColors">
+        <item>@color/colorPrimaryDark</item>
+        <item>@color/colorPrimaryLight</item>
+        <item>@color/colorPrimaryText</item>
+    </array>
 </resources>

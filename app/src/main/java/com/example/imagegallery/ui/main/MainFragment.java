@@ -15,8 +15,6 @@ import com.example.imagegallery.utils.Injection;
 import com.example.imagegallery.utils.Utils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.Objects;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -26,38 +24,25 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class MainFragment extends Fragment implements SearchInputDialogFragment.SearchInputListener {
     private static final String TAG = "MainFragment";
     private MainViewModel mViewModel;
     private CustomPagedListAdapter mAdapter;
-    private SwipeRefreshLayout refreshLayout;
-    private RecyclerView recyclerView;
+    private RecyclerView mRecyclerView;
     private int dataPosition = -1;
-    FragmentMainBinding fragmentMainBinding;
-    Bundle bundle = new Bundle();
+    private FragmentMainBinding fragmentMainBinding;
 
     public static MainFragment newInstance() {
         return new MainFragment();
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
         fragmentMainBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_main, container, false);
-
-        /*FragmentMainBinding fragmentMainBinding = DataBindingUtil
-                .inflate(LayoutInflater.from(parent.getContext()), R.layout.page_view_pager2, parent, false);*/
-
         return fragmentMainBinding.getRoot();
     }
 
@@ -66,23 +51,21 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
         super.onActivityCreated(savedInstanceState);
         /*Toolbar toolbar = getView().findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);*/
-        Log.d(TAG, "onActivityCreated: " + savedInstanceState);
-        mViewModel = initViewModel(savedInstanceState);
-        //MainViewModel.orientation = getResources().getConfiguration().orientation;
-        fragmentMainBinding.setMainViewModel(mViewModel);
+        fragmentMainBinding.setMainViewModel(mViewModel = initViewModel(savedInstanceState));
         initAdapter();
         initFab();
         initLiveDataObservations();
-        initSwipeRefreshLayout();
     }
 
-    private void initSwipeRefreshLayout() {
-        refreshLayout = Objects.requireNonNull(getView()).findViewById(R.id.swipeRefresh);
-        refreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorPrimaryLight);
-        refreshLayout.setOnRefreshListener(() -> {
+    /*private void initSwipeRefreshLayout() {
+        refreshLayout = fragmentMainBinding.swipeRefresh;
+        //refreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorPrimaryLight);
+        refreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.refreshLayoutColors));
+
+        *//*refreshLayout.setOnRefreshListener(() -> {
             mViewModel.invalidateSource();
-        });
-    }
+        });*//*
+    }*/
 
     // TODO: 03/12/2019 Do I really need SavedStateViewModel?
     private MainViewModel initViewModel(Bundle savedInstanceState) {
@@ -93,7 +76,7 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
 
     //@BindingAdapter("android:initAdapter")
     // @BindingAdapter("android:initAdapter")
-    public void initAdapter() {
+    private void initAdapter() {
         mAdapter = new CustomPagedListAdapter(getContext());
         mAdapter.setOnItemInteractionListener((View view, int position) -> {
             //start new activity with intent containing full url
@@ -101,63 +84,14 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
             intent.putExtra(Utils.IntentUtils.POSITION, position);
             startActivityForResult(intent, Utils.IntentUtils.CODE_RETURN_POSITION);
         });
-        recyclerView = fragmentMainBinding.recyclerView;
-        //recyclerView = Objects.requireNonNull(getView()).findViewById(R.id.recyclerView);
-        //int columns = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 3 : 2;
-        /*StaggeredGridLayoutManager staggeredGridManager =
-                new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL) {
-                    *//* *
-         * Disable predictive animations. There is a bug in RecyclerView which causes views that
-         * are being reloaded to pull invalid ViewHolders from the internal recycler stack if the
-         * adapter size has decreased since the ViewHolder was recycled.*//*
-
-                    @Override
-                    public boolean supportsPredictiveItemAnimations() {
-                        return false;
-                    }
-                };*/
-        //staggeredGridManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);//to correctly handle the decorations.
-        //RecyclerView.LayoutManager linearLayoutManger = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        //recyclerView.setLayoutManager(staggeredGridManager);
-        recyclerView.setAdapter(mAdapter);
-        //int spacingPixels = getResources().getDimensionPixelSize(R.dimen.recycler_view_spacing);
-        //recyclerView.addItemDecoration(new SpaceItemDecoration(spacingPixels, 2));
+        mRecyclerView = fragmentMainBinding.recyclerView;
+        mRecyclerView.setAdapter(mAdapter);
     }
 
-
-   /* public static void initAdapter(View view, int i) {
-        mAdapter = new CustomPagedListAdapter(getContext());
-        mAdapter.setOnItemInteractionListener((View view, int position) -> {
-            //start new activity with intent containing full url
-            Intent intent = Utils.IntentUtils.buildImageFragmentIntent(getContext());
-            intent.putExtra(Utils.IntentUtils.POSITION, position);
-            startActivityForResult(intent, Utils.IntentUtils.CODE_RETURN_POSITION);
-        });
-
-        recyclerView = Objects.requireNonNull(getView()).findViewById(R.id.recyclerView);
-        int columns = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 3 : 2;
-        StaggeredGridLayoutManager staggeredGridManager =
-                new StaggeredGridLayoutManager(columns, LinearLayoutManager.VERTICAL) {
-                    *//* *
-     * Disable predictive animations. There is a bug in RecyclerView which causes views that
-     * are being reloaded to pull invalid ViewHolders from the internal recycler stack if the
-     * adapter size has decreased since the ViewHolder was recycled.*//*
-
-                    @Override
-                    public boolean supportsPredictiveItemAnimations() {
-                        return false;
-                    }
-                };
-        staggeredGridManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);//to correctly handle the decorations.
-        //RecyclerView.LayoutManager linearLayoutManger = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(staggeredGridManager);
-        recyclerView.setAdapter(mAdapter);
-        int spacingPixels = getResources().getDimensionPixelSize(R.dimen.recycler_view_spacing);
-        recyclerView.addItemDecoration(new SpaceItemDecoration(spacingPixels, columns));
-    }*/
-
     private void initFab() {
-        FloatingActionButton button = getView().findViewById(R.id.fab);
+        //FloatingActionButton button = getView().findViewById(R.id.fab);
+        //fall back to viewbinding?
+        FloatingActionButton button = fragmentMainBinding.fab;
         button.setOnClickListener((View view) -> {
             buildDialogFragment();
 
@@ -171,7 +105,7 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
     private void initLiveDataObservations() {
         mViewModel.mLiveData.observe(this, hits -> {
             mAdapter.submitList(hits);
-            refreshLayout.setRefreshing(false);
+            fragmentMainBinding.swipeRefresh.setRefreshing(false);
         });
 
         mViewModel.searchTermLiveData.observe(this, this::setActivityTitle);
@@ -190,7 +124,9 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
     }
 
     private void setActivityTitle(String s) {
-        getActivity().setTitle(s + " Gallery");
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.setTitle(getResources().getString(R.string.activity_title, s));
     }
 
     @Override
@@ -210,8 +146,8 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
     @Override
     public void onResume() {
         super.onResume();
-        if (recyclerView != null && Integer.signum(dataPosition) == 1) {
-            recyclerView.scrollToPosition(dataPosition);
+        if (mRecyclerView != null && Integer.signum(dataPosition) == 1) {
+            mRecyclerView.scrollToPosition(dataPosition);
         }
     }
 

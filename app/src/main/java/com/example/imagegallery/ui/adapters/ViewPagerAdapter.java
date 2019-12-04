@@ -45,7 +45,6 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
         mContext = context;
     }
 
-
     @NonNull
     @Override
     public ViewPagerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -70,7 +69,6 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
      */
     @Override
     public void onBindViewHolder(@NonNull final ViewPagerAdapter.ViewHolder holder, final int position) {
-
         Hit hit = Objects.requireNonNull(getItem(position));
         holder.bind(hit);
 

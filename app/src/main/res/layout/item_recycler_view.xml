@@ -4,6 +4,14 @@
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="hit"
+            type="com.example.imagegallery.models.Hit" />
+
+    </data>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="match_parent"
@@ -18,7 +26,9 @@
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="0dp">
+            android:layout_margin="0dp"
+            android:dimensionWidth="@{hit.previewWidth}"
+            android:dimensionHeight="@{hit.previewHeight}">
 
             <ImageView
                 android:id="@+id/imageView"
@@ -27,6 +37,7 @@
                 android:adjustViewBounds="true"
                 android:background="@color/colorDivider"
                 android:contentDescription="@string/image_description"
+                android:fetchImage="@{hit.previewURL}"
                 android:scaleType="fitCenter"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="parent"

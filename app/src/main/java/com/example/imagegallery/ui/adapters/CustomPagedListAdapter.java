@@ -30,7 +30,7 @@ public class CustomPagedListAdapter extends PagedListAdapter<Hit, CustomPagedLis
     private static final String TAG = "CustomPagedListAdapter";
     private Context mContext;
     private OnItemInteractionListener mListener;
-    private ConstraintSet set = new ConstraintSet();
+    //private ConstraintSet set = new ConstraintSet();
 
     public CustomPagedListAdapter(Context mContext) {
         super(DIFF_CALLBACK);
@@ -52,28 +52,24 @@ public class CustomPagedListAdapter extends PagedListAdapter<Hit, CustomPagedLis
     @Override
     public void onBindViewHolder(@NonNull final CustomPagedListAdapter.ViewHolder holder, final int position) {
         Hit hit = Objects.requireNonNull(getItem(position));
-        String ratio = String.format(Locale.getDefault(), "%d:%d", hit.getPreviewWidth(), hit.getPreviewHeight());
+        holder.bind(hit);
+        /*String ratio = String.format(Locale.getDefault(), "%d:%d", hit.getPreviewWidth(), hit.getPreviewHeight());
         set.clone(holder.constraintLayout);
         set.setDimensionRatio(holder.imageView.getId(), ratio);
-        set.applyTo(holder.constraintLayout);
-
-        GlideApp.with(mContext)
-                //.asBitmap()
-                .load(hit.getPreviewURL())
-                .transition(DrawableTransitionOptions.withCrossFade())
-                //.apply(options)
-                .into(holder.imageView);
+        set.applyTo(holder.constraintLayout);*/
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView imageView;
-        private ConstraintLayout constraintLayout;
+        //private ImageView imageView;
+        //private ConstraintLayout constraintLayout;
+        ItemRecyclerViewBinding viewBinding;
 
         ViewHolder(@NonNull ItemRecyclerViewBinding itemRecyclerViewBinding) {
             super(itemRecyclerViewBinding.getRoot());
-            constraintLayout = itemRecyclerViewBinding.constraintLayout;
-            CardView cardView = itemRecyclerViewBinding.cardView;
-            imageView = itemRecyclerViewBinding.imageView;
+            viewBinding = itemRecyclerViewBinding;
+            //constraintLayout = viewBinding.constraintLayout;
+            CardView cardView = viewBinding.cardView;
+            //imageView = viewBinding.imageView;
 
             cardView.setOnClickListener(v -> {
                 if (mListener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
@@ -81,6 +77,11 @@ public class CustomPagedListAdapter extends PagedListAdapter<Hit, CustomPagedLis
                     mListener.onItemClick(v, getAdapterPosition());
                 }
             });
+        }
+
+        void bind(Hit hit) {
+            viewBinding.setHit(hit);
+            viewBinding.executePendingBindings();
         }
     }
 

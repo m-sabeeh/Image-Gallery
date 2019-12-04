@@ -3,11 +3,18 @@ package com.example.imagegallery.utils;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.view.View;
+import android.widget.ImageView;
 
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.example.imagegallery.R;
 import com.example.imagegallery.ui.adapters.CustomPagedListAdapter;
 import com.example.imagegallery.ui.main.SearchInputDialogFragment;
 import com.example.imagegallery.ui.main.SpaceItemDecoration;
 
+import java.util.Locale;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.databinding.BindingAdapter;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -16,9 +23,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-public class BindingAdaptersMainFragment {
+public class BindingAdapters {
 
     // TODO: 03/12/2019 Discuss about this implementation approach. Data-binding requires at-least one custom argument (view passed is a default argument)
+    //fragment_main
     @BindingAdapter("android:initRecyclerView")
     public static void initRecyclerView(final RecyclerView recyclerView, float spacing) {
         int columns = recyclerView.getResources().getConfiguration()
@@ -44,7 +52,27 @@ public class BindingAdaptersMainFragment {
         }
         recyclerView.addItemDecoration(new SpaceItemDecoration(spacingPixels, columns));
         recyclerView.setLayoutManager(staggeredGridManager);
-
     }
 
+    //item_recycler_view
+    @BindingAdapter("android:fetchImage")
+    public static void loadImage(ImageView view, String imageUrl) {
+        GlideApp.with(view.getContext())
+                //.asBitmap()
+                .load(imageUrl)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                //.apply(options)
+                .into(view);
+    }
+
+    //item_recycler_view
+    private static ConstraintSet set = new ConstraintSet();
+
+    @BindingAdapter(value = {"android:dimensionWidth", "android:dimensionHeight"}, requireAll = true)
+    public static void setDimensionRatio(ConstraintLayout layout, int width, int height) {
+        String ratio = String.format(Locale.getDefault(), "%d:%d", width, height);
+        set.clone(layout);
+        set.setDimensionRatio(layout.findViewById(R.id.imageView).getId(), ratio);
+        set.applyTo(layout);
+    }
 }

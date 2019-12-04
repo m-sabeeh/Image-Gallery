@@ -28,10 +28,10 @@ import androidx.viewpager2.widget.ViewPager2;
 public class ViewPagerFragment extends Fragment {
     private static final String TAG = "ViewPagerFragment";
     private ViewPager2 mViewPager;
-    ViewPagerAdapter mPagerAdapter;
-    Intent intent = new Intent();
-    int mPosition;
-    LiveData<PagedList<Hit>> liveData;
+    private ViewPagerAdapter mPagerAdapter;
+    private Intent intent = new Intent();
+    private int mPosition;
+    private LiveData<PagedList<Hit>> liveData;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,22 +63,21 @@ public class ViewPagerFragment extends Fragment {
         mPagerAdapter = new ViewPagerAdapter(getContext());
         mViewPager.setAdapter(mPagerAdapter);
         mPagerAdapter.submitList(liveData.getValue());
-        int position = getArguments().getInt(Utils.IntentUtils.POSITION, 0);
+        int position = getArguments().getInt(Utils.General.POSITION, 0);
         mViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 mPosition = position;
                 Log.d(TAG, "onPageSelected: " + position);
-                intent.removeExtra(Utils.IntentUtils.RETURN_POSITION);
-                intent.putExtra(Utils.IntentUtils.RETURN_POSITION, position);
+                intent.removeExtra(Utils.General.RETURN_POSITION);
+                intent.putExtra(Utils.General.RETURN_POSITION, position);
                 requireActivity().setResult(Activity.RESULT_OK, intent);
             }
         });
         mViewPager.setCurrentItem(position, false);
         mViewPager.setOffscreenPageLimit(5);
         Log.d(TAG, "onActivityCreated: " + getTargetFragment());
-        //setActivityTitle();
     }
 
     @Override
@@ -91,31 +90,28 @@ public class ViewPagerFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item_download:
-
+                // TODO: 04/12/2019 implement download function.
                 //Log.d(TAG, "onOptionsItemSelectedFragemnt: item Download " + liveData.getValue().get(mPosition).getLargeImageURL());
 
                 return true;
             case R.id.item_share:
-                Log.d(TAG, "onOptionsItemSelectedFragemnt: item Share");
                 shareTextUrl(liveData.getValue().get(mPosition).getLargeImageURL());
+                return true;
 
+            case android.R.id.home:
+                // TODO: 04/12/2019 implement back button press.
                 return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     private void shareTextUrl(String uri) {
         Intent intent = new Intent(android.content.Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-
-        // Add data to the intent, the receiving app will decide
-        // what to do with it.
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Title Of The Post");
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Beautiful Image");
         intent.putExtra(Intent.EXTRA_TEXT, uri);
-
-        startActivity(Intent.createChooser(intent, "Share link!"));
+        startActivity(Intent.createChooser(intent, "Share link"));
     }
 }
 

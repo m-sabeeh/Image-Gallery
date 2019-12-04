@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.imagegallery.models.Hit;
 import com.example.imagegallery.repositories.ImageRepository;
+import com.example.imagegallery.utils.Utils;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -24,7 +25,10 @@ public class MainViewModel extends ViewModel {
             (String input) -> mImageRepo.searchImages(input.toLowerCase(), page_size));
 
     public MainViewModel(ImageRepository repository, SavedStateHandle savedStateHandle) {
-        initializeSampleData();
+        if (savedStateHandle.contains(Utils.General.SEARCH_TERM))
+            setSearchTerm(savedStateHandle.get(Utils.General.SEARCH_TERM));
+        else
+            initializeSampleData();
         mImageRepo = repository;
     }
 

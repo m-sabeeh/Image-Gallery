@@ -2,7 +2,9 @@ package com.example.imagegallery.ui.main;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +32,6 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
     private MainViewModel mViewModel;
     private CustomPagedListAdapter mAdapter;
     private RecyclerView mRecyclerView;
-    private int dataPosition = -1;
     private FragmentMainBinding fragmentMainBinding;
 
     public static MainFragment newInstance() {
@@ -49,14 +50,20 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        fragmentMainBinding.setMainViewModel(mViewModel = initViewModel(savedInstanceState));
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String search = preferences.getString(Utils.General.SEARCH_TERM, "");
+        Bundle bundle = new Bundle();
+        if (!search.equalsIgnoreCase("")) {
+            bundle.putString(Utils.General.SEARCH_TERM, search);
+        }
+        fragmentMainBinding.setMainViewModel(mViewModel = initViewModel(bundle));
         initAdapter();
         initFab();
         initLiveDataObservations();
     }
 
     // TODO: 03/12/2019 Do I really need SavedStateViewModel?
-    private MainViewModel initViewModel(Bundle savedInstanceState) {
+    private MainViewModel initViewModel(@Nullable Bundle savedInstanceState) {
         ViewModelProvider.Factory factory = Injection.getViewModelFactory(this, savedInstanceState);
         return ViewModelProviders.of(this, factory).get(MainViewModel.class);
     }
@@ -65,8 +72,8 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
         mAdapter = new CustomPagedListAdapter(getContext());
         mAdapter.setOnItemInteractionListener((View view, int position) -> {
             Intent intent = Utils.IntentUtils.buildImageFragmentIntent(getContext());
-            intent.putExtra(Utils.IntentUtils.POSITION, position);
-            startActivityForResult(intent, Utils.IntentUtils.CODE_RETURN_POSITION);
+            intent.putExtra(Utils.General.POSITION, position);
+            startActivityForResult(intent, Utils.General.CODE_RETURN_POSITION);
         });
         mRecyclerView = fragmentMainBinding.recyclerView;
         mRecyclerView.setAdapter(mAdapter);
@@ -109,29 +116,23 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
 
     @Override
     public void onInputFinished(String query) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(Utils.General.SEARCH_TERM, query);
+        editor.apply();
         mViewModel.setSearchTerm(query);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == Utils.IntentUtils.CODE_RETURN_POSITION) {
-            if (resultCode == Activity.RESULT_OK && data != null) {
-                dataPosition = data.getIntExtra(Utils.IntentUtils.RETURN_POSITION, -1);
+        if (requestCode == Utils.General.CODE_RETURN_POSITION
+                && resultCode == Activity.RESULT_OK
+                && data != null) {
+            int dataPosition = data.getIntExtra(Utils.General.RETURN_POSITION, -1);
+            if (mRecyclerView != null && Integer.signum(dataPosition) == 1) {
+                mRecyclerView.smoothScrollToPosition(dataPosition);
             }
         }
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mRecyclerView != null && Integer.signum(dataPosition) == 1) {
-            mRecyclerView.scrollToPosition(dataPosition);
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        dataPosition = -1;
-    }
 }
+

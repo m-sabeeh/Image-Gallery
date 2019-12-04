@@ -21,9 +21,9 @@ public final class Utils {
         public static final String FRAGMENT_CLASS = ViewPagerFragment.class.getName();
         public static final String CONTAINER_ID = "Container ID";
         static final String ACTIVITY_TITLE = "Activity Title";
-        public static final String POSITION = "position";
-        public static final int CODE_RETURN_POSITION = 100;
-        public static final String RETURN_POSITION = "return position";
+
+
+
 
         public static void instantiateFragment(FragmentActivity activity, Intent intent) {
             Bundle bundle = intent.getExtras();
@@ -47,6 +47,10 @@ public final class Utils {
     }
 
     public static class General {
+        public static final String POSITION = "position";
+        public static final int CODE_RETURN_POSITION = 100;
+        public static final String RETURN_POSITION = "return position";
+        public static final String SEARCH_TERM = "search";
         public static String withSuffix(long count) {
             if (count < 1000) return "" + count;
             int exp = (int) (Math.log(count) / Math.log(1000));

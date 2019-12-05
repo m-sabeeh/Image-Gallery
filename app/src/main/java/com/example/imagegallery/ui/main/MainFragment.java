@@ -23,6 +23,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
@@ -93,7 +94,7 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
             fragmentMainBinding.swipeRefresh.setRefreshing(false);
         });
 
-        mViewModel.searchTermLiveData.observe(this, this::setActivityTitle);
+        mViewModel.searchParamsLiveData.observe(this, searchParams -> setActivityTitle(searchParams.mSearch));
     }
 
     private void buildDialogFragment() {
@@ -120,7 +121,7 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(Utils.General.SEARCH_TERM, query);
         editor.apply();
-        mViewModel.setSearchTerm(query);
+        mViewModel.setSearchTerm(query, null);
     }
 
     @Override

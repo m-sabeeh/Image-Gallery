@@ -23,10 +23,12 @@ public interface PixabayApi {
     @GET("?key=" + API_key + "&id=")
     Call<Hit> getHitById(@Query("id") String id);
 
-    @GET("?key=" + API_key + "&editors_choice=true")
+    @GET("?key=" + API_key)
     Call<DataList> searchImages(@Query("q") String q,
                                 @Query("page") int page,
-                                @Query("per_page") int per_page);
+                                @Query("per_page") int per_page,
+                                @Query("editors_choice") Boolean choice,
+                                @Query("colors") String color);
 
     /**
      * build retrofit object. using that object, instantiate pixabay endpoint interface and

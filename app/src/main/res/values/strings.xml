@@ -12,4 +12,5 @@
     <string name="download">Download</string>
     <string name="activity_title">%s Gallery</string>
     <string name="image_description">beautiful image</string>
+    <string name="editors_choice">Editor\'s Choice</string>
 </resources>

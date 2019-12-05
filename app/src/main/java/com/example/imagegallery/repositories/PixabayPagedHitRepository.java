@@ -1,11 +1,13 @@
 package com.example.imagegallery.repositories;
 
 import android.util.Log;
+import android.util.Pair;
 
 import com.example.imagegallery.api.PixabayApiService;
 import com.example.imagegallery.factories.PixabayDataSourceFactory;
 import com.example.imagegallery.models.Hit;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.paging.DataSource;
 import androidx.paging.LivePagedListBuilder;
@@ -30,13 +32,13 @@ public class PixabayPagedHitRepository implements ImageRepository {
         return mImageRepository;
     }
 
-    @Override
-    public LiveData<PagedList<Hit>> searchImages(String query, int page_size) {
+ /*   //@Override
+    public LiveData<PagedList<Hit>> searchImages(String query, int page_size, boolean editors_choice) {
         factory = new PixabayDataSourceFactory(pixabayApiService, query);
         PagedList.Config config = initPagedListConfig(page_size);
         mLiveData = new LivePagedListBuilder<>(factory, config).build();
         return mLiveData;
-    }
+    }*/
 
     private PagedList.Config initPagedListConfig(int pageSize) {
         return new PagedList.Config.Builder()
@@ -44,6 +46,15 @@ public class PixabayPagedHitRepository implements ImageRepository {
                 .setInitialLoadSizeHint(100)
                 .setPrefetchDistance(100)
                 .build();
+    }
+
+
+    @Override
+    public LiveData<PagedList<Hit>> searchImages(String query, int page_size, @Nullable Pair<String, Boolean>... params) {
+        factory = new PixabayDataSourceFactory(pixabayApiService, query);
+        PagedList.Config config = initPagedListConfig(page_size);
+        mLiveData = new LivePagedListBuilder<>(factory, config).build();
+        return mLiveData;
     }
 
     /**

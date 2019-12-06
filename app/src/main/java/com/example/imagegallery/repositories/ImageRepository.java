@@ -10,7 +10,7 @@ import androidx.paging.PagedList;
 
 public interface ImageRepository {
 
-    LiveData<PagedList<Hit>> searchImages(String query, int page_size, @Nullable Pair<String,Boolean>... params);
+    LiveData<PagedList<Hit>> searchImages(String query, int page_size);
 
     LiveData<PagedList<Hit>> getLiveHitList();
 

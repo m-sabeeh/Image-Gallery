@@ -50,7 +50,7 @@ public class PixabayPagedHitRepository implements ImageRepository {
 
 
     @Override
-    public LiveData<PagedList<Hit>> searchImages(String query, int page_size, @Nullable Pair<String, Boolean>... params) {
+    public LiveData<PagedList<Hit>> searchImages(String query, int page_size) {
         factory = new PixabayDataSourceFactory(pixabayApiService, query);
         PagedList.Config config = initPagedListConfig(page_size);
         mLiveData = new LivePagedListBuilder<>(factory, config).build();

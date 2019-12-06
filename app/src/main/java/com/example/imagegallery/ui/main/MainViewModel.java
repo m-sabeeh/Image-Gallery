@@ -25,16 +25,16 @@ public class MainViewModel extends ViewModel {
     private static final String DEFAULT_SEARCH_TERM = "Colors";
     private static final int page_size = 200;
 
-    /*private MutableLiveData<String> mutableSearchTerm = new MutableLiveData<>();
+    private MutableLiveData<String> mutableSearchTerm = new MutableLiveData<>();
     LiveData<String> searchTermLiveData = Transformations.map(mutableSearchTerm, input -> input);
     LiveData<PagedList<Hit>> mLiveData = Transformations.switchMap(searchTermLiveData,
-            (String input) -> mImageRepo.searchImages(input.toLowerCase(), page_size));*/
+            (String input) -> mImageRepo.searchImages(input.toLowerCase(), page_size));
 
 
-    private MutableLiveData<SearchParams> searchParamsMutable = new MutableLiveData<>();
+    /*private MutableLiveData<SearchParams> searchParamsMutable = new MutableLiveData<>();
     LiveData<SearchParams> searchParamsLiveData = Transformations.map(searchParamsMutable, input -> input);//simple conversion to LiveData
     LiveData<PagedList<Hit>> mLiveData = Transformations.switchMap(searchParamsLiveData,
-            (SearchParams input) -> mImageRepo.searchImages(input.mSearch.toLowerCase(), page_size, input.arguments));
+            (SearchParams input) -> mImageRepo.searchImages(input.mSearch.toLowerCase(), page_size, input.arguments));*/
 
 
     public MainViewModel(ImageRepository repository, SavedStateHandle savedStateHandle) {
@@ -49,11 +49,11 @@ public class MainViewModel extends ViewModel {
         setSearchTerm(DEFAULT_SEARCH_TERM);
     }
 
-    void setSearchTerm(String searchTerm, Pair<String, Boolean>... params) {
+    void setSearchTerm(String searchTerm) {
         Log.d(TAG, "setSearchTerm: ");
-        searchParamsMutable.setValue(new SearchParams(searchTerm, params));
+        //searchParamsMutable.setValue(new SearchParams(searchTerm, params));
         ///////////
-        // mutableSearchTerm.setValue(searchTerm);
+        mutableSearchTerm.setValue(searchTerm);
     }
 
     public void invalidateSource() {

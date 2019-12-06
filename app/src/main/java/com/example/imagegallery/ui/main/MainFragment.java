@@ -94,7 +94,7 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
             fragmentMainBinding.swipeRefresh.setRefreshing(false);
         });
 
-        mViewModel.searchParamsLiveData.observe(this, searchParams -> setActivityTitle(searchParams.mSearch));
+        mViewModel.searchTermLiveData.observe(this, this::setActivityTitle);
     }
 
     private void buildDialogFragment() {
@@ -121,7 +121,7 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(Utils.General.SEARCH_TERM, query);
         editor.apply();
-        mViewModel.setSearchTerm(query, null);
+        mViewModel.setSearchTerm(query);
     }
 
     @Override

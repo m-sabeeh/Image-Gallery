@@ -51,6 +51,9 @@ public final class Utils {
         public static final int CODE_RETURN_POSITION = 100;
         public static final String RETURN_POSITION = "return position";
         public static final String SEARCH_TERM = "search";
+        public static final String INTENT_PRACTICE = "intent practice";
+        public static final int INTENT_PRACTICE_CODE = 200;
+
         public static String withSuffix(long count) {
             if (count < 1000) return "" + count;
             int exp = (int) (Math.log(count) / Math.log(1000));

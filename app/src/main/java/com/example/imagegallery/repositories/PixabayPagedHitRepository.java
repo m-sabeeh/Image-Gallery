@@ -1,15 +1,12 @@
 package com.example.imagegallery.repositories;
 
 import android.util.Log;
-import android.util.Pair;
 
-import com.example.imagegallery.api.PixabayApiService;
+import com.example.imagegallery.network.PixabayApiService;
 import com.example.imagegallery.factories.PixabayDataSourceFactory;
 import com.example.imagegallery.models.Hit;
 
-import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
-import androidx.paging.DataSource;
 import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
 

@@ -2,7 +2,7 @@ package com.example.imagegallery.repositories;
 
 import android.util.Log;
 
-import com.example.imagegallery.api.PixabayApiService;
+import com.example.imagegallery.network.PixabayApiService;
 import com.example.imagegallery.models.DataList;
 import com.example.imagegallery.models.Hit;
 
@@ -14,6 +14,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// TODO: 08/12/2019 implement mechanism for passing back data loading state and retries in case of failure.
 public class PixabayDataSource extends PageKeyedDataSource<Integer, Hit> {
     private PixabayApiService pixabayApiService;
     private static final java.lang.String TAG = "PixabayDataSource";

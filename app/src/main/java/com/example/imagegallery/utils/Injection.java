@@ -2,8 +2,8 @@ package com.example.imagegallery.utils;
 
 import android.os.Bundle;
 
-import com.example.imagegallery.api.PixabayApi;
-import com.example.imagegallery.api.PixabayApiService;
+import com.example.imagegallery.network.PixabayApi;
+import com.example.imagegallery.network.PixabayApiService;
 import com.example.imagegallery.repositories.ImageRepository;
 import com.example.imagegallery.repositories.PixabayPagedHitRepository;
 import com.example.imagegallery.factories.ViewModelFactory;

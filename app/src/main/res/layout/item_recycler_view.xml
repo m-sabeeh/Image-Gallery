@@ -7,8 +7,8 @@
     <data>
 
         <variable
-            name="hit"
-            type="com.example.imagegallery.models.Hit" />
+            name="pageViewModel"
+            type="com.example.imagegallery.ui.main.ImageViewModel" />
 
     </data>
 
@@ -27,8 +27,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="0dp"
-            android:dimensionWidth="@{hit.previewWidth}"
-            android:dimensionHeight="@{hit.previewHeight}">
+            android:dimensionWidth="@{pageViewModel.getPreviewWidth}"
+            android:dimensionHeight="@{pageViewModel.getPreviewHeight}">
 
             <ImageView
                 android:id="@+id/imageView"
@@ -37,7 +37,7 @@
                 android:adjustViewBounds="true"
                 android:background="@color/colorDivider"
                 android:contentDescription="@string/image_description"
-                android:fetchImage="@{hit.previewURL}"
+                android:fetchImage="@{pageViewModel.getPreviewURL}"
                 android:scaleType="fitCenter"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="parent"

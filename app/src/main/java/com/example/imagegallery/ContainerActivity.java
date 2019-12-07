@@ -9,6 +9,7 @@ import com.example.imagegallery.utils.Utils;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NavUtils;
 
 public class ContainerActivity extends AppCompatActivity {
     private static final String TAG = "ContainerActivity";
@@ -35,5 +36,14 @@ public class ContainerActivity extends AppCompatActivity {
             Utils.IntentUtils.instantiateFragment(this, getIntent());
         }
         setTitle("Photos");//should be set by the attached fragment, anyway leave it for now.
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

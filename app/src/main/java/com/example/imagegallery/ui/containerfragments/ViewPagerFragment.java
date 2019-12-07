@@ -15,7 +15,6 @@ import com.example.imagegallery.R;
 import com.example.imagegallery.models.Hit;
 import com.example.imagegallery.repositories.ImageRepository;
 import com.example.imagegallery.repositories.PixabayPagedHitRepository;
-import com.example.imagegallery.ui.adapters.ViewPagerAdapter;
 import com.example.imagegallery.utils.Utils;
 
 import androidx.annotation.NonNull;
@@ -60,7 +59,7 @@ public class ViewPagerFragment extends Fragment {
         //launching the viewPagerFragment directly from withing the MainFragment to implement this
         //approach.
         liveData = mImageRepo.getLiveHitList();
-        mPagerAdapter = new ViewPagerAdapter(getContext());
+        mPagerAdapter = new ViewPagerAdapter();
         mViewPager.setAdapter(mPagerAdapter);
         mPagerAdapter.submitList(liveData.getValue());
         int position = getArguments().getInt(Utils.General.POSITION, 0);
@@ -92,26 +91,39 @@ public class ViewPagerFragment extends Fragment {
             case R.id.item_download:
                 // TODO: 04/12/2019 implement download function.
                 //Log.d(TAG, "onOptionsItemSelectedFragemnt: item Download " + liveData.getValue().get(mPosition).getLargeImageURL());
-
+                intentPractice();
                 return true;
             case R.id.item_share:
-                shareTextUrl(liveData.getValue().get(mPosition).getLargeImageURL());
-                return true;
-
-            case android.R.id.home:
-                // TODO: 04/12/2019 implement back button press.
+                shareUrl(liveData.getValue().get(mPosition).getLargeImageURL());
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void shareTextUrl(String uri) {
+    private void shareUrl(String uri) {
         Intent intent = new Intent(android.content.Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
         intent.putExtra(Intent.EXTRA_SUBJECT, "Beautiful Image");
         intent.putExtra(Intent.EXTRA_TEXT, uri);
         startActivity(Intent.createChooser(intent, "Share link"));
+    }
+
+    private void intentPractice() {//just for practicing intents
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_MAIN);
+        //intent.setType("vnd.android.cursor.item/phone");
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        startActivityForResult(Intent.createChooser(intent, "Share link"), Utils.General.INTENT_PRACTICE_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == Utils.General.INTENT_PRACTICE_CODE
+                && resultCode == Activity.RESULT_OK
+                && data != null) {
+            Log.d(TAG, "onActivityResult: " + data.getData());
+        }
     }
 }
 

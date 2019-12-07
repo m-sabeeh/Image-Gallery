@@ -4,15 +4,13 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.imagegallery.repositories.ImageRepository;
-import com.example.imagegallery.ui.main.MainViewModel;
+import com.example.imagegallery.ui.main.ImageListViewModel;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AbstractSavedStateViewModelFactory;
 import androidx.lifecycle.SavedStateHandle;
-import androidx.lifecycle.SavedStateViewModelFactory;
 import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.savedstate.SavedStateRegistryOwner;
 
 public class ViewModelFactory extends AbstractSavedStateViewModelFactory {
@@ -51,8 +49,8 @@ public class ViewModelFactory extends AbstractSavedStateViewModelFactory {
     @Override
     protected <T extends ViewModel> T create(@NonNull String key, @NonNull Class<T> modelClass, @NonNull SavedStateHandle handle) {
         Log.d(TAG, "create: "+handle.contains("search"));
-        if (modelClass.isAssignableFrom(MainViewModel.class)) {
-            return (T) new MainViewModel(repository, handle);
+        if (modelClass.isAssignableFrom(ImageListViewModel.class)) {
+            return (T) new ImageListViewModel(repository, handle);
         }
         throw new IllegalArgumentException("ViewModel class is unknown");
     }

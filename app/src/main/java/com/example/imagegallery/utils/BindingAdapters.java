@@ -1,14 +1,11 @@
 package com.example.imagegallery.utils;
 
-import android.content.Intent;
 import android.content.res.Configuration;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.imagegallery.R;
-import com.example.imagegallery.ui.adapters.CustomPagedListAdapter;
-import com.example.imagegallery.ui.main.SearchInputDialogFragment;
+import com.example.imagegallery.application.GlideApp;
 import com.example.imagegallery.ui.main.SpaceItemDecoration;
 
 import java.util.Locale;
@@ -16,9 +13,6 @@ import java.util.Locale;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.databinding.BindingAdapter;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -26,7 +20,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 public class BindingAdapters {
 
     // TODO: 03/12/2019 Discuss about this implementation approach. Data-binding requires at-least one custom argument (view passed is a default argument)
-    //fragment_main
+    //fragment_image_list
     @BindingAdapter("android:initRecyclerView")
     public static void initRecyclerView(final RecyclerView recyclerView, float spacing) {
         int columns = recyclerView.getResources().getConfiguration()

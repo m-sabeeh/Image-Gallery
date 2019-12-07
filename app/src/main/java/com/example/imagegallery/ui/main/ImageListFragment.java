@@ -5,14 +5,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.imagegallery.R;
-import com.example.imagegallery.databinding.FragmentMainBinding;
-import com.example.imagegallery.ui.adapters.CustomPagedListAdapter;
+import com.example.imagegallery.databinding.FragmentImageListBinding;
 import com.example.imagegallery.utils.Injection;
 import com.example.imagegallery.utils.Utils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -23,29 +21,28 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class MainFragment extends Fragment implements SearchInputDialogFragment.SearchInputListener {
+public class ImageListFragment extends Fragment implements SearchInputDialogFragment.SearchInputListener {
     private static final String TAG = "MainFragment";
-    private MainViewModel mViewModel;
-    private CustomPagedListAdapter mAdapter;
+    private ImageListViewModel mViewModel;
+    private ImageListAdapter mAdapter;
     private RecyclerView mRecyclerView;
-    private FragmentMainBinding fragmentMainBinding;
+    private FragmentImageListBinding binding;
 
-    public static MainFragment newInstance() {
-        return new MainFragment();
+    public static ImageListFragment newInstance() {
+        return new ImageListFragment();
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        fragmentMainBinding = DataBindingUtil.inflate(
-                inflater, R.layout.fragment_main, container, false);
-        return fragmentMainBinding.getRoot();
+        binding = DataBindingUtil.inflate(
+                inflater, R.layout.fragment_image_list, container, false);
+        return binding.getRoot();
     }
 
     @Override
@@ -57,32 +54,32 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
         if (!search.equalsIgnoreCase("")) {
             bundle.putString(Utils.General.SEARCH_TERM, search);
         }
-        fragmentMainBinding.setMainViewModel(mViewModel = initViewModel(bundle));
+        binding.setViewModel(mViewModel = initViewModel(bundle));
         initAdapter();
         initFab();
         initLiveDataObservations();
     }
 
     // TODO: 03/12/2019 Do I really need SavedStateViewModel?
-    private MainViewModel initViewModel(@Nullable Bundle savedInstanceState) {
+    private ImageListViewModel initViewModel(@Nullable Bundle savedInstanceState) {
         ViewModelProvider.Factory factory = Injection.getViewModelFactory(this, savedInstanceState);
-        return ViewModelProviders.of(this, factory).get(MainViewModel.class);
+        return ViewModelProviders.of(this, factory).get(ImageListViewModel.class);
     }
 
     private void initAdapter() {
-        mAdapter = new CustomPagedListAdapter(getContext());
+        mAdapter = new ImageListAdapter();
         mAdapter.setOnItemInteractionListener((View view, int position) -> {
             Intent intent = Utils.IntentUtils.buildImageFragmentIntent(getContext());
             intent.putExtra(Utils.General.POSITION, position);
             startActivityForResult(intent, Utils.General.CODE_RETURN_POSITION);
         });
-        mRecyclerView = fragmentMainBinding.recyclerView;
+        mRecyclerView = binding.recyclerView;
         mRecyclerView.setAdapter(mAdapter);
     }
 
     private void initFab() {
         //fall back to viewbinding?
-        FloatingActionButton button = fragmentMainBinding.fab;
+        FloatingActionButton button = binding.fab;
         button.setOnClickListener((View view) -> {
             buildDialogFragment();
         });
@@ -91,7 +88,7 @@ public class MainFragment extends Fragment implements SearchInputDialogFragment.
     private void initLiveDataObservations() {
         mViewModel.mLiveData.observe(this, hits -> {
             mAdapter.submitList(hits);
-            fragmentMainBinding.swipeRefresh.setRefreshing(false);
+            binding.swipeRefresh.setRefreshing(false);
         });
 
         mViewModel.searchTermLiveData.observe(this, this::setActivityTitle);

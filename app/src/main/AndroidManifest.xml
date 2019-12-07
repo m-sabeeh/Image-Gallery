@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:dist="http://schemas.android.com/apk/distribution"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.imagegallery">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -14,17 +15,17 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".MyMotionActivity2"></activity>
-        <activity android:name=".MyMotionActivity" />
+        android:theme="@style/AppTheme.NoActionBar"
+        tools:ignore="GoogleAppIndexingWarning">
+
         <activity
             android:name=".ContainerActivity"
             android:label="@string/title_activity_container"
-            android:parentActivityName="androidx.appcompat.app.AppCompatActivity"
+            android:parentActivityName="com.example.imagegallery.MainActivity"
             android:theme="@style/AppTheme.Dark">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="androidx.appcompat.app.AppCompatActivity" />
+                android:value="com.example.imagegallery.MainActivity" />
         </activity>
         <activity android:name=".MainActivity">
             <intent-filter>

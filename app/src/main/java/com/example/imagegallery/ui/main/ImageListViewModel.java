@@ -19,7 +19,7 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 import androidx.paging.PagedList;
 
-public class MainViewModel extends ViewModel {
+public class ImageListViewModel extends ViewModel {
     private static final String TAG = "MainViewModel";
     private ImageRepository mImageRepo;
     private static final String DEFAULT_SEARCH_TERM = "Colors";
@@ -37,7 +37,7 @@ public class MainViewModel extends ViewModel {
             (SearchParams input) -> mImageRepo.searchImages(input.mSearch.toLowerCase(), page_size, input.arguments));*/
 
 
-    public MainViewModel(ImageRepository repository, SavedStateHandle savedStateHandle) {
+    public ImageListViewModel(ImageRepository repository, SavedStateHandle savedStateHandle) {
         if (savedStateHandle.contains(Utils.General.SEARCH_TERM))
             setSearchTerm(savedStateHandle.get(Utils.General.SEARCH_TERM));
         else
@@ -69,7 +69,5 @@ public class MainViewModel extends ViewModel {
             arguments = params;
         }
     }
-
-
 }
 

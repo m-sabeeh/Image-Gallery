@@ -1,4 +1,4 @@
-package com.example.imagegallery.api;
+package com.example.imagegallery.network;
 
 import com.example.imagegallery.models.DataList;
 import com.example.imagegallery.models.Hit;

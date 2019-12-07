@@ -1,40 +1,32 @@
-package com.example.imagegallery.ui.adapters;
+package com.example.imagegallery.ui.main;
 
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.imagegallery.R;
 import com.example.imagegallery.databinding.ItemRecyclerViewBinding;
 import com.example.imagegallery.models.Hit;
-import com.example.imagegallery.utils.GlideApp;
 
-import java.util.Locale;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.databinding.DataBindingUtil;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-public class CustomPagedListAdapter extends PagedListAdapter<Hit, CustomPagedListAdapter.ViewHolder> {
+public class ImageListAdapter extends PagedListAdapter<Hit, ImageListAdapter.ViewHolder> {
     private static final String TAG = "CustomPagedListAdapter";
-    private Context mContext;
     private OnItemInteractionListener mListener;
     //private ConstraintSet set = new ConstraintSet();
 
-    public CustomPagedListAdapter(Context mContext) {
+    public ImageListAdapter() {
         super(DIFF_CALLBACK);
-        this.mContext = mContext;
     }
 
     public void setOnItemInteractionListener(OnItemInteractionListener listener) {
@@ -43,14 +35,14 @@ public class CustomPagedListAdapter extends PagedListAdapter<Hit, CustomPagedLis
 
     @NonNull
     @Override
-    public CustomPagedListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ImageListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ItemRecyclerViewBinding binding = DataBindingUtil
                 .inflate(LayoutInflater.from(parent.getContext()), R.layout.item_recycler_view, parent, false);
         return new ViewHolder(binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final CustomPagedListAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final ImageListAdapter.ViewHolder holder, final int position) {
         Hit hit = Objects.requireNonNull(getItem(position));
         holder.bind(hit);
         /*String ratio = String.format(Locale.getDefault(), "%d:%d", hit.getPreviewWidth(), hit.getPreviewHeight());
@@ -63,9 +55,11 @@ public class CustomPagedListAdapter extends PagedListAdapter<Hit, CustomPagedLis
         //private ImageView imageView;
         //private ConstraintLayout constraintLayout;
         ItemRecyclerViewBinding viewBinding;
+        ImageViewModel recyclerViewItemModel;
 
         ViewHolder(@NonNull ItemRecyclerViewBinding itemRecyclerViewBinding) {
             super(itemRecyclerViewBinding.getRoot());
+            recyclerViewItemModel = new ImageViewModel();
             viewBinding = itemRecyclerViewBinding;
             //constraintLayout = viewBinding.constraintLayout;
             CardView cardView = viewBinding.cardView;
@@ -80,7 +74,9 @@ public class CustomPagedListAdapter extends PagedListAdapter<Hit, CustomPagedLis
         }
 
         void bind(Hit hit) {
-            viewBinding.setHit(hit);
+            recyclerViewItemModel.bind(hit);
+            viewBinding.setPageViewModel(recyclerViewItemModel);
+            //viewBinding.setHit(hit);
             viewBinding.executePendingBindings();
         }
     }

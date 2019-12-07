@@ -2,7 +2,7 @@ package com.example.imagegallery;
 
 import android.os.Bundle;
 
-import com.example.imagegallery.ui.main.MainFragment;
+import com.example.imagegallery.ui.main.ImageListFragment;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, MainFragment.newInstance())
+                    .replace(R.id.container, ImageListFragment.newInstance())
                     .commitNow();
         }
     }

@@ -1,4 +1,4 @@
-package com.example.imagegallery.ui.adapters;
+package com.example.imagegallery.ui.containerfragments;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.imagegallery.R;
-import com.example.imagegallery.databinding.PageViewPager2Binding;
+import com.example.imagegallery.databinding.PageViewPagerBinding;
 import com.example.imagegallery.models.Hit;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
@@ -37,20 +37,18 @@ import me.relex.photodraweeview.PhotoDraweeView;
 
 public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.ViewHolder> {
     private static final String TAG = "ViewPagerAdapter";
-    private Context mContext;
     private OnItemInteractionListener mListener;
 
-    public ViewPagerAdapter(Context context) {
+    public ViewPagerAdapter() {
         super(DIFF_CALLBACK);
-        mContext = context;
     }
 
     @NonNull
     @Override
     public ViewPagerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        PageViewPager2Binding pager2Binding = DataBindingUtil
-                .inflate(LayoutInflater.from(parent.getContext()), R.layout.page_view_pager2, parent, false);
-        return new ViewPagerAdapter.ViewHolder(pager2Binding);
+        PageViewPagerBinding binding = DataBindingUtil
+                .inflate(LayoutInflater.from(parent.getContext()), R.layout.page_view_pager, parent, false);
+        return new ViewPagerAdapter.ViewHolder(binding);
     }
 
     @Override
@@ -114,12 +112,12 @@ public class ViewPagerAdapter extends PagedListAdapter<Hit, ViewPagerAdapter.Vie
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        final PageViewPager2Binding itemBinding;
+        final PageViewPagerBinding itemBinding;
         PhotoDraweeView draweeView;
 
-        ViewHolder(@NonNull PageViewPager2Binding pager2Binding) {
-            super(pager2Binding.getRoot());
-            itemBinding = pager2Binding;
+        ViewHolder(@NonNull PageViewPagerBinding pagerBinding) {
+            super(pagerBinding.getRoot());
+            itemBinding = pagerBinding;
             draweeView = itemBinding.mainImage;//otherwise can't generate palette and update views
             //colors afterwards, that's why handling this one directly.
         }

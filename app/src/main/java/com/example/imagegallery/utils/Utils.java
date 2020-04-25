@@ -54,6 +54,11 @@ public final class Utils {
         public static final String INTENT_PRACTICE = "intent practice";
         public static final int INTENT_PRACTICE_CODE = 200;
 
+        /**
+         * https://stackoverflow.com/questions/9769554/how-to-convert-number-into-k-thousands-m-million-and-b-billion-suffix-in-jsp/54141102#54141102
+         * @param count
+         * @return
+         */
         public static String withSuffix(long count) {
             if (count < 1000) return "" + count;
             int exp = (int) (Math.log(count) / Math.log(1000));

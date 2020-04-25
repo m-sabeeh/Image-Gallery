@@ -48,6 +48,7 @@ public class PixabayPagedHitRepository implements ImageRepository {
 
     @Override
     public LiveData<PagedList<Hit>> searchImages(String query, int page_size) {
+        // TODO: 13/12/2019 do i need new factory every time?
         factory = new PixabayDataSourceFactory(pixabayApiService, query);
         PagedList.Config config = initPagedListConfig(page_size);
         mLiveData = new LivePagedListBuilder<>(factory, config).build();

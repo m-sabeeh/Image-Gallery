@@ -17,7 +17,7 @@
     android:id="@+id/details_motion"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layoutDescription="@xml/chris_bane_scene">
+    app:layoutDescription="@xml/practice_scene">
 
     <ImageView
         android:id="@+id/details_backdrop"

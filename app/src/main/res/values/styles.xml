@@ -21,7 +21,7 @@
     <style name="AppTheme.Dark" parent="AppTheme.NoActionBar">
         <item name="colorPrimary">@android:color/transparent</item><!--actionbar-->
         <item name="colorPrimaryDark">@color/colorBlack</item><!--statusBar-->
-        <item name="colorAccent">@color/colorAccent</item><!--prgoressBar-->
+        <item name="colorAccent">@color/colorAccent</item><!--progressBar-->
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

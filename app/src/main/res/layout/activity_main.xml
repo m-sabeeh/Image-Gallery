@@ -21,9 +21,9 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-<!--
-    app:layout_scrollFlags="scroll|enterAlways"
--->
+    <!--
+        app:layout_scrollFlags="scroll|enterAlways"
+    -->
 
     <!--   <LinearLayout
            android:id="@+id/newContainer"
